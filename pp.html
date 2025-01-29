@@ -41,12 +41,19 @@
             line-height: 1.6;
         }
     </style>
+    <script>
+        function updateLastUpdated() {
+            const date = new Date();
+            const options = { year: 'numeric', month: 'long' };
+            document.getElementById('last-updated').textContent = new Intl.DateTimeFormat('en-US', options).format(date);
+        }
+    </script>
 </head>
 <body>
     
     <div class="container">
         <h1>Privacy Policy</h1>
-        <p><strong>Last Updated: January 2025</strong></p>
+        <p><strong>Last Updated: <span id="last-updated"></span></strong></p>
         <h2>1. Introduction</h2>
         <p>At DevHorizan, we value and protect your privacy. This policy explains how we collect, use, and safeguard your information when you interact with our website and services.</p>
         <h2>2. Information We Collect</h2>
