@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
@@ -26,6 +25,7 @@
 
   <!-- Main CSS File -->
   <link href="assets/css/main.css" rel="stylesheet">
+
 </head>
 
 <body class="index-page">
@@ -34,7 +34,7 @@
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
       <a href="index.html" class="logo d-flex align-items-center me-auto">
-        <img src="assets/img/logo.png" alt="">
+        <img src="assets/img/logo.png">
         <h1 class="sitename">DevHorizan</h1>
       </a>
       <nav id="navmenu" class="navmenu">
@@ -651,8 +651,45 @@
   </footer>
   <!-- Scroll Top -->
   <a href="#" id="scroll-top" class="scroll-top d-flex align-items-center justify-content-center"><i class="bi bi-arrow-up-short"></i></a>
+  
   <!-- Preloader -->
-  <div id="preloader"></div>
+  <div id="preloader">
+      <img src="assets/img/DH.png" alt=""> <!-- Preloader Image remove-->
+  </div>
+  <style>
+    /* Preloader Styles */
+    #preloader {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background-color: var(--background-color);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+      transition: all 0.6s ease-out;
+    }
+
+    #preloader img {
+      width: 100px;
+      height: auto;
+      animation: blink-animation 1s infinite alternate;
+    }
+
+    @keyframes blink-animation {
+      0% { opacity: 1; }
+      100% { opacity: 0.2; }
+    }
+  </style>  <script>
+    window.addEventListener("load", function() {
+      const preloader = document.getElementById("preloader");
+      preloader.style.opacity = "0";
+      setTimeout(() => preloader.style.display = "none", 600);
+    });
+  </script>
+  <!-- End Preloader -->
+
   <!-- Vendor JS Files -->
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
