@@ -108,7 +108,90 @@
         </div>
       </div>
     </section><!-- /About Section -->
-    
+
+  <!-- Stats Counter Section -->
+  <section id="stats" class="stats-counter section">
+    <div class="container">
+      <div class="row gy-4">
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
+          <div class="stats-item text-center">
+            <div class="counter-wrapper">
+              <span class="purecounter" data-purecounter-start="0" data-purecounter-end="256" data-purecounter-duration="2">0</span>
+              <span class="counter-suffix">+</span>
+            </div>
+            <p>Happy Clients</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
+          <div class="stats-item text-center">
+            <div class="counter-wrapper">
+              <span class="purecounter" data-purecounter-start="0" data-purecounter-end="521" data-purecounter-duration="1">0</span>
+              <span class="counter-suffix">+</span>
+            </div>
+            <p>Issues Resolved</p>
+          </div>
+        </div>
+        <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="300">
+          <div class="stats-item text-center">
+            <div class="counter-wrapper">
+              <span class="purecounter" data-purecounter-start="0" data-purecounter-end="5301" data-purecounter-duration="1">0</span>
+              <span class="counter-suffix">+</span>
+            </div>
+            <p>Cups of Coffee</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <style>
+    /* Stats Counter Styles */
+    .stats-counter {
+      padding: 60px 0;
+      background: #f8f9fa;
+    }
+    .stats-item {
+      padding: 30px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+    }
+    .stats-item:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    }
+    .counter-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      margin-bottom: 10px;
+    }
+    .stats-item .purecounter {
+      font-size: 42px;
+      font-weight: 700;
+      color: #2c3e50;
+      line-height: 1;
+    }
+    .stats-item .counter-suffix {
+      font-size: 32px;
+      font-weight: 700;
+      color: #2c3e50;
+      line-height: 1;
+    }
+    .stats-item p {
+      font-size: 16px;
+      color: #6c757d;
+      margin: 0;
+    }
+  </style>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      new PureCounter();
+    });
+  </script>
+  <!-- /Stats Counter Section -->
+
     <!-- Features Section 1 -->
     <section id="features" class="features section">
 
@@ -683,6 +766,7 @@
   </script>
   <!-- End Preloader -->
   <!-- Vendor JS Files -->
+  <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
   <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
