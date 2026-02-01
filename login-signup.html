@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Client Portal - Login & Signup | DevHorizan</title>
+  <meta name="description" content="Access your DevHorizan client portal. Login or signup to manage your projects, track progress, and communicate with our team.">
+  <meta name="keywords" content="client portal, login, signup, project management, DevHorizan">
+  <meta name="author" content="DevHorizan">
+  <meta name="robots" content="noindex, nofollow">
+  <link rel="canonical" href="https://devhorizan.vercel.app/login-signup.html">
+
+  <!-- Favicons -->
+  <link href="assets/img/logo.png" rel="icon">
+  <link href="assets/img/logo.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #388da8;
+      --secondary-color: #0f3460;
+      --accent-color: #4a9eff;
+      --light-bg: #f8fbfc;
+      --dark-text: #3e5055;
+      --light-text: #666;
+      --border-color: #e0e0e0;
+    }
+
+    body.auth-page {
+      background: linear-gradient(135deg, #f8fbfc 0%, #e8f4f8 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--default-font);
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 420px;
+      padding: 20px;
+    }
+
+    .auth-card {
+      background: white;
+      border-radius: 15px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+      overflow: hidden;
+      animation: slideUp 0.5s ease-out;
+    }
+
+    @keyframes slideUp {
+      from {
+        opacity: 0;
+        transform: translateY(30px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .auth-header {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+      color: white;
+      padding: 40px 30px;
+      text-align: center;
+    }
+
+    .auth-header .logo {
+      height: 50px;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .auth-header .logo img {
+      height: 100%;
+      width: auto;
+      filter: brightness(0) invert(1);
+    }
+
+    .auth-header h2 {
+      font-size: 28px;
+      font-weight: 700;
+      margin: 15px 0 5px;
+      color: white;
+    }
+
+    .auth-header p {
+      font-size: 14px;
+      opacity: 0.95;
+      margin: 0;
+    }
+
+    .auth-body {
+      padding: 40px 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: var(--dark-text);
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+      background-color: #f9fdff;
+    }
+
+    .form-group input::placeholder {
+      color: #bbb;
+    }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle .toggle-icon {
+      position: absolute;
+      right: 15px;
+      top: 38px;
+      cursor: pointer;
+      color: var(--light-text);
+      font-size: 18px;
+      transition: color 0.3s;
+    }
+
+    .password-toggle .toggle-icon:hover {
+      color: var(--accent-color);
+    }
+
+    .form-check {
+      margin-bottom: 20px;
+    }
+
+    .form-check-input {
+      border: 2px solid var(--border-color);
+      border-radius: 4px;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      accent-color: var(--accent-color);
+    }
+
+    .form-check-label {
+      margin-left: 8px;
+      font-size: 14px;
+      color: var(--light-text);
+      cursor: pointer;
+    }
+
+    .form-check-label a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    .form-check-label a:hover {
+      text-decoration: underline;
+    }
+
+    .btn-auth {
+      width: 100%;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-bottom: 15px;
+    }
+
+    .btn-login {
+      background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      color: white;
+    }
+
+    .btn-login:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(74, 158, 255, 0.3);
+    }
+
+    .btn-signup {
+      background: white;
+      color: var(--accent-color);
+      border: 2px solid var(--accent-color);
+    }
+
+    .btn-signup:hover {
+      background: var(--accent-color);
+      color: white;
+      transform: translateY(-2px);
+    }
+
+    .divider {
+      display: flex;
+      align-items: center;
+      margin: 25px 0;
+      color: var(--light-text);
+      font-size: 13px;
+    }
+
+    .divider::before,
+    .divider::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-color);
+    }
+
+    .divider span {
+      padding: 0 10px;
+    }
+
+    .social-login {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .social-btn {
+      flex: 1;
+      padding: 10px;
+      border: 2px solid var(--border-color);
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 18px;
+      transition: all 0.3s ease;
+      color: var(--dark-text);
+    }
+
+    .social-btn:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .signup-form {
+      display: none;
+    }
+
+    .signup-form.active {
+      display: block;
+    }
+
+    .login-form.hidden {
+      display: none;
+    }
+
+    .toggle-form {
+      text-align: center;
+      font-size: 14px;
+      color: var(--light-text);
+    }
+
+    .toggle-form a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-form a:hover {
+      text-decoration: underline;
+    }
+
+    .error-message {
+      color: #dc3545;
+      font-size: 13px;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .error-message.show {
+      display: block;
+    }
+
+    .success-message {
+      background: #d4edda;
+      color: #155724;
+      padding: 12px 15px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 14px;
+    }
+
+    .success-message.show {
+      display: block;
+    }
+
+    @media (max-width: 576px) {
+      .auth-container {
+        max-width: 100%;
+      }
+
+      .auth-header {
+        padding: 30px 20px;
+      }
+
+      .auth-body {
+        padding: 30px 20px;
+      }
+
+      .auth-header h2 {
+        font-size: 24px;
+      }
+    }
+  </style>
+</head>
+
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="auth-card">
+      <!-- Header -->
+      <div class="auth-header">
+        <div class="logo">
+          <img src="assets/img/DH.png" alt="DevHorizan Logo">
+        </div>
+        <h2 id="headerTitle">Welcome Back</h2>
+        <p id="headerSubtitle">Sign in to your DevHorizan account</p>
+      </div>
+
+      <!-- Body -->
+      <div class="auth-body">
+        <!-- Success Message -->
+        <div class="success-message" id="successMessage">
+          Account created successfully! Please log in.
+        </div>
+
+        <!-- Login Form -->
+        <form class="login-form" id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="Enter your email" required>
+          </div>
+
+          <div class="form-group password-toggle">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+            <i class="bi bi-eye toggle-icon" onclick="togglePassword('loginPassword', this)"></i>
+          </div>
+
+          <div class="form-check">
+            <input type="checkbox" id="rememberMe" class="form-check-input">
+            <label class="form-check-label" for="rememberMe">Remember me</label>
+          </div>
+
+          <button type="submit" class="btn-auth btn-login">Sign In</button>
+
+          <div class="toggle-form">
+            Don't have an account? <a onclick="toggleForms()">Sign Up</a>
+          </div>
+        </form>
+
+        <!-- Signup Form -->
+        <form class="signup-form" id="signupForm" onsubmit="handleSignup(event)">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" placeholder="Enter your full name" required>
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <input type="email" id="signupEmail" placeholder="Enter your email" required>
+          </div>
+
+          <div class="form-group password-toggle">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" placeholder="Create a strong password" required>
+            <i class="bi bi-eye toggle-icon" onclick="togglePassword('signupPassword', this)"></i>
+          </div>
+
+          <div class="form-group password-toggle">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Confirm your password" required>
+            <i class="bi bi-eye toggle-icon" onclick="togglePassword('confirmPassword', this)"></i>
+            <div class="error-message" id="passwordError">Passwords do not match!</div>
+          </div>
+
+          <div class="form-check">
+            <input type="checkbox" id="agreeTerms" class="form-check-input" required>
+            <label class="form-check-label" for="agreeTerms">
+              I agree to the <a href="tos.html" target="_blank">Terms of Service</a> and <a href="pp.html" target="_blank">Privacy Policy</a>
+            </label>
+          </div>
+
+          <button type="submit" class="btn-auth btn-login">Create Account</button>
+
+          <div class="toggle-form">
+            Already have an account? <a onclick="toggleForms()">Sign In</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Toggle between login and signup forms
+    function toggleForms() {
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const headerTitle = document.getElementById('headerTitle');
+      const headerSubtitle = document.getElementById('headerSubtitle');
+
+      loginForm.classList.toggle('hidden');
+      signupForm.classList.toggle('active');
+
+      if (signupForm.classList.contains('active')) {
+        headerTitle.textContent = 'Create Account';
+        headerSubtitle.textContent = 'Join DevHorizan today';
+      } else {
+        headerTitle.textContent = 'Welcome Back';
+        headerSubtitle.textContent = 'Sign in to your DevHorizan account';
+      }
+    }
+
+    // Toggle password visibility
+    function togglePassword(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+      }
+    }
+
+    // Handle login
+    function handleLogin(event) {
+      event.preventDefault();
+      
+      const email = document.getElementById('loginEmail').value;
+      const password = document.getElementById('loginPassword').value;
+      
+      // Basic validation
+      if (!email || !password) {
+        alert('Please fill in all fields');
+        return;
+      }
+
+      // Find matching user from stored users
+      const users = JSON.parse(localStorage.getItem('devhorizan_users') || '[]');
+      const matched = users.find(u => u.email === email && u.password === password);
+
+      if (!matched) {
+        alert('Invalid email or password. Please sign up first.');
+        return;
+      }
+
+      const user = {
+        id: matched.id,
+        email: matched.email,
+        name: matched.name,
+        joinedDate: matched.joinedDate,
+        loginTime: new Date().toLocaleString()
+      };
+
+      localStorage.setItem('devhorizan_user', JSON.stringify(user));
+      localStorage.setItem('devhorizan_isLoggedIn', 'true');
+
+      // Redirect to dashboard
+      window.location.href = 'dashboard.html';
+    }
+
+    // Handle signup
+    function handleSignup(event) {
+      event.preventDefault();
+      
+      const name = document.getElementById('signupName').value;
+      const email = document.getElementById('signupEmail').value;
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const passwordError = document.getElementById('passwordError');
+
+      // Check if passwords match
+      if (password !== confirmPassword) {
+        passwordError.classList.add('show');
+        return;
+      }
+
+      passwordError.classList.remove('show');
+
+      // Check if user already exists
+      const existingUsers = JSON.parse(localStorage.getItem('devhorizan_users') || '[]');
+      if (existingUsers.some(u => u.email === email)) {
+        alert('Email already registered!');
+        return;
+      }
+
+      // Save new user
+      const newUser = {
+        id: Date.now(),
+        name: name,
+        email: email,
+        password: password,
+        joinedDate: new Date().toLocaleDateString(),
+        createdAt: new Date().toLocaleString()
+      };
+
+      existingUsers.push(newUser);
+      localStorage.setItem('devhorizan_users', JSON.stringify(existingUsers));
+
+      // Auto-add user to admin system with Free plan
+      const userPlans = JSON.parse(localStorage.getItem('devhorizan_userPlans') || '{}');
+      userPlans[newUser.id] = 'Free';
+      localStorage.setItem('devhorizan_userPlans', JSON.stringify(userPlans));
+
+      // Show success message
+      const successMsg = document.getElementById('successMessage');
+      successMsg.classList.add('show');
+
+      // Clear form and switch to login
+      document.getElementById('signupForm').reset();
+      setTimeout(() => {
+        toggleForms();
+        successMsg.classList.remove('show');
+      }, 2000);
+    }
+  </script>
+</body>
+</html>

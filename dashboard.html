@@ -1,0 +1,1450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Dashboard - DevHorizan</title>
+  <meta name="description" content="">
+  <meta name="keywords" content="">
+
+  <!-- Favicons -->
+  <link href="assets/img/logo.png" rel="icon">
+  <link href="assets/img/logo.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Inter:wght@100;200;300;400;500;600;700;800;900&family=Nunito:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <!-- PDF Library -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <!-- Main CSS File -->
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #388da8;
+      --secondary-color: #0f3460;
+      --accent-color: #4a9eff;
+      --light-bg: #f8fbfc;
+      --dark-text: #3e5055;
+      --light-text: #666;
+      --border-color: #e0e0e0;
+      --success-color: #28a745;
+      --warning-color: #ffc107;
+      --danger-color: #dc3545;
+      --info-color: #17a2b8;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: var(--light-bg);
+      font-family: var(--default-font);
+      color: var(--dark-text);
+    }
+
+    /* Layout */
+    .dashboard-wrapper {
+      display: flex;
+      min-height: 100vh;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 250px;
+      background: white;
+      box-shadow: 2px 0 10px rgba(0, 0, 0, 0.08);
+      padding: 30px 0;
+      position: fixed;
+      left: 0;
+      top: 0;
+      height: 100vh;
+      overflow-y: auto;
+      z-index: 999;
+    }
+
+    .sidebar-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 20px 30px;
+      text-decoration: none;
+      color: var(--secondary-color);
+      font-weight: 700;
+      font-size: 18px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 20px;
+    }
+
+    .sidebar-logo img {
+      height: 35px;
+      width: auto;
+    }
+
+    .sidebar-menu {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    .sidebar-menu li {
+      margin: 0;
+    }
+
+    .sidebar-menu a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      color: var(--light-text);
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+      border-left: 3px solid transparent;
+    }
+
+    .sidebar-menu a:hover,
+    .sidebar-menu a.active {
+      background: rgba(74, 158, 255, 0.1);
+      color: var(--accent-color);
+      border-left-color: var(--accent-color);
+      padding-left: 17px;
+    }
+
+    .sidebar-menu i {
+      font-size: 18px;
+      width: 20px;
+      text-align: center;
+    }
+
+    /* Top Header */
+    .top-header {
+      background: white;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+      padding: 15px 30px;
+      position: fixed;
+      top: 0;
+      left: 250px;
+      right: 0;
+      z-index: 998;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .header-title h1 {
+      margin: 0;
+      font-size: 24px;
+      color: var(--dark-text);
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 20px;
+      align-items: center;
+    }
+
+    .search-box {
+      padding: 10px 15px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      width: 250px;
+      font-size: 13px;
+      background: var(--light-bg);
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background: white;
+    }
+
+    .user-menu {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding-left: 15px;
+      border-left: 1px solid var(--border-color);
+      position: relative;
+    }
+
+    .user-avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-weight: 600;
+      cursor: pointer;
+      position: relative;
+    }
+
+    .user-avatar:hover {
+      transform: scale(1.1);
+    }
+
+    .dropdown-menu-user {
+      position: absolute;
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      top: 50px;
+      right: 0;
+      min-width: 180px;
+      display: none;
+      z-index: 1001;
+    }
+
+    .dropdown-menu-user.show {
+      display: block;
+    }
+
+    .dropdown-menu-user a {
+      display: block;
+      padding: 12px 20px;
+      color: var(--dark-text);
+      text-decoration: none;
+      font-size: 13px;
+      transition: background 0.3s;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .dropdown-menu-user a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown-menu-user a:hover {
+      background: var(--light-bg);
+    }
+
+    .logout-btn {
+      color: var(--danger-color) !important;
+      font-weight: 600;
+    }
+
+    /* Main Content */
+    .main-content {
+      margin-left: 250px;
+      margin-top: 70px;
+      padding: 30px;
+      flex: 1;
+    }
+
+    /* Section */
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+      animation: fadeIn 0.3s ease-in;
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+      }
+      to {
+        opacity: 1;
+      }
+    }
+
+    /* Stats Cards */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+
+    .stat-card-icon {
+      width: 50px;
+      height: 50px;
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      margin-bottom: 12px;
+    }
+
+    .stat-card-icon.primary {
+      background: rgba(74, 158, 255, 0.1);
+      color: var(--accent-color);
+    }
+
+    .stat-card-icon.success {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+
+    .stat-card-icon.warning {
+      background: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+    }
+
+    .stat-card-icon.danger {
+      background: rgba(220, 53, 69, 0.1);
+      color: var(--danger-color);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--dark-text);
+      margin-bottom: 5px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--light-text);
+    }
+
+    /* Projects Section */
+    .projects-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+    }
+
+    .projects-header h2 {
+      font-size: 22px;
+      color: var(--dark-text);
+      margin: 0;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 6px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(74, 158, 255, 0.3);
+    }
+
+    .projects-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      margin-bottom: 30px;
+    }
+
+    .project-card {
+      background: white;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .project-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    }
+
+    .project-card-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border-color);
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+    }
+
+    .project-type {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .project-type.android {
+      background: rgba(244, 67, 54, 0.1);
+      color: #f44336;
+    }
+
+    .project-type.web {
+      background: rgba(33, 150, 243, 0.1);
+      color: #2196f3;
+    }
+
+    .project-type.design {
+      background: rgba(156, 39, 176, 0.1);
+      color: #9c27b0;
+    }
+
+    .project-type.api {
+      background: rgba(76, 175, 80, 0.1);
+      color: #4caf50;
+    }
+
+    .project-name {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--dark-text);
+      margin-bottom: 5px;
+    }
+
+    .project-desc {
+      font-size: 12px;
+      color: var(--light-text);
+    }
+
+    .project-status {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    .status-active {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+
+    .status-completed {
+      background: rgba(52, 144, 220, 0.1);
+      color: #3490dc;
+    }
+
+    .status-hold {
+      background: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+    }
+
+    .project-card-body {
+      padding: 15px 20px;
+    }
+
+    .progress-bar-custom {
+      background: var(--border-color);
+      height: 6px;
+      border-radius: 3px;
+      overflow: hidden;
+      margin-bottom: 10px;
+    }
+
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent-color), var(--primary-color));
+      border-radius: 3px;
+    }
+
+    .progress-info {
+      display: flex;
+      justify-content: space-between;
+      font-size: 12px;
+      color: var(--light-text);
+      margin-bottom: 15px;
+    }
+
+    .project-meta {
+      display: flex;
+      gap: 10px;
+      font-size: 12px;
+      color: var(--light-text);
+      margin-bottom: 15px;
+    }
+
+    .project-meta span {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .project-card-footer {
+      padding: 15px 20px;
+      border-top: 1px solid var(--border-color);
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn-small {
+      padding: 8px 12px;
+      font-size: 12px;
+      flex: 1;
+      text-align: center;
+    }
+
+    .btn-secondary {
+      background: white;
+      color: var(--accent-color);
+      border: 1px solid var(--accent-color);
+    }
+
+    .btn-secondary:hover {
+      background: var(--accent-color);
+      color: white;
+    }
+
+    /* Billing Section */
+    .billing-container {
+      max-width: 1000px;
+    }
+
+    .billing-header {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      margin-bottom: 25px;
+    }
+
+    .billing-header h3 {
+      font-size: 18px;
+      margin-bottom: 10px;
+      color: var(--dark-text);
+    }
+
+    .billing-header p {
+      color: var(--light-text);
+      font-size: 14px;
+      margin: 0;
+    }
+
+    .plans-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 30px;
+    }
+
+    .plan-card {
+      background: white;
+      border-radius: 10px;
+      border: 2px solid var(--border-color);
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .plan-card.popular {
+      border-color: var(--accent-color);
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(74, 158, 255, 0.2);
+    }
+
+    .plan-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--accent-color);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      display: none;
+    }
+
+    .plan-card.popular .plan-badge {
+      display: block;
+    }
+
+    .plan-name {
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: var(--dark-text);
+    }
+
+    .plan-price {
+      font-size: 40px;
+      font-weight: 700;
+      color: var(--accent-color);
+      margin-bottom: 5px;
+    }
+
+    .plan-price small {
+      font-size: 14px;
+      color: var(--light-text);
+    }
+
+    .plan-desc {
+      font-size: 13px;
+      color: var(--light-text);
+      margin: 20px 0;
+    }
+
+    .plan-features {
+      list-style: none;
+      margin: 25px 0;
+      padding: 0;
+      text-align: left;
+    }
+
+    .plan-features li {
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+      color: var(--dark-text);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .plan-features li:last-child {
+      border-bottom: none;
+    }
+
+    .plan-features i {
+      color: var(--success-color);
+      font-weight: 700;
+    }
+
+    .plan-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 10px 30px rgba(74, 158, 255, 0.2);
+    }
+
+    .btn-select-plan {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+    }
+
+    .invoices-section {
+      background: white;
+      border-radius: 10px;
+      border: 1px solid var(--border-color);
+      overflow: hidden;
+    }
+
+    .invoices-header {
+      padding: 20px 30px;
+      border-bottom: 1px solid var(--border-color);
+      background: var(--light-bg);
+    }
+
+    .invoices-header h3 {
+      margin: 0;
+      font-size: 16px;
+      color: var(--dark-text);
+    }
+
+    .invoices-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .invoices-table thead {
+      background: var(--light-bg);
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .invoices-table th {
+      padding: 15px 20px;
+      text-align: left;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--light-text);
+      text-transform: uppercase;
+    }
+
+    .invoices-table td {
+      padding: 15px 20px;
+      border-bottom: 1px solid var(--border-color);
+      font-size: 13px;
+    }
+
+    .invoices-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .invoice-id {
+      color: var(--accent-color);
+      font-weight: 600;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .badge-paid {
+      background: rgba(40, 167, 69, 0.1);
+      color: var(--success-color);
+    }
+
+    .badge-pending {
+      background: rgba(255, 193, 7, 0.1);
+      color: var(--warning-color);
+    }
+
+    .invoices-table a {
+      color: var(--accent-color);
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .invoices-table a:hover {
+      text-decoration: underline;
+    }
+
+    /* Modal */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal.show {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-content {
+      background-color: white;
+      padding: 30px;
+      border-radius: 10px;
+      width: 90%;
+      max-width: 600px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .modal-header h3 {
+      margin: 0;
+      color: var(--dark-text);
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      color: var(--light-text);
+      cursor: pointer;
+    }
+
+    .close-btn:hover {
+      color: var(--dark-text);
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark-text);
+      font-size: 13px;
+    }
+
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      font-size: 13px;
+      font-family: inherit;
+    }
+
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      box-shadow: 0 0 0 3px rgba(74, 158, 255, 0.1);
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .sidebar {
+        width: 200px;
+      }
+
+      .top-header {
+        left: 200px;
+      }
+
+      .main-content {
+        margin-left: 200px;
+      }
+
+      .search-box {
+        width: 150px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .sidebar {
+        position: relative;
+        width: 100%;
+        height: auto;
+        padding: 20px 0;
+        margin-bottom: 20px;
+      }
+
+      .top-header {
+        position: relative;
+        left: 0;
+        margin-top: 0;
+      }
+
+      .main-content {
+        margin-left: 0;
+        margin-top: 0;
+        padding: 20px;
+      }
+
+      .projects-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .plans-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .plan-card {
+        transform: scale(1) !important;
+      }
+
+      .plan-card.popular {
+        transform: scale(1) !important;
+      }
+
+      .header-actions {
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .search-box {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="dashboard-wrapper">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <a href="index.html" class="sidebar-logo">
+        <img src="assets/img/DH.png" alt="DevHorizan">
+      </a>
+
+      <ul class="sidebar-menu">
+        <li><a href="javascript:showRequestProjectModal()" class="sidebar-link" data-section="request-project">
+          <i class="bi bi-plus-circle"></i>
+          <span>Request Project</span>
+        </a></li>
+        <li><a href="javascript:showSection('dashboard')" class="sidebar-link active" data-section="dashboard">
+          <i class="bi bi-briefcase"></i>
+          <span>Projects</span>
+        </a></li>
+        <li><a href="javascript:showSection('billing')" class="sidebar-link" data-section="billing">
+          <i class="bi bi-credit-card"></i>
+          <span>Billing</span>
+        </a></li>
+        <li><a href="javascript:showSection('settings')" class="sidebar-link" data-section="settings">
+          <i class="bi bi-gear"></i>
+          <span>Settings</span>
+        </a></li>
+      </ul>
+    </aside>
+
+    <!-- Top Header -->
+    <div class="top-header">
+      <div class="header-title">
+        <h1 id="pageTitle">Dashboard</h1>
+      </div>
+
+      <div class="header-actions">
+        <input type="text" class="search-box" placeholder="Search projects...">
+        
+        <div class="user-menu">
+          <div class="user-avatar" id="userAvatarBtn" onclick="toggleUserDropdown()">
+            <span id="userInitial">U</span>
+          </div>
+          <div class="dropdown-menu-user" id="dropdownMenuUser">
+            <a href="#profile">My Profile</a>
+            <a href="#settings">Settings</a>
+            <a href="#billing">Billing & Plans</a>
+            <a href="javascript:logout()" class="logout-btn">Logout</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <!-- Dashboard Section (merged with Projects) -->
+      <section class="section active" id="dashboard-section" data-section="dashboard">
+        <div class="dashboard-grid">
+          <div class="stats-grid">
+            <div class="stat-card">
+              <div class="stat-card-icon primary">
+                <i class="bi bi-briefcase"></i>
+              </div>
+              <div class="stat-value" id="totalProjects">4</div>
+              <div class="stat-label">Active Projects</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-icon success">
+                <i class="bi bi-check-circle"></i>
+              </div>
+              <div class="stat-value" id="completedProjects">1</div>
+              <div class="stat-label">Completed</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-icon warning">
+                <i class="bi bi-hourglass-split"></i>
+              </div>
+              <div class="stat-value" id="inProgressProjects">3</div>
+              <div class="stat-label">In Progress</div>
+            </div>
+
+            <div class="stat-card">
+              <div class="stat-card-icon danger">
+                <i class="bi bi-credit-card"></i>
+              </div>
+              <div class="stat-value" id="totalSpent">$14,500</div>
+              <div class="stat-label">Total Spent</div>
+            </div>
+          </div>
+
+          <div class="projects-header">
+            <h2>Projects</h2>
+          </div>
+
+          <div class="projects-grid" id="recentProjects">
+            <!-- Projects will be populated here -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Billing Section -->
+      <section class="section" id="billing-section" data-section="billing">
+        <div class="billing-container">
+          <div class="invoices-section">
+            <div class="invoices-header">
+              <h3>Invoice History</h3>
+            </div>
+            <table class="invoices-table">
+              <thead>
+                <tr>
+                  <th>Invoice ID</th>
+                  <th>Date</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="invoicesTable">
+                <!-- Invoices will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Settings Section -->
+      <section class="section" id="settings-section" data-section="settings">
+        <div style="background: white; padding: 30px; border-radius: 10px; border: 1px solid var(--border-color);">
+          <h3 style="color: var(--dark-text); margin-bottom: 20px;">Account Settings</h3>
+          <p style="color: var(--light-text);">Settings page - Coming soon with profile management and preferences.</p>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Request Project Modal -->
+  <div class="modal" id="requestProjectModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3>Request New Project</h3>
+        <button class="close-btn" onclick="closeRequestProjectModal()">&times;</button>
+      </div>
+      <form id="requestProjectForm">
+        <div class="form-group">
+          <label>Project Name</label>
+          <input type="text" id="requestProjectName" placeholder="Enter project name" required>
+        </div>
+        <div class="form-group">
+          <label>Project Type</label>
+          <select id="requestProjectType" required>
+            <option value="">Select Type</option>
+            <option value="web">Web Development</option>
+            <option value="android">Android App</option>
+            <option value="design">UI/UX Design</option>
+            <option value="api">API Development</option>
+            <option value="consultation">Consultation</option>
+            <option value="mobile-service">Mobile Service</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="requestProjectDescription" placeholder="Describe your project requirements" rows="4" required></textarea>
+        </div>
+        <div class="form-group">
+          <label>Budget (Optional)</label>
+          <input type="number" id="requestProjectBudget" placeholder="Estimated budget" step="0.01" min="0">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeRequestProjectModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">Submit Request</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let currentUser = null;
+
+    // Check authentication
+    function checkAuth() {
+      const isLoggedIn = localStorage.getItem('devhorizan_isLoggedIn');
+      if (!isLoggedIn) {
+        window.location.href = 'login-signup.html';
+        return;
+      }
+      loadUserData();
+    }
+
+    // Load user data
+    function loadUserData() {
+      currentUser = JSON.parse(localStorage.getItem('devhorizan_user'));
+      if (!currentUser || !currentUser.email) {
+        window.location.href = 'login-signup.html';
+        return;
+      }
+
+      // Backfill missing id from stored users (handles old logins without id)
+      if (!currentUser.id) {
+        const users = JSON.parse(localStorage.getItem('devhorizan_users') || '[]');
+        const found = users.find(u => u.email === currentUser.email);
+        if (found) {
+          currentUser = { ...found };
+          localStorage.setItem('devhorizan_user', JSON.stringify(currentUser));
+        }
+      }
+
+      // Ensure numeric id for filters
+      if (currentUser.id) currentUser.id = parseInt(currentUser.id, 10);
+
+      const userName = currentUser.name || currentUser.email.split('@')[0];
+      document.getElementById('userInitial').textContent = userName.charAt(0).toUpperCase();
+    }
+
+    // Get user's projects from admin system
+    function getUserProjects() {
+      const allProjects = JSON.parse(localStorage.getItem('devhorizan_projects') || '[]');
+      const userId = currentUser ? parseInt(currentUser.id, 10) : null;
+      if (userId === null || Number.isNaN(userId)) return [];
+      return allProjects.filter(p => parseInt(p.userId, 10) === userId);
+    }
+
+    // Get user's invoices from admin system
+    function getUserInvoices() {
+      const allInvoices = JSON.parse(localStorage.getItem('devhorizan_invoices') || '[]');
+      const userId = currentUser ? parseInt(currentUser.id, 10) : null;
+      if (userId === null || Number.isNaN(userId)) return [];
+      return allInvoices.filter(inv => parseInt(inv.userId, 10) === userId);
+    }
+
+    // Get user's plan
+    function getUserPlan() {
+      const userPlans = JSON.parse(localStorage.getItem('devhorizan_userPlans') || '{}');
+      return userPlans[currentUser.id] || 'Free';
+    }
+
+    // Show section
+    function showSection(section) {
+      // Alias projects to dashboard since sections are merged
+      if (section === 'projects') section = 'dashboard';
+
+      // Hide all sections
+      document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+      
+      // Show selected section
+      const target = document.getElementById(`${section}-section`);
+      if (target) target.classList.add('active');
+      
+      // Update sidebar active state (both Dashboard and Projects point to dashboard)
+      document.querySelectorAll('.sidebar-link').forEach(link => link.classList.remove('active'));
+      document.querySelectorAll(`[data-section="${section}"]`).forEach(link => link.classList.add('active'));
+      
+      // Update page title
+      const titles = {
+        'dashboard': 'Dashboard & Projects',
+        'billing': 'Billing & Plans',
+        'settings': 'Settings'
+      };
+      document.getElementById('pageTitle').textContent = titles[section] || 'Dashboard & Projects';
+
+      // Load section data
+      if (section === 'dashboard') {
+        loadDashboardData();
+        loadAllProjects();
+      } else if (section === 'billing') {
+        loadInvoices();
+      }
+    }
+
+    // Load dashboard data
+    function loadDashboardData() {
+      const userProjects = getUserProjects();
+      const active = userProjects.length;
+      const completed = userProjects.filter(p => p.status === 'Completed').length;
+      const inProgress = userProjects.filter(p => p.status === 'In Progress').length;
+      const totalSpent = userProjects.reduce((sum, p) => sum + parseFloat(p.budget.toString().replace('$', '').replace(',', '')), 0);
+
+      document.getElementById('totalProjects').textContent = active;
+      document.getElementById('completedProjects').textContent = completed;
+      document.getElementById('inProgressProjects').textContent = inProgress;
+      document.getElementById('totalSpent').textContent = '$' + totalSpent.toFixed(0);
+
+      renderProjects(userProjects.slice(0, 3), 'recentProjects');
+    }
+
+    // Load all projects
+    function loadAllProjects() {
+      const userProjects = getUserProjects();
+      renderProjects(userProjects, 'allProjects');
+    }
+
+    // Render projects (Read-only for users)
+    function renderProjects(projects, containerId) {
+      const container = document.getElementById(containerId);
+      
+      if (projects.length === 0) {
+        container.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--light-text);">No projects assigned yet. Contact admin to get started!</div>';
+        return;
+      }
+
+      container.innerHTML = projects.map(project => `
+        <div class="project-card">
+          <div class="project-card-header">
+            <div style="flex: 1;">
+              <div class="project-type ${project.type}">${project.type}</div>
+              <div class="project-name">${project.name}</div>
+              <div class="project-desc">${project.description}</div>
+            </div>
+            <div class="project-status status-${project.status.toLowerCase().replace(' ', '-')}">${project.status}</div>
+          </div>
+          <div class="project-card-body">
+            <div class="progress-bar-custom">
+              <div class="progress-fill" style="width: ${project.progress}%"></div>
+            </div>
+            <div class="progress-info">
+              <span>Progress</span>
+              <span>${project.progress}%</span>
+            </div>
+            <div class="project-meta">
+              <span><i class="bi bi-calendar"></i> Due: ${project.dueDate || 'N/A'}</span>
+              <span><i class="bi bi-cash"></i> Budget: $${project.budget}</span>
+            </div>
+          </div>
+          <div class="project-card-footer">
+            <button class="btn btn-primary btn-small" disabled style="opacity: 0.6; cursor: not-allowed;">View Details</button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Load invoices and billing (User-specific, read-only)
+    function loadInvoices() {
+      const userInvoices = getUserInvoices();
+      const container = document.getElementById('invoicesTable');
+
+      if (userInvoices.length === 0) {
+        container.innerHTML = '<tr><td colspan="5" style="text-align: center; color: var(--light-text); padding: 30px;">No invoices yet. Your invoices will appear here when generated by admin.</td></tr>';
+        return;
+      }
+
+      container.innerHTML = userInvoices.map((invoice, index) => `
+        <tr>
+          <td class="invoice-id">INV-${String(index + 1).padStart(3, '0')}</td>
+          <td>${invoice.date}</td>
+          <td><strong>$${invoice.amount.toFixed(2)}</strong></td>
+          <td><span class="badge badge-${invoice.status === 'Paid' ? 'paid' : 'pending'}">${invoice.status}</span></td>
+          <td><a href="#" onclick="downloadInvoice(${index}); return false;">Download</a></td>
+        </tr>
+      `).join('');
+    }
+
+    function downloadInvoice(index) {
+      const userInvoices = getUserInvoices();
+      const invoice = userInvoices[index];
+
+      if (!invoice) {
+        alert('Invoice not found');
+        return;
+      }
+
+      // Get project info
+      const projects = JSON.parse(localStorage.getItem('devhorizan_projects') || '[]');
+      const project = projects.find(p => parseInt(p.id, 10) === invoice.projectId);
+
+      const invoiceId = `INV-${String(index + 1).padStart(3, '0')}`;
+      const userName = currentUser ? (currentUser.name || currentUser.email) : 'User';
+      const projectName = project ? project.name : 'Service Invoice';
+      
+      const COMPANY_LOGO_BASE64 = "data:image/png;base64,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";
+
+      // Create HTML content for PDF
+      const htmlContent = `
+<div style="font-family: Arial, sans-serif; padding: 40px; background: #ffffff; color: #333;">
+
+  <!-- HEADER -->
+  <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #4a9eff; padding-bottom: 20px; margin-bottom: 40px;">
+    
+    <div>
+      <img 
+        src="${COMPANY_LOGO_BASE64}" 
+        alt="DevHorizan Logo" 
+        style="height: 60px; object-fit: contain;"
+      />
+    </div>
+
+    <div style="text-align: right;">
+      <h1 style="margin: 0; color: #0f3460; font-size: 32px;">INVOICE</h1>
+      <p style="margin: 6px 0 0; color: #666; font-size: 13px;">${invoiceId}</p>
+    </div>
+  </div>
+
+  <!-- BILLING INFO -->
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-bottom: 40px;">
+    
+    <div>
+      <h3 style="margin: 0 0 12px; color: #0f3460; font-size: 13px; text-transform: uppercase;">Bill To</h3>
+      <p style="margin: 4px 0; font-size: 14px;"><strong>${userName}</strong></p>
+      <p style="margin: 4px 0; font-size: 13px; color: #666;">${currentUser.email || 'N/A'}</p>
+    </div>
+
+    <div style="text-align: right; font-size: 13px;">
+      <p style="margin: 4px 0;"><strong>Invoice Date:</strong> ${invoice.date}</p>
+      <p style="margin: 4px 0;">
+        <strong>Status:</strong>
+        <span style="font-weight: 700; color: ${invoice.status === 'Paid' ? '#28a745' : '#f0ad4e'};">
+          ${invoice.status}
+        </span>
+      </p>
+    </div>
+  </div>
+
+  <!-- PROJECT INFO -->
+  <div style="margin-bottom: 30px; padding: 14px 18px; background: #f8fbfc; border-left: 4px solid #4a9eff; border-radius: 4px;">
+    <p style="margin: 0; font-size: 13px; color: #0f3460; font-weight: 600;">
+      Project: <span style="color: #333;">${projectName}</span>
+    </p>
+  </div>
+
+  <!-- TABLE -->
+  <table style="width: 100%; border-collapse: collapse; margin-bottom: 40px;">
+    <thead>
+      <tr style="background: #f8fbfc; border-bottom: 2px solid #e0e0e0;">
+        <th style="padding: 14px; text-align: left; font-size: 12px; color: #0f3460; text-transform: uppercase;">Description</th>
+        <th style="padding: 14px; text-align: right; font-size: 12px; color: #0f3460; text-transform: uppercase;">Amount</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr style="border-bottom: 1px solid #e0e0e0;">
+        <td style="padding: 14px; font-size: 13px;">
+          ${invoice.description || 'Service Usage Charges'}
+        </td>
+        <td style="padding: 14px; text-align: right; font-size: 13px;">
+          $${invoice.amount.toFixed(2)}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- TOTAL -->
+  <div style="display: flex; justify-content: flex-end; margin-bottom: 40px;">
+    <div style="width: 300px; border-top: 2px solid #e0e0e0; padding-top: 14px;">
+      <div style="display: flex; justify-content: space-between; font-size: 14px;">
+        <strong>Total Amount</strong>
+        <span style="font-size: 18px; font-weight: 700; color: #0f3460;">
+          $${invoice.amount.toFixed(2)}
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="border-top: 1px solid #e0e0e0; padding-top: 18px; font-size: 12px; color: #666;">
+    <p style="margin: 4px 0;"><strong>Invoice ID:</strong> ${invoiceId}</p>
+    <p style="margin: 4px 0;"><strong>Payment Status:</strong> ${invoice.status}</p>
+    <p style="margin: 6px 0; color: #999;">
+      Thank you for doing business with <strong>DevHorizan</strong>
+    </p>
+  </div>
+
+</div>
+`;
+
+
+      // Generate PDF
+      const element = document.createElement('div');
+      element.innerHTML = htmlContent;
+      
+      const opt = {
+        margin: 10,
+        filename: `${invoiceId}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { orientation: 'portrait', unit: 'mm', format: 'a4' }
+      };
+
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // Toggle user dropdown
+    function toggleUserDropdown() {
+      document.getElementById('dropdownMenuUser').classList.toggle('show');
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('dropdownMenuUser');
+      const userBtn = document.getElementById('userAvatarBtn');
+      
+      if (!dropdown.contains(event.target) && !userBtn.contains(event.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+
+    // Show request project modal
+    function showRequestProjectModal() {
+      document.getElementById('requestProjectModal').classList.add('show');
+    }
+
+    // Close request project modal
+    function closeRequestProjectModal() {
+      document.getElementById('requestProjectModal').classList.remove('show');
+      document.getElementById('requestProjectForm').reset();
+    }
+
+    // Handle project request submission
+    document.addEventListener('DOMContentLoaded', function() {
+      const requestForm = document.getElementById('requestProjectForm');
+      if (requestForm) {
+        requestForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+
+          const projectRequest = {
+            id: Date.now(),
+            userId: currentUser.id,
+            userName: currentUser.name || currentUser.email,
+            userEmail: currentUser.email,
+            projectName: document.getElementById('requestProjectName').value,
+            projectType: document.getElementById('requestProjectType').value,
+            description: document.getElementById('requestProjectDescription').value,
+            estimatedBudget: document.getElementById('requestProjectBudget').value || '0',
+            status: 'Pending',
+            requestDate: new Date().toISOString().split('T')[0],
+            dueDate: null,
+            budget: null,
+            approvedDate: null
+          };
+
+          // Store request in localStorage
+          let requests = JSON.parse(localStorage.getItem('devhorizan_projectRequests') || '[]');
+          requests.push(projectRequest);
+          localStorage.setItem('devhorizan_projectRequests', JSON.stringify(requests));
+
+          // Show success message
+          alert('Project request submitted successfully! Admin will review and approve it soon.');
+          closeRequestProjectModal();
+        });
+      }
+    });
+
+    // Logout function
+    function logout() {
+      localStorage.removeItem('devhorizan_isLoggedIn');
+      localStorage.removeItem('devhorizan_user');
+      window.location.href = 'login-signup.html';
+    }
+
+    // Initialize on load
+    window.addEventListener('load', function() {
+      checkAuth();
+      loadDashboardData();
+    });
+  </script>
+</body>
+</html>
