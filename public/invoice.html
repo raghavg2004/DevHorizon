@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Invoice & Receipt | DevHorizan</title>
+  <link href="/icon.png" rel="icon">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+
+  <style>
+    :root {
+      --primary: #0f3460;
+      --secondary: #388da8;
+      --accent: #2f6fed;
+      --success: #13b37a;
+      --danger: #ef4444;
+      --border: #e2e8f0;
+      --text: #1e293b;
+      --bg: #f8fafc;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', system-ui, sans-serif; }
+
+    body {
+      background: radial-gradient(circle at 10% 20%, rgba(47, 111, 237, 0.06), transparent 30%),
+                  radial-gradient(circle at 90% 80%, rgba(19, 179, 122, 0.06), transparent 30%),
+                  var(--bg);
+      min-height: 100vh;
+      padding: 30px 20px;
+      color: var(--text);
+    }
+
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .top-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      flex-wrap: gap;
+      gap: 12px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      border: 1px solid transparent;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-outline {
+      background: white;
+      border-color: var(--border);
+      color: var(--text);
+    }
+    .btn-outline:hover { background: #f1f5f9; }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent), var(--secondary));
+      color: white;
+      box-shadow: 0 4px 12px rgba(47, 111, 237, 0.25);
+    }
+    .btn-primary:hover { transform: translateY(-1px); color: white; }
+
+    .btn-success {
+      background: var(--success);
+      color: white;
+    }
+    .btn-success:hover { background: #0fa36d; }
+
+    /* Invoice Paper Card */
+    .invoice-card {
+      background: white;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      padding: 48px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .invoice-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 30px;
+      margin-bottom: 32px;
+    }
+
+    .company-brand {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .company-brand img {
+      height: 48px;
+      object-fit: contain;
+    }
+
+    .company-brand h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.02em;
+    }
+
+    .invoice-meta {
+      text-align: right;
+    }
+
+    .invoice-num {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--accent);
+    }
+
+    .invoice-status-badge {
+      display: inline-block;
+      padding: 6px 16px;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-top: 8px;
+    }
+
+    .status-paid {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .status-due {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .status-partial {
+      background: #eff6ff;
+      color: #1e40af;
+      border: 1px solid #bfdbfe;
+    }
+
+    /* Billing Parties */
+    .parties-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 36px;
+      margin-bottom: 36px;
+    }
+
+    .party-card h5 {
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #94a3b8;
+      margin-bottom: 8px;
+    }
+
+    .party-name {
+      font-size: 17px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+
+    .party-info {
+      font-size: 13px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* Items Table */
+    .table-container {
+      margin-bottom: 32px;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+    }
+
+    thead th {
+      background: #f8fafc;
+      padding: 14px 16px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+
+    tbody td {
+      padding: 18px 16px;
+      border-bottom: 1px solid #f1f5f9;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    /* Total Summary Box */
+    .summary-section {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 32px;
+    }
+
+    .summary-box {
+      width: 320px;
+    }
+
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      font-size: 14px;
+      color: #64748b;
+    }
+
+    .summary-row.total-row {
+      border-top: 2px solid #e2e8f0;
+      margin-top: 8px;
+      padding-top: 12px;
+      font-size: 18px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .summary-row.balance-row {
+      background: #fef2f2;
+      border: 1px solid #fecaca;
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-top: 10px;
+      font-weight: 700;
+      color: #991b1b;
+    }
+
+    .footer-note {
+      border-top: 1px solid #f1f5f9;
+      padding-top: 24px;
+      font-size: 12px;
+      color: #94a3b8;
+      line-height: 1.6;
+      text-align: center;
+    }
+
+    /* Notification banner */
+    .alert-bar {
+      padding: 14px 20px;
+      border-radius: 10px;
+      margin-bottom: 20px;
+      display: none;
+      font-size: 14px;
+      font-weight: 500;
+    }
+    .alert-bar.success { background: #ecfdf5; color: #065f46; border: 1px solid #a7f3d0; display: block; }
+    .alert-bar.error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; display: block; }
+
+    @media print {
+      body { background: white; padding: 0; }
+      .top-actions { display: none !important; }
+      .invoice-card { box-shadow: none; border: none; padding: 0; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <div id="statusAlert" class="alert-bar"></div>
+
+    <div class="top-actions">
+      <a href="javascript:history.back()" class="btn btn-outline">
+        <i class="fas fa-arrow-left"></i> Return to Portal
+      </a>
+
+      <div style="display: flex; gap: 10px;">
+        <button class="btn btn-outline" onclick="downloadInvoicePDF()">
+          <i class="fas fa-file-pdf"></i> Download PDF
+        </button>
+        <button class="btn btn-outline" id="btnEmailInvoice" onclick="dispatchInvoiceEmail()">
+          <i class="fas fa-paper-plane"></i> Email Invoice
+        </button>
+        <button class="btn btn-success d-none" id="btnPayOnline" onclick="triggerOnlinePayment()">
+          <i class="fas fa-credit-card"></i> Pay Online
+        </button>
+      </div>
+    </div>
+
+    <!-- PRINTABLE INVOICE CARD -->
+    <div class="invoice-card" id="invoicePrintArea">
+      <!-- Header -->
+      <div class="invoice-header">
+        <div class="company-brand">
+          <img src="/DH.png" alt="DevHorizan Logo">
+     <!-- <div>
+            <h2>DevHorizan</h2>
+            <div style="font-size: 12px; color: #64748b;">Transforming Ideas into Innovative Solutions</div>
+          </div>-->
+        </div>
+
+        <div class="invoice-meta">
+          <div class="invoice-num" id="invNumber">INV-2026-0001</div>
+          <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+            Date: <span id="invDate">Jan 16, 2026</span>
+          </div>
+          <div style="font-size: 13px; color: #64748b;">
+            Due Date: <span id="invDueDate">Feb 15, 2026</span>
+          </div>
+          <div id="invBadge" class="invoice-status-badge status-due">PAYMENT DUE</div>
+        </div>
+      </div>
+
+      <!-- Parties Grid -->
+      <div class="parties-grid">
+        <div class="party-card">
+          <h5>Issued By (Service Provider)</h5>
+          <div class="party-name">DevHorizan Technologies</div>
+          <div class="party-info">
+            Shivalik Greens Apartments<br>
+            Mussoorie Rd, Dehradun, Uttarakhand 248001<br>
+            Phone: +91 98374 52608<br>
+            Email: devhorizan@gmail.com
+          </div>
+        </div>
+
+        <div class="party-card">
+          <h5>Billed To (Client)</h5>
+          <div class="party-name" id="invClientName">Raghav Sharma</div>
+          <div class="party-info" id="invClientInfo">
+            Apex Innovations Pvt Ltd<br>
+            Connaught Place, New Delhi<br>
+            Email: client@devhorizan.com
+          </div>
+        </div>
+      </div>
+
+      <!-- Itemized Breakdown Table -->
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th style="width: 50%;">Description / Service Item</th>
+              <th style="text-align: right;">Unit Price</th>
+              <th style="text-align: right;">GST (18%)</th>
+              <th style="text-align: right;">Total (INR)</th>
+            </tr>
+          </thead>
+          <tbody id="invItemsBody">
+            <tr>
+              <td>
+                <strong id="invItemTitle">Enterprise SaaS Web Portal</strong>
+                <div style="font-size: 12px; color: #64748b;" id="invItemDesc">Corporate management & analytics portal development with cloud deployment.</div>
+              </td>
+              <td style="text-align: right;" id="invItemBasePrice">₹1,27,118.64</td>
+              <td style="text-align: right;" id="invItemTax">₹22,881.36</td>
+              <td style="text-align: right; font-weight: 700;" id="invItemTotal">₹1,50,000.00</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Summary Box -->
+      <div class="summary-section">
+        <div class="summary-box">
+          <div class="summary-row">
+            <span>Subtotal:</span>
+            <span id="invSubtotal">₹1,27,118.64</span>
+          </div>
+          <div class="summary-row">
+            <span>GST (18% Integrated):</span>
+            <span id="invTaxTotal">₹22,881.36</span>
+          </div>
+          <div class="summary-row total-row">
+            <span>Total Contract:</span>
+            <span id="invGrandTotal">₹1,50,000.00</span>
+          </div>
+          <div class="summary-row" style="color: #10b981; font-weight: 600;">
+            <span>Amount Paid:</span>
+            <span id="invPaidTotal">₹75,000.00</span>
+          </div>
+          <div class="summary-row balance-row" id="invBalanceRow">
+            <span>Remaining Balance Due:</span>
+            <span id="invRemainingTotal">₹75,000.00</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Transaction details if paid -->
+      <div id="invTransactionBox" class="p-3 bg-light rounded-3 mb-4" style="font-size: 12px; color: #475569; display: none;">
+        <strong>Payment Reference:</strong> <span id="invTxnId">TXN_123456789</span> &bull; 
+        <strong>Payment Method:</strong> <span id="invPayMethod">UPI / Net Banking</span> &bull; 
+        <strong>Settlement Timestamp:</strong> <span id="invPaidDate">2026-01-16</span>
+      </div>
+
+      <!-- Footer Note -->
+      <div class="footer-note">
+        Thank you for partnering with <strong>DevHorizan</strong>! All payments are processed through encrypted channels.<br>
+        For inquiries regarding this invoice, please reach out to <strong>devhorizan@gmail.com</strong> or call <strong>+91 98374 52608</strong>.
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let currentInvoice = null;
+
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Extract invoice ID from pathname /invoice/:id or search ?id=:id
+      const pathParts = window.location.pathname.split('/');
+      let invId = pathParts[pathParts.length - 1];
+      if (!invId || invId === 'invoice' || invId === 'invoice.html') {
+        const params = new URLSearchParams(window.location.search);
+        invId = params.get('id') || 1;
+      }
+
+      await loadInvoiceData(invId);
+    });
+
+    async function loadInvoiceData(id) {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/payments/${id}`, {
+          headers: token ? { 'Authorization': `Bearer ${token}` } : {}
+        });
+        const data = await res.json();
+
+        if (!data.success || !data.payment) {
+          showAlert('Invoice not found or access expired.', true);
+          return;
+        }
+
+        currentInvoice = data.payment;
+        populateInvoiceView(currentInvoice);
+      } catch (e) {
+        console.error(e);
+        showAlert('Unable to load invoice details.', true);
+      }
+    }
+
+    function populateInvoiceView(inv) {
+      document.getElementById('invNumber').textContent = inv.invoice_number;
+      document.getElementById('invDate').textContent = new Date(inv.created_at).toLocaleDateString();
+      document.getElementById('invDueDate').textContent = inv.due_date || 'Due Upon Receipt';
+
+      // Client details
+      document.getElementById('invClientName').textContent = inv.client_name;
+      document.getElementById('invClientInfo').innerHTML = `
+        ${inv.company_name ? inv.company_name + '<br>' : ''}
+        ${inv.client_address ? inv.client_address + '<br>' : ''}
+        Phone: ${inv.client_phone || 'N/A'}<br>
+        Email: ${inv.client_email}
+      `;
+
+      // Item calculations (total = subtotal + 18% GST)
+      const total = inv.total_amount;
+      const baseSubtotal = total / 1.18;
+      const gstTax = total - baseSubtotal;
+      const paid = inv.amount_paid;
+      const balance = inv.remaining_balance;
+
+      document.getElementById('invItemTitle').textContent = inv.project_title;
+      document.getElementById('invItemDesc').textContent = inv.project_description || inv.notes || 'Full cycle development and cloud engineering.';
+      document.getElementById('invItemBasePrice').textContent = `₹${baseSubtotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('invItemTax').textContent = `₹${gstTax.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('invItemTotal').textContent = `₹${total.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+      document.getElementById('invSubtotal').textContent = `₹${baseSubtotal.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('invTaxTotal').textContent = `₹${gstTax.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('invGrandTotal').textContent = `₹${total.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('invPaidTotal').textContent = `₹${paid.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+      document.getElementById('invRemainingTotal').textContent = `₹${balance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+      // Status Badge
+      const badge = document.getElementById('invBadge');
+      const payBtn = document.getElementById('btnPayOnline');
+      const balanceRow = document.getElementById('invBalanceRow');
+
+      if (inv.status === 'Paid') {
+        badge.className = 'invoice-status-badge status-paid';
+        badge.textContent = 'PAID IN FULL';
+        balanceRow.style.display = 'none';
+        payBtn.classList.add('d-none');
+
+        // Show transaction box
+        const txnBox = document.getElementById('invTransactionBox');
+        txnBox.style.display = 'block';
+        document.getElementById('invTxnId').textContent = inv.transaction_id || 'VERIFIED';
+        document.getElementById('invPayMethod').textContent = inv.payment_method || 'Online';
+        document.getElementById('invPaidDate').textContent = inv.paid_date ? new Date(inv.paid_date).toLocaleString() : 'Confirmed';
+      } else if (inv.status === 'Partially Paid') {
+        badge.className = 'invoice-status-badge status-partial';
+        badge.textContent = 'PARTIALLY PAID';
+        balanceRow.style.display = 'flex';
+        payBtn.classList.remove('d-none');
+      } else {
+        badge.className = 'invoice-status-badge status-due';
+        badge.textContent = 'PAYMENT DUE';
+        balanceRow.style.display = 'flex';
+        payBtn.classList.remove('d-none');
+      }
+    }
+
+    // Download PDF using html2pdf
+    function downloadInvoicePDF() {
+      const element = document.getElementById('invoicePrintArea');
+      const opt = {
+        margin: 10,
+        filename: `Invoice_${currentInvoice ? currentInvoice.invoice_number : 'DevHorizan'}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+      html2pdf().set(opt).from(element).save();
+    }
+
+    // Dispatch Invoice Email with Attached PDF
+    async function dispatchInvoiceEmail() {
+      if (!currentInvoice) return;
+      const btn = document.getElementById('btnEmailInvoice');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+      try {
+        const element = document.getElementById('invoicePrintArea');
+        const opt = {
+          margin: 10,
+          filename: `Invoice_${currentInvoice.invoice_number}.pdf`,
+          image: { type: 'jpeg', quality: 0.95 },
+          html2canvas: { scale: 2, useCORS: true },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+        };
+
+        const pdf = await html2pdf().set(opt).from(element).outputPdf('dataurlstring');
+        const pdfBase64 = pdf.split(',')[1];
+
+        const res = await fetch('/api/payments/send-invoice-email', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to_email: currentInvoice.client_email,
+            subject: `[DevHorizan] Official Invoice: ${currentInvoice.invoice_number}`,
+            message: `Dear ${currentInvoice.client_name},\n\nPlease find attached the official invoice (${currentInvoice.invoice_number}) for project "${currentInvoice.project_title}".\n\nTotal Contract: ₹${currentInvoice.total_amount.toLocaleString('en-IN')}\nAmount Paid: ₹${currentInvoice.amount_paid.toLocaleString('en-IN')}\nRemaining Balance: ₹${currentInvoice.remaining_balance.toLocaleString('en-IN')}\nStatus: ${currentInvoice.status}\n\nThank you for choosing DevHorizan!`,
+            pdf_base64: pdfBase64,
+            invoice_number: currentInvoice.invoice_number
+          })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          showAlert(`Invoice successfully emailed to ${currentInvoice.client_email}!`, false);
+        } else {
+          showAlert(`Failed to email invoice: ${data.message}`, true);
+        }
+      } catch (err) {
+        showAlert('Email dispatch error: ' + err.message, true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-paper-plane"></i> Email Invoice';
+      }
+    }
+
+    // Trigger Online Payment
+    async function triggerOnlinePayment() {
+      if (!currentInvoice) return;
+      const token = localStorage.getItem('devhorizan_token');
+      if (!token) {
+        alert('Please log in to your client portal to complete online payment.');
+        window.location.href = '/login';
+        return;
+      }
+
+      const amountToPay = currentInvoice.remaining_balance;
+      if (!confirm(`Confirm online payment of ₹${amountToPay.toLocaleString('en-IN')} for invoice ${currentInvoice.invoice_number}?`)) return;
+
+      try {
+        const res = await fetch(`/api/payments/${currentInvoice.id}/pay`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            amount: amountToPay,
+            payment_method: 'Online UPI / NetBanking',
+            transaction_id: `TXN_ONLINE_${Date.now()}`
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          showAlert('Payment successful! Transaction recorded.', false);
+          await loadInvoiceData(currentInvoice.id);
+        } else {
+          showAlert(data.message || 'Payment failed.', true);
+        }
+      } catch (e) {
+        showAlert('Payment server error.', true);
+      }
+    }
+
+    function showAlert(msg, isError) {
+      const el = document.getElementById('statusAlert');
+      el.className = `alert-bar ${isError ? 'error' : 'success'}`;
+      el.textContent = msg;
+      setTimeout(() => { el.style.display = 'none'; }, 6000);
+    }
+  </script>
+</body>
+</html>
+

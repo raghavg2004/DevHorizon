@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# Disallow admin and dashboard pages
+Disallow: /admin.html
+Disallow: /dashboard.html
+Disallow: /Due.html
+Disallow: /Paid.html
+
+# Sitemap
+Sitemap: https://devhorizan.vercel.app/sitemap.xml

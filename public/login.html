@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Client & Admin Portal - Login & Register | DevHorizan</title>
+  <meta name="description" content="Access your DevHorizan client portal. Manage projects, track milestones, negotiate revisions, and handle payments.">
+  <link href="assets/img/logo.png" rel="icon">
+  <link href="assets/img/logo.png" rel="apple-touch-icon">
+
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+  <link href="assets/css/main.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --primary-color: #388da8;
+      --secondary-color: #0f3460;
+      --accent-color: #2f6fed;
+      --light-bg: #f8fbfc;
+      --dark-text: #1e293b;
+      --light-text: #64748b;
+      --border-color: #e2e8f0;
+      --success-color: #13b37a;
+    }
+
+    body.auth-page {
+      background: radial-gradient(circle at 10% 20%, rgba(47, 111, 237, 0.08), transparent 30%),
+                  radial-gradient(circle at 90% 80%, rgba(19, 179, 122, 0.08), transparent 30%),
+                  #f1f5f9;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      padding: 24px;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 480px;
+    }
+
+    .auth-card {
+      background: white;
+      border-radius: 20px;
+      box-shadow: 0 15px 45px rgba(15, 23, 42, 0.08);
+      overflow: hidden;
+      border: 1px solid var(--border-color);
+      animation: slideUp 0.4s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .auth-header {
+      background: linear-gradient(135deg, var(--secondary-color) 0%, var(--primary-color) 100%);
+      color: white;
+      padding: 36px 30px;
+      text-align: center;
+      position: relative;
+    }
+
+    .auth-header .logo-img {
+      height: 48px;
+      margin-bottom: 12px;
+      filter: brightness(0) invert(1);
+    }
+
+    .auth-header h2 {
+      font-size: 24px;
+      font-weight: 700;
+      margin: 0;
+      color: white;
+      letter-spacing: -0.02em;
+    }
+
+    .auth-header p {
+      font-size: 14px;
+      opacity: 0.9;
+      margin: 6px 0 0;
+    }
+
+    .auth-body {
+      padding: 32px 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: var(--dark-text);
+      font-size: 13px;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      font-size: 14px;
+      transition: all 0.2s ease;
+      background: #f8fafc;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: var(--accent-color);
+      background: white;
+      box-shadow: 0 0 0 4px rgba(47, 111, 237, 0.12);
+    }
+
+    .password-toggle {
+      position: relative;
+    }
+
+    .password-toggle .toggle-icon {
+      position: absolute;
+      right: 14px;
+      top: 40px;
+      cursor: pointer;
+      color: #94a3b8;
+      font-size: 18px;
+      transition: color 0.2s;
+    }
+
+    .password-toggle .toggle-icon:hover {
+      color: var(--dark-text);
+    }
+
+    .btn-auth {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--accent-color), var(--primary-color));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 14px rgba(47, 111, 237, 0.25);
+    }
+
+    .btn-auth:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(47, 111, 237, 0.35);
+      color: white;
+    }
+
+    .btn-auth:disabled {
+      opacity: 0.7;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .auth-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 22px;
+      font-size: 13px;
+    }
+
+    .auth-meta a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .auth-meta a:hover {
+      text-decoration: underline;
+    }
+
+    .toggle-form {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 14px;
+      color: var(--light-text);
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .toggle-form a {
+      color: var(--accent-color);
+      text-decoration: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .toggle-form a:hover {
+      text-decoration: underline;
+    }
+
+    .demo-credentials {
+      background: #f8fafc;
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 14px 16px;
+      margin-top: 24px;
+      font-size: 12px;
+      color: #475569;
+    }
+
+    .demo-btn {
+      background: white;
+      border: 1px solid #cbd5e1;
+      border-radius: 6px;
+      padding: 4px 10px;
+      font-size: 11px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 4px;
+      transition: all 0.2s;
+    }
+
+    .demo-btn:hover {
+      border-color: var(--accent-color);
+      color: var(--accent-color);
+    }
+
+    .alert-banner {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .alert-banner.show {
+      display: block;
+    }
+
+    .alert-danger-custom {
+      background: #fef2f2;
+      color: #991b1b;
+      border: 1px solid #fecaca;
+    }
+
+    .alert-success-custom {
+      background: #ecfdf5;
+      color: #065f46;
+      border: 1px solid #a7f3d0;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+  </style>
+</head>
+
+<body class="auth-page">
+  <div class="auth-container">
+    <div class="text-center mb-4">
+      <a href="/" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; color: var(--secondary-color); font-weight: 700; font-size: 18px;">
+        <i class="bi bi-arrow-left"></i> Back to DevHorizan Website
+      </a>
+    </div>
+
+    <div class="auth-card">
+      <div class="auth-header">
+        <img src="assets/img/logo.png" alt="DevHorizan" class="logo-img">
+        <h2 id="headerTitle">Welcome Back</h2>
+        <p id="headerSubtitle">Sign in to your centralized portal</p>
+      </div>
+
+      <div class="auth-body">
+        <div id="alertBox" class="alert-banner"></div>
+
+        <!-- LOGIN FORM -->
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="form-group">
+            <label for="loginEmail">Email Address</label>
+            <input type="email" id="loginEmail" placeholder="you@company.com" required autocomplete="email">
+          </div>
+
+          <div class="form-group password-toggle">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required autocomplete="current-password">
+            <i class="bi bi-eye toggle-icon" onclick="togglePassword('loginPassword', this)"></i>
+          </div>
+
+          <div class="auth-meta">
+            <label class="d-flex align-items-center gap-2 mb-0" style="cursor: pointer;">
+              <input type="checkbox" id="rememberMe" checked class="form-check-input mt-0">
+              <span class="text-muted">Remember me</span>
+            </label>
+            <a href="/forgot-password">Forgot Password?</a>
+          </div>
+
+          <button type="submit" id="loginBtn" class="btn-auth">
+            <span class="btn-text">Sign In</span>
+          </button>
+
+          <div class="toggle-form">
+            Don't have an account yet? <a onclick="toggleMode('signup')">Create an Account</a>
+          </div>
+
+          <!-- Quick Test Credentials -->
+          <div class="demo-credentials">
+            <div class="fw-bold mb-1"><i class="bi bi-key-fill text-primary"></i> Quick Demo Access:</div>
+            <div class="d-flex justify-content-between align-items-center mt-1">
+              <span><strong>Admin:</strong> admin@devhorizan.com</span>
+              <button type="button" class="demo-btn" onclick="fillCredentials('admin@devhorizan.com', 'Admin@12345')">Fill Admin</button>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-1">
+              <span><strong>Client:</strong> client@devhorizan.com</span>
+              <button type="button" class="demo-btn" onclick="fillCredentials('client@devhorizan.com', 'Client@12345')">Fill Client</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- REGISTER FORM -->
+        <form id="signupForm" class="hidden" onsubmit="handleSignup(event)">
+          <div class="form-group">
+            <label for="signupName">Full Name</label>
+            <input type="text" id="signupName" placeholder="John Doe" required autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label for="signupEmail">Email Address</label>
+            <input type="email" id="signupEmail" placeholder="you@company.com" required autocomplete="email">
+          </div>
+
+          <div class="form-group">
+            <label for="signupCompany">Company Name (Optional)</label>
+            <input type="text" id="signupCompany" placeholder="Acme Corp" autocomplete="organization">
+          </div>
+
+          <div class="form-group">
+            <label for="signupPhone">Phone Number</label>
+            <input type="tel" id="signupPhone" placeholder="+91 98765 43210" autocomplete="tel">
+          </div>
+
+          <div class="form-group password-toggle">
+            <label for="signupPassword">Password</label>
+            <input type="password" id="signupPassword" placeholder="Minimum 6 characters" required autocomplete="new-password">
+            <i class="bi bi-eye toggle-icon" onclick="togglePassword('signupPassword', this)"></i>
+          </div>
+
+          <div class="form-group password-toggle">
+            <label for="confirmPassword">Confirm Password</label>
+            <input type="password" id="confirmPassword" placeholder="Re-enter your password" required autocomplete="new-password">
+            <i class="bi bi-eye toggle-icon" onclick="togglePassword('confirmPassword', this)"></i>
+          </div>
+
+          <div class="form-check mb-4">
+            <input type="checkbox" id="agreeTerms" class="form-check-input" required>
+            <label class="form-check-label" for="agreeTerms" style="font-size: 13px; color: var(--light-text);">
+              I agree to the <a href="/tos.html" target="_blank">Terms of Service</a> and <a href="/pp.html" target="_blank">Privacy Policy</a>
+            </label>
+          </div>
+
+          <button type="submit" id="signupBtn" class="btn-auth">
+            <span class="btn-text">Create Client Account</span>
+          </button>
+
+          <div class="toggle-form">
+            Already have an account? <a onclick="toggleMode('login')">Sign In</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Switch between Login and Signup modes
+    function toggleMode(mode) {
+      const loginForm = document.getElementById('loginForm');
+      const signupForm = document.getElementById('signupForm');
+      const headerTitle = document.getElementById('headerTitle');
+      const headerSubtitle = document.getElementById('headerSubtitle');
+      const alertBox = document.getElementById('alertBox');
+      alertBox.className = 'alert-banner';
+      alertBox.textContent = '';
+
+      if (mode === 'signup') {
+        loginForm.classList.add('hidden');
+        signupForm.classList.remove('hidden');
+        headerTitle.textContent = 'Create Account';
+        headerSubtitle.textContent = 'Join the DevHorizan Client Portal';
+      } else {
+        signupForm.classList.add('hidden');
+        loginForm.classList.remove('hidden');
+        headerTitle.textContent = 'Welcome Back';
+        headerSubtitle.textContent = 'Sign in to your centralized portal';
+      }
+    }
+
+    // Toggle password reveal
+    function togglePassword(inputId, icon) {
+      const input = document.getElementById(inputId);
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.classList.remove('bi-eye');
+        icon.classList.add('bi-eye-slash');
+      } else {
+        input.type = 'password';
+        icon.classList.remove('bi-eye-slash');
+        icon.classList.add('bi-eye');
+      }
+    }
+
+    // Fill Demo Credentials
+    function fillCredentials(email, pass) {
+      document.getElementById('loginEmail').value = email;
+      document.getElementById('loginPassword').value = pass;
+    }
+
+    // Show Alert
+    function showAlert(msg, isError = true) {
+      const alertBox = document.getElementById('alertBox');
+      alertBox.className = `alert-banner ${isError ? 'alert-danger-custom' : 'alert-success-custom'} show`;
+      alertBox.textContent = msg;
+    }
+
+    // Handle Login
+    async function handleLogin(event) {
+      event.preventDefault();
+      const email = document.getElementById('loginEmail').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      const btn = document.getElementById('loginBtn');
+
+      if (!email || !password) {
+        showAlert('Please fill in both email and password.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.querySelector('.btn-text').textContent = 'Signing in...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          showAlert(data.message || 'Invalid login credentials.');
+          btn.disabled = false;
+          btn.querySelector('.btn-text').textContent = 'Sign In';
+          return;
+        }
+
+        showAlert('Login successful! Redirecting...', false);
+        localStorage.setItem('devhorizan_token', data.token);
+        localStorage.setItem('devhorizan_user', JSON.stringify(data.user));
+
+        setTimeout(() => {
+          if (data.user.role === 'admin') {
+            showAlert('Admin credentials detected. Redirecting to Admin Console on Port 4000...', false);
+            window.location.href = 'http://' + window.location.hostname + ':4000/admin';
+          } else {
+            window.location.href = '/dashboard';
+          }
+        }, 500);
+      } catch (err) {
+        showAlert('Network or server error during login.');
+        btn.disabled = false;
+        btn.querySelector('.btn-text').textContent = 'Sign In';
+      }
+    }
+
+    // Handle Signup
+    async function handleSignup(event) {
+      event.preventDefault();
+      const full_name = document.getElementById('signupName').value.trim();
+      const email = document.getElementById('signupEmail').value.trim();
+      const company_name = document.getElementById('signupCompany').value.trim();
+      const phone = document.getElementById('signupPhone').value.trim();
+      const password = document.getElementById('signupPassword').value;
+      const confirmPassword = document.getElementById('confirmPassword').value;
+      const btn = document.getElementById('signupBtn');
+
+      if (password !== confirmPassword) {
+        showAlert('Passwords do not match!');
+        return;
+      }
+
+      if (password.length < 6) {
+        showAlert('Password must be at least 6 characters long.');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.querySelector('.btn-text').textContent = 'Creating account...';
+
+      try {
+        const res = await fetch('/api/auth/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ full_name, email, company_name, phone, password })
+        });
+
+        const data = await res.json();
+
+        if (!data.success) {
+          showAlert(data.message || 'Failed to create account.');
+          btn.disabled = false;
+          btn.querySelector('.btn-text').textContent = 'Create Client Account';
+          return;
+        }
+
+        showAlert('Account created successfully! Redirecting to your dashboard...', false);
+        localStorage.setItem('devhorizan_token', data.token);
+        localStorage.setItem('devhorizan_user', JSON.stringify(data.user));
+
+        setTimeout(() => {
+          window.location.href = '/dashboard';
+        }, 800);
+      } catch (err) {
+        showAlert('Network or server error during registration.');
+        btn.disabled = false;
+        btn.querySelector('.btn-text').textContent = 'Create Client Account';
+      }
+    }
+
+    // Check if query string has ?mode=signup
+    document.addEventListener('DOMContentLoaded', () => {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get('mode') === 'signup') {
+        toggleMode('signup');
+      }
+    });
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,2437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Admin Command Center | DevHorizan</title>
+  <link href="assets/img/logo.png" rel="icon">
+  
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com" rel="preconnect">
+  <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <!-- Vendor CSS Files -->
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --admin-navy: #091a33;
+      --admin-sidebar: #0d2342;
+      --primary: #2f6fed;
+      --secondary: #388da8;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --bg: #f8fafc;
+      --border: #e2e8f0;
+      --sidebar-width: 270px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      background-color: var(--bg);
+      font-family: 'Inter', -apple-system, sans-serif;
+      color: #1e293b;
+      min-height: 100vh;
+      overflow-x: hidden;
+      margin: 0;
+    }
+
+    /* Sidebar */
+    .admin-sidebar {
+      width: var(--sidebar-width);
+      background: var(--admin-sidebar);
+      position: fixed;
+      top: 0;
+      left: 0;
+      bottom: 0;
+      z-index: 1000;
+      padding: 24px 16px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 4px 0 20px rgba(0,0,0,0.08);
+      transition: all 0.3s;
+    }
+
+    .sidebar-brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 0 12px 24px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      margin-bottom: 24px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .sidebar-brand img {
+      height: 38px;
+      filter: brightness(0) invert(1);
+    }
+
+    .admin-pill {
+      background: var(--danger);
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      letter-spacing: 0.05em;
+    }
+
+    .sidebar-nav {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      flex-grow: 1;
+    }
+
+    .nav-item a {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 16px;
+      border-radius: 10px;
+      color: #94a3b8;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .nav-item a:hover {
+      background: rgba(255,255,255,0.06);
+      color: white;
+    }
+
+    .nav-item a.active {
+      background: linear-gradient(135deg, var(--primary), var(--secondary));
+      color: white;
+      font-weight: 600;
+      box-shadow: 0 4px 14px rgba(47, 111, 237, 0.35);
+    }
+
+    .nav-item i {
+      font-size: 18px;
+    }
+
+    /* Main Area */
+    .admin-wrapper {
+      margin-left: var(--sidebar-width);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .admin-topbar {
+      height: 70px;
+      background: white;
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 990;
+    }
+
+    .admin-content {
+      padding: 32px;
+      flex-grow: 1;
+    }
+
+    .tab-section { display: none; }
+    .tab-section.active { display: block; animation: fadeIn 0.3s ease; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .metric-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 22px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .metric-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.06);
+    }
+
+    .metric-icon {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .metric-val {
+      font-size: 26px;
+      font-weight: 700;
+      color: #0f172a;
+      letter-spacing: -0.02em;
+      margin: 8px 0 2px;
+    }
+
+    .metric-label {
+      font-size: 13px;
+      color: #64748b;
+      font-weight: 500;
+    }
+
+    .badge-status {
+      padding: 6px 12px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .status-in-progress { background: #e0f2fe; color: #0369a1; }
+    .status-approved { background: #ecfdf5; color: #047857; }
+    .status-completed { background: #dcfce7; color: #15803d; }
+    .status-pending { background: #fef3c7; color: #b45309; }
+    .status-revision { background: #fee2e2; color: #b91c1c; }
+    .status-on-hold { background: #f1f5f9; color: #475569; }
+    .status-rejected { background: #f1f5f9; color: #94a3b8; }
+
+    .progress {
+      height: 8px;
+      border-radius: 999px;
+      background-color: #e2e8f0;
+    }
+
+    .progress-bar {
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+    }
+
+    /* Requests Queue Split View (Same Page Window Fit) */
+    .req-queue-card {
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .req-queue-card:hover {
+      border-color: var(--primary);
+      background-color: #f8fafc;
+      transform: translateY(-1px);
+    }
+    .req-queue-card.active-req {
+      border-color: #3b82f6 !important;
+      background: #eff6ff !important;
+      box-shadow: 0 3px 10px rgba(59, 130, 246, 0.14);
+    }
+    .req-queue-scroll {
+      overflow-y: auto;
+      scrollbar-width: thin;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ADMIN SIDEBAR -->
+  <aside class="admin-sidebar">
+    <a href="/" class="sidebar-brand">
+      <img src="assets/img/DH.png" alt="DevHorizan">
+      <div>
+        <!--<div class="fw-bold" style="font-size: 18px;">DevHorizan</div>-->
+      </div>
+      <span class="admin-pill">ADMIN CONSOLE</span>
+    </a>
+
+    <ul class="sidebar-nav">
+      <li class="nav-item">
+        <a href="#dashboard" class="active" onclick="switchAdminTab('dashboard')">
+          <i class="bi bi-grid-1x2"></i> Overview
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#users" onclick="switchAdminTab('users')">
+          <i class="bi bi-people"></i> User Management
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#projects" onclick="switchAdminTab('projects')">
+          <i class="bi bi-kanban"></i> Project Management
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#requests" onclick="switchAdminTab('requests')">
+          <i class="bi bi-file-earmark-text"></i> Requests & Negotiations
+          <span id="adminPendingReqBadge" class="badge bg-danger rounded-pill ms-auto d-none">0</span>
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#billing" onclick="switchAdminTab('billing')">
+          <i class="bi bi-cash-coin"></i> Payments & Dues
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#activity" onclick="switchAdminTab('activity')">
+          <i class="bi bi-clock-history"></i> Audit Activity Logs
+        </a>
+      </li>
+    </ul>
+
+    <div class="pt-3 border-top border-secondary">
+      <div class="d-flex align-items-center justify-content-between px-2">
+        <div class="text-white small">
+          <div id="adminNameDisplay" class="fw-bold text-truncate" style="max-width: 150px;">Administrator</div>
+          <div class="text-white-50" style="font-size: 11px;">Super Admin</div>
+        </div>
+        <button onclick="handleLogout()" class="btn btn-sm btn-outline-light border-0" title="Sign Out">
+          <i class="bi bi-box-arrow-right fs-5"></i>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ADMIN MAIN WRAPPER -->
+  <div class="admin-wrapper">
+    <!-- TOPBAR -->
+    <header class="admin-topbar">
+      <div>
+        <h4 id="adminPageHeading" class="fw-bold mb-0 text-dark fs-5">Executive Overview</h4>
+        <span class="text-muted small">Manage clients, projects, budget negotiations, and payments.</span>
+      </div>
+
+      <div class="d-flex align-items-center gap-3">
+        <a href="http://localhost:3000" id="linkToPublicSite" target="_blank" class="btn btn-outline-secondary rounded-pill btn-sm px-3 fw-medium">
+          <i class="bi bi-globe me-1"></i> Public Website (Port 3000)
+        </a>
+
+        <button class="btn btn-primary rounded-pill btn-sm px-3 fw-semibold shadow-sm" onclick="openCreateProjectModal()">
+          <i class="bi bi-plus-lg me-1"></i> Create Project
+        </button>
+
+        <!-- Admin Notifications -->
+        <div class="dropdown">
+          <button class="btn btn-light rounded-circle position-relative border" data-bs-toggle="dropdown" style="width: 42px; height: 42px;">
+            <i class="bi bi-bell fs-5 text-secondary"></i>
+            <span id="adminNotifBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="font-size: 10px;">
+              0
+            </span>
+          </button>
+          <div class="dropdown-menu dropdown-menu-end p-0" style="width: 360px; max-height: 420px; overflow-y: auto;">
+            <div class="p-3 border-bottom d-flex justify-content-between align-items-center bg-light">
+              <span class="fw-bold text-dark fs-6">Admin Notifications</span>
+              <button onclick="markAllNotificationsRead()" class="btn btn-link btn-sm text-decoration-none p-0 text-primary" style="font-size: 12px;">Mark all read</button>
+            </div>
+            <div id="adminNotifList" class="p-0">
+              <div class="p-4 text-center text-muted small">No notifications.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- CONTENT AREA -->
+    <main class="admin-content">
+
+      <!-- ================= 1. OVERVIEW TAB ================= -->
+      <section id="tab-dashboard" class="tab-section active">
+        <!-- Revenue & Financial KPI Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-xl-4 col-sm-6">
+            <div class="metric-card border-start border-4 border-primary">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="metric-label">Total Contracted Revenue</div>
+                  <div class="metric-val text-primary" id="kpiTotalRevenue">₹0</div>
+                  <div class="text-muted small">All signed client projects</div>
+                </div>
+                <div class="metric-icon" style="background: #eff6ff; color: #2563eb;">
+                  <i class="bi bi-currency-rupee"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-4 col-sm-6">
+            <div class="metric-card border-start border-4 border-success">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="metric-label">Payments Received</div>
+                  <div class="metric-val text-success" id="kpiTotalReceived">₹0</div>
+                  <div class="text-muted small">Realized cash in bank</div>
+                </div>
+                <div class="metric-icon" style="background: #f0fdf4; color: #16a34a;">
+                  <i class="bi bi-check2-circle"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-xl-4 col-sm-6">
+            <div class="metric-card border-start border-4 border-danger">
+              <div class="d-flex justify-content-between align-items-start">
+                <div>
+                  <div class="metric-label">Outstanding Balances Due</div>
+                  <div class="metric-val text-danger" id="kpiTotalOutstanding">₹0</div>
+                  <div class="text-muted small">Pending milestone invoices</div>
+                </div>
+                <div class="metric-icon" style="background: #fef2f2; color: #dc2626;">
+                  <i class="bi bi-hourglass-split"></i>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Operational Metric Cards -->
+        <div class="row g-4 mb-4">
+          <div class="col-xl-3 col-sm-6">
+            <div class="metric-card">
+              <div class="metric-label">Registered Clients</div>
+              <div class="metric-val" id="kpiTotalUsers">0</div>
+              <div class="text-muted small">Active enterprise accounts</div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6">
+            <div class="metric-card">
+              <div class="metric-label">Active Projects</div>
+              <div class="metric-val text-info" id="kpiActiveProjects">0</div>
+              <div class="text-muted small">In development & review</div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6">
+            <div class="metric-card">
+              <div class="metric-label">Delivered Projects</div>
+              <div class="metric-val text-success" id="kpiCompletedProjects">0</div>
+              <div class="text-muted small">Successfully completed</div>
+            </div>
+          </div>
+          <div class="col-xl-3 col-sm-6">
+            <div class="metric-card">
+              <div class="metric-label">Pending Requests</div>
+              <div class="metric-val text-warning" id="kpiPendingRequests">0</div>
+              <div class="text-muted small">Awaiting review / revisions</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Activity Feed & Quick Actions -->
+        <div class="row g-4">
+          <div class="col-lg-8">
+            <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h5 class="fw-bold mb-0 text-dark">Live Platform Activity Log</h5>
+                <a href="#activity" onclick="switchAdminTab('activity')" class="text-primary text-decoration-none small fw-semibold">View Full Audit Log &rarr;</a>
+              </div>
+              <div class="table-responsive">
+                <table class="table align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Action</th>
+                      <th>Entity</th>
+                      <th>Performed By</th>
+                      <th>Details</th>
+                      <th>Time</th>
+                    </tr>
+                  </thead>
+                  <tbody id="adminRecentActivityTable">
+                    <tr><td colspan="5" class="text-center text-muted py-4">Loading activities...</td></tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-lg-4">
+            <div class="card border-0 rounded-4 shadow-sm p-4 bg-white h-100">
+              <h5 class="fw-bold mb-3 text-dark">Project Category Breakdown</h5>
+              <div id="categoryBreakdownList" class="d-flex flex-column gap-3">
+                <div class="text-center text-muted py-4">Loading analytics...</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 2. USER MANAGEMENT TAB ================= -->
+      <section id="tab-users" class="tab-section">
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+              <h4 class="fw-bold text-dark mb-1">Registered Users</h4>
+              <p class="text-muted small mb-0">Search, filter, view projects & financial history, and manage access.</p>
+            </div>
+            <div class="d-flex gap-2">
+              <input type="text" id="userSearchInput" class="form-control form-control-sm rounded-pill" placeholder="Search name or email..." oninput="debounceUserSearch()" style="width: 220px;">
+              <select id="userStatusFilter" class="form-select form-select-sm rounded-pill" onchange="loadUsersList()" style="width: 140px;">
+                <option value="">All Statuses</option>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Client Name</th>
+                  <th>Email & Phone</th>
+                  <th>Company</th>
+                  <th>Projects</th>
+                  <th>Total Spent</th>
+                  <th>Status</th>
+                  <th>Joined</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <tr><td colspan="8" class="text-center text-muted py-4">Loading users...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 3. PROJECT MANAGEMENT TAB ================= -->
+      <section id="tab-projects" class="tab-section">
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+              <h4 class="fw-bold text-dark mb-1">Project Portfolio</h4>
+              <p class="text-muted small mb-0">Track delivery status, adjust progress, manage milestones, and post updates.</p>
+            </div>
+            <button class="btn btn-primary rounded-pill btn-sm px-3 fw-semibold" onclick="openCreateProjectModal()">
+              <i class="bi bi-plus-lg me-1"></i> New Project
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Project Name</th>
+                  <th>Client</th>
+                  <th>Category</th>
+                  <th>Budget</th>
+                  <th>Status</th>
+                  <th>Completion</th>
+                  <th>Delivery</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="projectsTableBody">
+                <tr><td colspan="8" class="text-center text-muted py-4">Loading projects...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 4. PROJECT REQUESTS & REVISION WORKFLOW TAB ================= -->
+      <section id="tab-requests" class="tab-section">
+        <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+          <div>
+            <h4 class="fw-bold text-dark mb-1">Project Requests & Negotiations</h4>
+            <p class="text-muted small mb-0">Review client proposals, negotiate revisions, and approve into active projects.</p>
+          </div>
+          <div class="d-flex align-items-center gap-2">
+            <select id="requestStatusFilter" class="form-select form-select-sm rounded-pill" onchange="loadRequestsList()" style="width: 170px;">
+              <option value="">All Statuses</option>
+              <option value="Submitted">Submitted (New)</option>
+              <option value="Under Admin Review">Under Review</option>
+              <option value="Revision Requested">Revision Requested</option>
+              <option value="Approved">Approved</option>
+              <option value="Rejected">Rejected</option>
+            </select>
+            <div class="btn-group btn-group-sm rounded-pill p-1 bg-white border shadow-sm" role="group">
+              <button type="button" class="btn btn-sm rounded-pill px-3 fw-semibold btn-primary" id="btnReqViewSplit" onclick="toggleRequestView('split')">
+                <i class="bi bi-layout-sidebar-inset me-1"></i> Split Window
+              </button>
+              <button type="button" class="btn btn-sm rounded-pill px-3 fw-semibold btn-light text-muted" id="btnReqViewTable" onclick="toggleRequestView('table')">
+                <i class="bi bi-table me-1"></i> Data Table
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 1. SPLIT WINDOW VIEW (DEFAULT): Fits in the same page window -->
+        <div id="requestSplitContainer" class="row g-3" style="height: calc(100vh - 195px); min-height: 580px;">
+          <!-- Left Column: Request Queue Cards -->
+          <div class="col-lg-4 col-xl-4 d-flex flex-column h-100">
+            <div class="card border-0 rounded-4 shadow-sm bg-white p-3 h-100 d-flex flex-column">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <span class="fw-bold text-dark small text-uppercase" style="letter-spacing: 0.5px; font-size: 11px;">Requests Queue</span>
+                <span class="badge bg-primary-subtle text-primary border border-primary-subtle rounded-pill" id="splitReqCountBadge">0 Total</span>
+              </div>
+              <div class="mb-2">
+                <input type="text" id="splitReqSearchInput" class="form-control form-control-sm rounded-pill" placeholder="Search project or client..." oninput="filterSplitRequests()">
+              </div>
+              <div id="splitRequestsList" class="flex-grow-1 req-queue-scroll pe-1">
+                <div class="text-center text-muted small py-4">Loading requests...</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Project View & Negotiation Command Center (Same Page Window) -->
+          <div class="col-lg-8 col-xl-8 d-flex flex-column h-100">
+            <div class="card border-0 rounded-4 shadow-sm bg-white h-100 d-flex flex-column overflow-hidden" id="splitProjectViewCard">
+              <!-- Header Bar of Project View -->
+              <div class="p-3 border-bottom bg-light d-flex justify-content-between align-items-start gap-2 flex-wrap">
+                <div>
+                  <div class="d-flex align-items-center gap-2 mb-1">
+                    <span class="badge bg-primary rounded-pill fw-bold" id="spvCode">REQ-XXXX</span>
+                    <span class="badge bg-light text-secondary border" id="spvType">Type</span>
+                    <span class="badge-status" id="spvStatusBadge">Submitted</span>
+                  </div>
+                  <h5 class="fw-bold text-dark mb-1" id="spvTitle">Select a project request</h5>
+                  <div class="text-muted small">
+                    <i class="bi bi-person text-secondary me-1"></i> <span id="spvClientName" class="fw-semibold text-dark">-</span> •
+                    <span id="spvClientEmail" class="text-muted">-</span>
+                    <span id="spvClientPhone" class="ms-1 text-muted"></span>
+                  </div>
+                </div>
+                <div class="text-end">
+                  <span class="text-muted small fw-bold text-uppercase d-block" style="font-size: 11px;">Expected Budget</span>
+                  <h4 class="fw-bold text-primary mb-0" id="spvBudget">₹0</h4>
+                  <div class="text-muted small" style="font-size: 11px;">Target: <span id="spvDeadline" class="fw-semibold text-dark">-</span></div>
+                </div>
+              </div>
+
+              <!-- Main Content Body: Specs & Negotiation in 2 side-by-side columns -->
+              <div class="flex-grow-1 overflow-y-auto p-3" id="spvBody">
+                <div class="row g-3">
+                  <!-- Left Specs Column -->
+                  <div class="col-md-6 d-flex flex-column">
+                    <div class="mb-3">
+                      <h6 class="fw-bold text-dark small text-uppercase mb-2" style="font-size: 11px; letter-spacing: 0.5px;">
+                        <i class="bi bi-file-earmark-text text-primary me-1"></i> Description & Scope
+                      </h6>
+                      <div class="p-3 bg-light rounded-3 border small text-dark" id="spvDesc" style="min-height: 90px; max-height: 160px; overflow-y: auto; line-height: 1.5;">
+                        Select a request to inspect details.
+                      </div>
+                    </div>
+
+                    <div>
+                      <h6 class="fw-bold text-dark small text-uppercase mb-2" style="font-size: 11px; letter-spacing: 0.5px;">
+                        <i class="bi bi-check2-square text-success me-1"></i> Required Features & Notes
+                      </h6>
+                      <div class="p-3 bg-light rounded-3 border small text-muted" id="spvFeatures" style="min-height: 90px; max-height: 160px; overflow-y: auto; line-height: 1.5;">
+                        No extra features specified.
+                      </div>
+                    </div>
+                  </div>
+
+                  <!-- Right Negotiation Timeline Column -->
+                  <div class="col-md-6 d-flex flex-column">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                      <h6 class="fw-bold text-dark small text-uppercase mb-0" style="font-size: 11px; letter-spacing: 0.5px;">
+                        <i class="bi bi-clock-history text-secondary me-1"></i> Negotiation Rounds & History
+                      </h6>
+                      <span class="badge bg-secondary rounded-pill" id="spvRevCount">0 rounds</span>
+                    </div>
+                    <div id="spvRevisionsList" class="p-2 border rounded-3 bg-light flex-grow-1 overflow-y-auto" style="min-height: 200px; max-height: 350px;">
+                      <div class="text-muted small text-center py-4">No revision proposals yet.</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pinned Action Bar at Bottom of Project View Card -->
+              <div class="p-3 border-top bg-light d-flex justify-content-between align-items-center flex-wrap gap-2" id="spvFooter">
+                <div class="text-muted small">
+                  <i class="bi bi-calendar3 me-1"></i> <span id="spvSubmittedDate">Submitted: -</span>
+                </div>
+                <div class="d-flex align-items-center gap-2" id="spvActionBtns">
+                  <!-- Actions dynamically populated -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. FULL DATA TABLE VIEW (Alternative view mode) -->
+        <div id="requestTableContainer" class="card border-0 rounded-4 shadow-sm p-4 bg-white d-none">
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Request ID</th>
+                  <th>Client</th>
+                  <th>Project Title</th>
+                  <th>Type</th>
+                  <th>Proposed Budget</th>
+                  <th>Status</th>
+                  <th>Submitted</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="requestsTableBody">
+                <tr><td colspan="8" class="text-center text-muted py-4">Loading requests...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 5. BILLING & PAYMENTS TAB ================= -->
+      <section id="tab-billing" class="tab-section">
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+          <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+            <div>
+              <h4 class="fw-bold text-dark mb-1">Payment & Invoice Management</h4>
+              <p class="text-muted small mb-0">Record payments, track dues, auto-calculate balances, and send 1-click reminders.</p>
+            </div>
+            <button class="btn btn-primary rounded-pill btn-sm px-3 fw-semibold" onclick="openCreatePaymentModal()">
+              <i class="bi bi-plus-lg me-1"></i> Issue Invoice
+            </button>
+          </div>
+
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Invoice #</th>
+                  <th>Client</th>
+                  <th>Project</th>
+                  <th>Total Cost</th>
+                  <th>Paid Amount</th>
+                  <th>Remaining Balance</th>
+                  <th>Status</th>
+                  <th>Due Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminPaymentsTableBody">
+                <tr><td colspan="9" class="text-center text-muted py-4">Loading payment records...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ================= 6. AUDIT ACTIVITY LOGS TAB ================= -->
+      <section id="tab-activity" class="tab-section">
+        <div class="card border-0 rounded-4 shadow-sm p-4 bg-white">
+          <h4 class="fw-bold text-dark mb-1">Full Audit Activity Trail</h4>
+          <p class="text-muted small mb-4">Immutable record of system operations, status adjustments, revisions, and transactions.</p>
+          <div class="table-responsive">
+            <table class="table align-middle">
+              <thead class="table-light">
+                <tr>
+                  <th>Action</th>
+                  <th>Entity Type</th>
+                  <th>User / Admin</th>
+                  <th>Details</th>
+                  <th>IP Address</th>
+                  <th>Timestamp</th>
+                </tr>
+              </thead>
+              <tbody id="fullActivityTableBody">
+                <tr><td colspan="6" class="text-center text-muted py-4">Loading audit logs...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <!-- ================= ADMIN MODALS ================= -->
+
+  <!-- 1. Create Project Modal -->
+  <div class="modal fade" id="createProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header border-bottom p-4">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-kanban text-primary me-2"></i> Create & Assign New Project</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="createProjectForm" onsubmit="handleCreateProject(event)">
+          <div class="modal-body p-4">
+            <div class="row g-3">
+              <div class="col-md-7">
+                <label class="form-label small fw-bold">Project Title *</label>
+                <input type="text" id="adminProjTitle" class="form-control" required placeholder="e.g. AI Powered CRM Dashboard">
+              </div>
+              <div class="col-md-5">
+                <label class="form-label small fw-bold">Assign to Client *</label>
+                <select id="adminProjUserSelect" class="form-select" required>
+                  <option value="">Select Client...</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Category</label>
+                <select id="adminProjCategory" class="form-select">
+                  <option value="Web Development">Web Development</option>
+                  <option value="Android Development">Android Development</option>
+                  <option value="UI/UX Design">UI/UX Design</option>
+                  <option value="API Development & Integration">API Development & Integration</option>
+                  <option value="Maintenance & Support">Maintenance & Support</option>
+                  <option value="Consultation">Consultation</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Total Project Cost (INR ₹) *</label>
+                <input type="number" id="adminProjCost" class="form-control" placeholder="100000" required min="1000">
+              </div>
+              <div class="col-12">
+                <label class="form-label small fw-bold">Description & Scope</label>
+                <textarea id="adminProjDesc" class="form-control" rows="3" placeholder="Provide complete specifications..."></textarea>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Start Date</label>
+                <input type="date" id="adminProjStart" class="form-control">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label small fw-bold">Expected Delivery Date</label>
+                <input type="date" id="adminProjEnd" class="form-control">
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-top p-3 bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Create & Deploy Project</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Edit Project & Milestones Modal -->
+  <div class="modal fade" id="editProjectModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header border-bottom p-4">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-sliders text-primary me-2"></i> Manage Project & Milestones</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body p-4">
+          <div class="row g-4">
+            <!-- Left: Edit Project Status & Progress -->
+            <div class="col-lg-6">
+              <h6 class="fw-bold text-dark mb-3">Project Details & Delivery State</h6>
+              <form id="editProjectForm" onsubmit="handleSaveProjectEdits(event)">
+                <input type="hidden" id="editProjectId">
+                <div class="mb-3">
+                  <label class="form-label small fw-bold">Project Title</label>
+                  <input type="text" id="editProjTitle" class="form-control" required>
+                </div>
+                <div class="row g-3 mb-3">
+                  <div class="col-6">
+                    <label class="form-label small fw-bold">Status</label>
+                    <select id="editProjStatus" class="form-select">
+                      <option value="Pending">Pending</option>
+                      <option value="Approved">Approved</option>
+                      <option value="In Progress">In Progress</option>
+                      <option value="Under Review">Under Review</option>
+                      <option value="On Hold">On Hold</option>
+                      <option value="Completed">Completed</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </div>
+                  <div class="col-6">
+                    <label class="form-label small fw-bold">Completion: <span id="progressValDisplay">0%</span></label>
+                    <input type="range" id="editProjProgress" class="form-range" min="0" max="100" oninput="document.getElementById('progressValDisplay').textContent = this.value + '%'">
+                  </div>
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold">Total Cost (INR ₹)</label>
+                  <input type="number" id="editProjCost" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold">Target Delivery Date</label>
+                  <input type="date" id="editProjEnd" class="form-control">
+                </div>
+                <div class="mb-3">
+                  <label class="form-label small fw-bold">Description</label>
+                  <textarea id="editProjDesc" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Save Project Changes</button>
+              </form>
+            </div>
+
+            <!-- Right: Manage Milestones & Post Update -->
+            <div class="col-lg-6 border-start ps-lg-4">
+              <!-- Post Live Update to Client -->
+              <div class="card p-3 border rounded-3 bg-light mb-4">
+                <h6 class="fw-bold text-dark mb-2"><i class="bi bi-broadcast text-primary me-1"></i> Post Update to Client</h6>
+                <form id="postUpdateForm" onsubmit="handlePostUpdate(event)">
+                  <input type="text" id="updateTitleInput" class="form-control form-control-sm mb-2" placeholder="Update Title (e.g. Sprint 3 Deployed)" required>
+                  <textarea id="updateContentInput" class="form-control form-control-sm mb-2" rows="2" placeholder="Details (Client will receive an instant notification & email)..." required></textarea>
+                  <button type="submit" class="btn btn-dark btn-sm rounded-pill px-3 fw-semibold">Publish Update</button>
+                </form>
+              </div>
+
+              <!-- Milestones List & Form -->
+              <h6 class="fw-bold text-dark mb-2">Milestones</h6>
+              <div id="adminMilestonesList" class="d-flex flex-column gap-2 mb-3" style="max-height: 200px; overflow-y: auto;">
+                <div class="text-muted small">Loading milestones...</div>
+              </div>
+
+              <form id="addMilestoneForm" onsubmit="handleAddMilestone(event)">
+                <div class="input-group input-group-sm">
+                  <input type="text" id="newMilestoneTitle" class="form-control" placeholder="New milestone title..." required>
+                  <input type="date" id="newMilestoneDate" class="form-control" style="max-width: 130px;">
+                  <button type="submit" class="btn btn-outline-primary fw-bold">Add</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Send Revision Proposal Modal (BUDGET & SCOPE NEGOTIATION WORKFLOW) -->
+  <div class="modal fade" id="sendRevisionModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header bg-warning-subtle border-bottom p-4">
+          <div>
+            <span class="badge bg-warning text-dark mb-1">Budget Negotiation Workflow</span>
+            <h5 class="modal-title fw-bold text-dark"><i class="bi bi-arrow-left-right text-dark me-2"></i> Send Revision Proposal to Client</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="revisionProposalForm" onsubmit="handleSendRevisionProposal(event)">
+          <input type="hidden" id="revReqId">
+          <div class="modal-body p-4">
+            <div class="card p-3 border-warning bg-light mb-4">
+              <div class="d-flex justify-content-between align-items-center">
+                <div>
+                  <span class="text-muted small">Project Request</span>
+                  <h5 class="fw-bold text-dark mb-0" id="revReqTitleDisplay">Project Name</h5>
+                </div>
+                <div class="text-end">
+                  <span class="text-muted small">Client Proposed Budget</span>
+                  <h4 class="fw-bold text-secondary mb-0" id="revReqBudgetDisplay">₹0</h4>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Suggested Revised Budget (INR ₹) *</label>
+              <input type="number" id="adminRevBudget" class="form-control fw-bold text-primary fs-5" placeholder="e.g. 95000" required min="1000">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Reason for Revision *</label>
+              <textarea id="adminRevReason" class="form-control" rows="2" placeholder="e.g. The proposed budget of ₹60,000 does not cover real-time GPS tracking and multi-vendor infrastructure." required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Updated Requirements & Scope Changes</label>
+              <textarea id="adminRevScope" class="form-control" rows="3" placeholder="Detail proposed phased delivery or technical adjustments..."></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Additional Comments / Advice for Client</label>
+              <input type="text" id="adminRevComments" class="form-control" placeholder="Optional notes for client...">
+            </div>
+
+            <div class="alert alert-info py-2 px-3 small rounded-3 mb-0">
+              <i class="bi bi-info-circle me-1"></i> Client will receive an in-app notification and email alert. They can accept, decline, or counter-submit.
+            </div>
+          </div>
+          <div class="modal-footer border-top p-3 bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" id="btnSubmitRevision" class="btn btn-warning rounded-pill px-4 fw-bold text-dark">Send Proposal to Client</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3b. Request Details & Negotiation History Modal (Expanded 2-Column Window Fit) -->
+  <div class="modal fade" id="adminRequestDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-xl">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header border-bottom p-3" style="background: linear-gradient(135deg, #eff6ff, #f8fafc);">
+          <div>
+            <div class="d-flex align-items-center gap-2 mb-1">
+              <span class="badge bg-primary rounded-pill" id="admReqCode">REQ-XXXX</span>
+              <span class="badge bg-light text-secondary border" id="admReqType">Type</span>
+              <span class="badge-status" id="admReqStatusBadge">Status</span>
+            </div>
+            <h5 class="modal-title fw-bold text-dark mb-0" id="admReqTitle">Project Request Details</h5>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+
+        <div class="modal-body p-3">
+          <input type="hidden" id="admReqActiveId">
+          <div class="row g-3">
+            <!-- Left Column: Specs & Client -->
+            <div class="col-lg-6">
+              <div class="card p-3 border-0 bg-light rounded-3 mb-3">
+                <div class="row g-2">
+                  <div class="col-sm-6 border-end">
+                    <span class="text-muted small fw-bold text-uppercase d-block" style="font-size: 11px;">Client Name</span>
+                    <strong class="text-dark" id="admReqClientName">-</strong>
+                    <div class="text-muted small text-truncate" id="admReqClientEmail">-</div>
+                  </div>
+                  <div class="col-sm-6">
+                    <span class="text-muted small fw-bold text-uppercase d-block" style="font-size: 11px;">Current Expected Budget</span>
+                    <h5 class="text-primary fw-bold mb-0" id="admReqBudget">₹0</h5>
+                    <div class="text-muted small" style="font-size: 11px;">Target Delivery: <span id="admReqDeadline">-</span></div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="mb-3">
+                <h6 class="fw-bold text-dark small text-uppercase mb-1" style="font-size: 11px;"><i class="bi bi-file-earmark-text text-primary me-1"></i> Project Description & Requirements</h6>
+                <div class="p-3 bg-white rounded-3 border small text-dark" id="admReqDesc" style="max-height: 130px; overflow-y: auto; line-height: 1.5;">-</div>
+              </div>
+
+              <div class="mb-2" id="admReqFeaturesBox">
+                <h6 class="fw-bold text-dark small text-uppercase mb-1" style="font-size: 11px;"><i class="bi bi-check2-square text-success me-1"></i> Required Features & Additional Notes</h6>
+                <div class="p-3 bg-white rounded-3 border small text-muted" id="admReqFeatures" style="max-height: 130px; overflow-y: auto; line-height: 1.5;">-</div>
+              </div>
+            </div>
+
+            <!-- Right Column: Negotiation Rounds & History -->
+            <div class="col-lg-6">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="fw-bold text-dark small text-uppercase mb-0" style="font-size: 11px;"><i class="bi bi-clock-history text-secondary me-1"></i> Negotiation Rounds & History</h6>
+                <span class="badge bg-secondary rounded-pill" id="admReqRevCount">0 rounds</span>
+              </div>
+              <div id="admReqRevisionsList" class="p-2 border rounded-3 bg-light" style="max-height: 360px; overflow-y: auto;">
+                <div class="text-muted small text-center py-2">No revision rounds.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="modal-footer border-top p-3 bg-light d-flex justify-content-between flex-wrap gap-2">
+          <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Close</button>
+          <div class="d-flex gap-2" id="admReqActionBtns">
+            <!-- Dynamic Actions -->
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Issue Invoice Modal -->
+  <div class="modal fade" id="createPaymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header border-bottom p-4">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-receipt text-primary me-2"></i> Issue New Payment Invoice</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="createPaymentForm" onsubmit="handleCreatePayment(event)">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Select Active Project *</label>
+              <select id="invoiceProjSelect" class="form-select" required onchange="handleInvoiceProjectChange()">
+                <option value="">Choose project...</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Total Invoice Amount (INR ₹) *</label>
+              <input type="number" id="invoiceAmount" class="form-control fw-bold" required min="100">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Required Advance Deposit (INR ₹)</label>
+              <input type="number" id="invoiceAdvance" class="form-control" placeholder="0">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Payment Due Date</label>
+              <input type="date" id="invoiceDueDate" class="form-control">
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Invoice Notes</label>
+              <input type="text" id="invoiceNotes" class="form-control" placeholder="e.g. Milestone 2 completion billing">
+            </div>
+          </div>
+          <div class="modal-footer border-top p-3 bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-primary rounded-pill px-4 fw-bold">Issue & Dispatch Invoice</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Record Manual Payment Modal -->
+  <div class="modal fade" id="recordPaymentModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content border-0 rounded-4 shadow">
+        <div class="modal-header border-bottom p-4">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-cash-coin text-success me-2"></i> Record Payment / Update Balance</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="recordPaymentForm" onsubmit="handleSavePaymentRecord(event)">
+          <input type="hidden" id="recPaymentId">
+          <div class="modal-body p-4">
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Invoice Number</label>
+              <input type="text" id="recInvoiceNum" class="form-control" readonly disabled>
+            </div>
+            <div class="row g-3 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-bold">Total Cost</label>
+                <input type="number" id="recTotalAmount" class="form-control" required>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-bold">Amount Paid (INR ₹)</label>
+                <input type="number" id="recAmountPaid" class="form-control fw-bold text-success" required>
+              </div>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Payment Status</label>
+              <select id="recStatus" class="form-select">
+                <option value="Paid">Paid in Full</option>
+                <option value="Partially Paid">Partially Paid</option>
+                <option value="Pending">Pending</option>
+                <option value="Overdue">Overdue</option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Transaction / Reference ID</label>
+              <input type="text" id="recTxnId" class="form-control" placeholder="e.g. TXN_9876543210">
+            </div>
+          </div>
+          <div class="modal-footer border-top p-3 bg-light">
+            <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" class="btn btn-success rounded-pill px-4 fw-bold">Save Payment Record</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- Bootstrap JS -->
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- ADMIN APPLICATION SCRIPT -->
+  <script>
+    let currentAdmin = null;
+    let allUsers = [];
+    let allProjects = [];
+    let allRequests = [];
+    let allPayments = [];
+    let searchDebounceTimeout = null;
+
+    // Check Admin Auth on Load
+    document.addEventListener('DOMContentLoaded', async () => {
+      // Set link to public site based on current hostname
+      const pubLink = document.getElementById('linkToPublicSite');
+      if (pubLink) pubLink.href = 'http://' + window.location.hostname + ':3000';
+
+      const token = localStorage.getItem('devhorizan_admin_token') || localStorage.getItem('devhorizan_token');
+      if (!token) {
+        window.location.href = '/login';
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/auth/me', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+
+        if (!data.success || !data.user || data.user.role !== 'admin') {
+          window.location.href = '/login';
+          return;
+        }
+
+        currentAdmin = data.user;
+        document.getElementById('adminNameDisplay').textContent = currentAdmin.full_name;
+
+        await loadAdminOverview();
+        await loadUsersList();
+        await loadProjectsList();
+        await loadRequestsList();
+        await loadPaymentsList();
+        await loadAdminNotifications();
+
+        const hash = window.location.hash.replace('#', '');
+        if (hash && ['dashboard', 'users', 'projects', 'requests', 'billing', 'activity'].includes(hash)) {
+          switchAdminTab(hash);
+        }
+      } catch (err) {
+        console.error('Admin auth check failed:', err);
+        window.location.href = '/login';
+      }
+    });
+
+    // Tab Switcher
+    function switchAdminTab(tabId) {
+      document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.sidebar-nav .nav-item a').forEach(el => el.classList.remove('active'));
+
+      const targetTab = document.getElementById(`tab-${tabId}`);
+      if (targetTab) targetTab.classList.add('active');
+
+      const activeLink = document.querySelector(`.sidebar-nav a[href="#${tabId}"]`);
+      if (activeLink) activeLink.classList.add('active');
+
+      const titles = {
+        dashboard: 'Executive Overview',
+        users: 'User Management',
+        projects: 'Project Portfolio',
+        requests: 'Project Requests & Negotiations',
+        billing: 'Payment & Invoice Management',
+        activity: 'Audit Activity Logs'
+      };
+      document.getElementById('adminPageHeading').textContent = titles[tabId] || 'Admin Console';
+      window.location.hash = tabId;
+
+      if (tabId === 'activity') loadFullActivity();
+    }
+
+    // Load Admin Overview Data
+    async function loadAdminOverview() {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch('/api/reports/dashboard', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          const s = data.stats;
+          document.getElementById('kpiTotalRevenue').textContent = `₹${s.totalRevenue.toLocaleString('en-IN')}`;
+          document.getElementById('kpiTotalReceived').textContent = `₹${s.totalReceived.toLocaleString('en-IN')}`;
+          document.getElementById('kpiTotalOutstanding').textContent = `₹${s.totalOutstanding.toLocaleString('en-IN')}`;
+
+          document.getElementById('kpiTotalUsers').textContent = s.totalUsers;
+          document.getElementById('kpiActiveProjects').textContent = s.activeProjects;
+          document.getElementById('kpiCompletedProjects').textContent = s.completedProjects;
+          document.getElementById('kpiPendingRequests').textContent = s.pendingRequests;
+
+          // Badges
+          if (s.pendingRequests > 0) {
+            const b = document.getElementById('adminPendingReqBadge');
+            b.textContent = s.pendingRequests;
+            b.classList.remove('d-none');
+          }
+
+          // Recent Activity
+          const tbody = document.getElementById('adminRecentActivityTable');
+          if (data.recentActivities.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-3">No activity logged yet.</td></tr>';
+          } else {
+            tbody.innerHTML = data.recentActivities.map(a => `
+              <tr>
+                <td><span class="fw-bold text-dark">${a.action}</span></td>
+                <td><span class="badge bg-light text-secondary border">${a.entity_type}</span></td>
+                <td>${a.user_name || 'System'}</td>
+                <td class="text-muted small">${a.details || ''}</td>
+                <td class="text-muted small">${new Date(a.created_at).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</td>
+              </tr>
+            `).join('');
+          }
+
+          // Category Breakdown
+          const catList = document.getElementById('categoryBreakdownList');
+          if (data.categoryBreakdown.length === 0) {
+            catList.innerHTML = '<div class="text-muted text-center py-3">No category data.</div>';
+          } else {
+            catList.innerHTML = data.categoryBreakdown.map(c => `
+              <div class="d-flex justify-content-between align-items-center p-2 border-bottom">
+                <span class="fw-semibold text-dark">${c.category}</span>
+                <span class="badge bg-primary-subtle text-primary fw-bold px-3 py-1 rounded-pill">${c.count} Projects</span>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    // Load Users List
+    async function loadUsersList() {
+      const token = localStorage.getItem('devhorizan_token');
+      const search = document.getElementById('userSearchInput').value.trim();
+      const status = document.getElementById('userStatusFilter').value;
+
+      try {
+        let url = '/api/users?role=client';
+        if (search) url += `&search=${encodeURIComponent(search)}`;
+        if (status) url += `&status=${encodeURIComponent(status)}`;
+
+        const res = await fetch(url, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          allUsers = data.users;
+          renderUsersTable();
+          populateUserDropdowns();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function debounceUserSearch() {
+      clearTimeout(searchDebounceTimeout);
+      searchDebounceTimeout = setTimeout(loadUsersList, 300);
+    }
+
+    function renderUsersTable() {
+      const tbody = document.getElementById('usersTableBody');
+      if (allUsers.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No users found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allUsers.map(u => `
+        <tr>
+          <td>
+            <div class="fw-bold text-dark">${u.full_name}</div>
+            <div class="text-muted small">ID: #${u.id}</div>
+          </td>
+          <td>
+            <div>${u.email}</div>
+            <div class="text-muted small">${u.phone || 'No phone'}</div>
+          </td>
+          <td>${u.company_name || '—'}</td>
+          <td><span class="badge bg-light text-primary border">${u.project_count}</span></td>
+          <td class="fw-semibold">₹${u.total_spent.toLocaleString('en-IN')}</td>
+          <td>
+            <span class="badge ${u.status === 'active' ? 'bg-success-subtle text-success' : 'bg-danger-subtle text-danger'} rounded-pill">
+              ${u.status}
+            </span>
+          </td>
+          <td class="text-muted small">${new Date(u.created_at).toLocaleDateString()}</td>
+          <td>
+            <div class="dropdown">
+              <button class="btn btn-sm btn-light border rounded-pill" data-bs-toggle="dropdown">
+                <i class="bi bi-three-dots-vertical"></i>
+              </button>
+              <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="toggleUserStatus(${u.id}, '${u.status === 'active' ? 'inactive' : 'active'}')">${u.status === 'active' ? 'Deactivate Account' : 'Activate Account'}</a></li>
+                <li><a class="dropdown-item" href="javascript:void(0)" onclick="promptDirectNotification(${u.id}, '${u.full_name}')">Send Notification</a></li>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    function populateUserDropdowns() {
+      const select = document.getElementById('adminProjUserSelect');
+      select.innerHTML = '<option value="">Select Client...</option>' +
+        allUsers.map(u => `<option value="${u.id}">${u.full_name} (${u.email})</option>`).join('');
+    }
+
+    // Toggle User Status
+    async function toggleUserStatus(userId, newStatus) {
+      if (!confirm(`Are you sure you want to change user status to ${newStatus}?`)) return;
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/users/${userId}/status`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status: newStatus })
+        });
+        const data = await res.json();
+        alert(data.message);
+        loadUsersList();
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Prompt Direct Notification
+    async function promptDirectNotification(userId, name) {
+      const title = prompt(`Enter notification subject for ${name}:`);
+      if (!title) return;
+      const message = prompt(`Enter message content:`);
+      if (!message) return;
+      const sendEmail = confirm(`Also dispatch an email to ${name}?`);
+
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/users/${userId}/notify`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ title, message, send_email: sendEmail })
+        });
+        const data = await res.json();
+        alert(data.message);
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Load Projects List
+    async function loadProjectsList() {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch('/api/projects', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          allProjects = data.projects;
+          renderProjectsTable();
+          populateInvoiceProjectSelect();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderProjectsTable() {
+      const tbody = document.getElementById('projectsTableBody');
+      if (allProjects.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No projects registered.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allProjects.map(p => `
+        <tr>
+          <td>
+            <div class="fw-bold text-dark">${p.title}</div>
+            <div class="text-muted small">#PRJ-${p.id}</div>
+          </td>
+          <td>
+            <div>${p.client_name}</div>
+            <div class="text-muted small">${p.client_email}</div>
+          </td>
+          <td><span class="badge bg-light text-secondary border">${p.category}</span></td>
+          <td class="fw-bold">₹${p.total_cost.toLocaleString('en-IN')}</td>
+          <td><span class="badge-status ${getStatusClass(p.status)}">${p.status}</span></td>
+          <td style="width: 140px;">
+            <div class="d-flex justify-content-between small text-muted mb-1">
+              <span>${p.progress_percent}%</span>
+            </div>
+            <div class="progress">
+              <div class="progress-bar" style="width: ${p.progress_percent}%"></div>
+            </div>
+          </td>
+          <td class="text-muted small">${p.expected_delivery_date || 'N/A'}</td>
+          <td>
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-primary rounded-pill" onclick="openEditProjectModal(${p.id})">
+                <i class="bi bi-sliders"></i> Manage
+              </button>
+              <button class="btn btn-sm btn-outline-danger rounded-pill" onclick="deleteProject(${p.id})" title="Delete">
+                <i class="bi bi-trash"></i>
+              </button>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Delete Project
+    async function deleteProject(projectId) {
+      if (!confirm('Are you sure you want to permanently delete this project? All milestones, updates, and documents will be deleted.')) return;
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/projects/${projectId}`, {
+          method: 'DELETE',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        alert(data.message);
+        loadProjectsList();
+        loadAdminOverview();
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Open Create Project Modal
+    function openCreateProjectModal() {
+      const modal = new bootstrap.Modal(document.getElementById('createProjectModal'));
+      modal.show();
+    }
+
+    // Handle Create Project
+    async function handleCreateProject(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const user_id = document.getElementById('adminProjUserSelect').value;
+      const title = document.getElementById('adminProjTitle').value.trim();
+      const category = document.getElementById('adminProjCategory').value;
+      const total_cost = document.getElementById('adminProjCost').value;
+      const description = document.getElementById('adminProjDesc').value.trim();
+      const start_date = document.getElementById('adminProjStart').value;
+      const expected_delivery_date = document.getElementById('adminProjEnd').value;
+
+      try {
+        const res = await fetch('/api/projects', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            user_id,
+            title,
+            category,
+            total_cost,
+            description,
+            start_date,
+            expected_delivery_date
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Project created successfully!');
+          document.getElementById('createProjectForm').reset();
+          const modalEl = document.getElementById('createProjectModal');
+          const instance = bootstrap.Modal.getInstance(modalEl);
+          if (instance) instance.hide();
+          loadProjectsList();
+          loadPaymentsList();
+          loadAdminOverview();
+        } else {
+          alert(data.message);
+        }
+      } catch (err) {
+        alert('Server error creating project.');
+      }
+    }
+
+    // Open Edit Project & Milestones Modal
+    async function openEditProjectModal(projectId) {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/projects/${projectId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!data.success) return;
+
+        const p = data.project;
+        document.getElementById('editProjectId').value = p.id;
+        document.getElementById('editProjTitle').value = p.title;
+        document.getElementById('editProjStatus').value = p.status;
+        document.getElementById('editProjProgress').value = p.progress_percent;
+        document.getElementById('progressValDisplay').textContent = `${p.progress_percent}%`;
+        document.getElementById('editProjCost').value = p.total_cost;
+        document.getElementById('editProjEnd').value = p.expected_delivery_date || '';
+        document.getElementById('editProjDesc').value = p.description || '';
+
+        renderAdminMilestones(p.milestones, p.id);
+
+        const modal = new bootstrap.Modal(document.getElementById('editProjectModal'));
+        modal.show();
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderAdminMilestones(milestones, projectId) {
+      const list = document.getElementById('adminMilestonesList');
+      if (!milestones || milestones.length === 0) {
+        list.innerHTML = '<div class="text-muted small py-2">No milestones added yet. Add one below.</div>';
+        return;
+      }
+
+      list.innerHTML = milestones.map(m => `
+        <div class="p-2 border rounded-3 bg-white d-flex justify-content-between align-items-center">
+          <div>
+            <div class="fw-semibold text-dark small">${m.title}</div>
+            <div class="text-muted" style="font-size: 11px;">Due: ${m.due_date || 'Flexible'} • Status: ${m.status}</div>
+          </div>
+          <div>
+            ${m.status !== 'Completed' ? `
+              <button class="btn btn-sm btn-outline-success py-0 px-2 rounded-pill" onclick="toggleMilestoneCompleted(${projectId}, ${m.id})">Mark Complete</button>
+            ` : '<span class="badge bg-success-subtle text-success">Completed</span>'}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Toggle Milestone Completed
+    async function toggleMilestoneCompleted(projectId, milestoneId) {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        await fetch(`/api/projects/${projectId}/milestones/${milestoneId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ status: 'Completed' })
+        });
+        openEditProjectModal(projectId);
+      } catch (e) {}
+    }
+
+    // Handle Add Milestone
+    async function handleAddMilestone(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const projectId = document.getElementById('editProjectId').value;
+      const title = document.getElementById('newMilestoneTitle').value.trim();
+      const due_date = document.getElementById('newMilestoneDate').value;
+
+      try {
+        const res = await fetch(`/api/projects/${projectId}/milestones`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ title, due_date })
+        });
+        const data = await res.json();
+        if (data.success) {
+          document.getElementById('newMilestoneTitle').value = '';
+          openEditProjectModal(projectId);
+        }
+      } catch (e) {}
+    }
+
+    // Handle Post Project Update to Client
+    async function handlePostUpdate(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const projectId = document.getElementById('editProjectId').value;
+      const title = document.getElementById('updateTitleInput').value.trim();
+      const content = document.getElementById('updateContentInput').value.trim();
+
+      try {
+        const res = await fetch(`/api/projects/${projectId}/updates`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ title, content })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Update posted! Client has been notified via in-app notification & email.');
+          document.getElementById('postUpdateForm').reset();
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Handle Save Project Edits
+    async function handleSaveProjectEdits(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const projectId = document.getElementById('editProjectId').value;
+      const title = document.getElementById('editProjTitle').value.trim();
+      const status = document.getElementById('editProjStatus').value;
+      const progress_percent = document.getElementById('editProjProgress').value;
+      const total_cost = document.getElementById('editProjCost').value;
+      const expected_delivery_date = document.getElementById('editProjEnd').value;
+      const description = document.getElementById('editProjDesc').value.trim();
+
+      try {
+        const res = await fetch(`/api/projects/${projectId}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            title,
+            status,
+            progress_percent,
+            total_cost,
+            expected_delivery_date,
+            description
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Project changes saved.');
+          const modalEl = document.getElementById('editProjectModal');
+          const instance = bootstrap.Modal.getInstance(modalEl);
+          if (instance) instance.hide();
+          loadProjectsList();
+          loadAdminOverview();
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    let currentSelectedRequestId = null;
+    let currentRequestViewMode = 'split'; // 'split' or 'table'
+
+    function toggleRequestView(mode) {
+      currentRequestViewMode = mode;
+      const splitCont = document.getElementById('requestSplitContainer');
+      const tableCont = document.getElementById('requestTableContainer');
+      const btnSplit = document.getElementById('btnReqViewSplit');
+      const btnTable = document.getElementById('btnReqViewTable');
+
+      if (mode === 'split') {
+        splitCont.classList.remove('d-none');
+        tableCont.classList.add('d-none');
+        btnSplit.className = 'btn btn-sm rounded-pill px-3 fw-semibold btn-primary';
+        btnTable.className = 'btn btn-sm rounded-pill px-3 fw-semibold btn-light text-muted';
+      } else {
+        splitCont.classList.add('d-none');
+        tableCont.classList.remove('d-none');
+        btnSplit.className = 'btn btn-sm rounded-pill px-3 fw-semibold btn-light text-muted';
+        btnTable.className = 'btn btn-sm rounded-pill px-3 fw-semibold btn-primary';
+      }
+    }
+
+    // Load Requests List
+    async function loadRequestsList() {
+      const token = localStorage.getItem('devhorizan_token');
+      const filter = document.getElementById('requestStatusFilter').value;
+
+      try {
+        const res = await fetch('/api/requests', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          allRequests = filter ? data.requests.filter(r => r.status === filter) : data.requests;
+          renderRequestsTable();
+          renderSplitRequestsQueue();
+
+          // Auto-select in split view (Same Page Window)
+          if (allRequests.length > 0) {
+            const hasCurrent = allRequests.some(r => r.id === currentSelectedRequestId);
+            const targetId = hasCurrent ? currentSelectedRequestId : allRequests[0].id;
+            selectRequestForView(targetId);
+          } else {
+            renderEmptySplitView();
+          }
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderEmptySplitView() {
+      currentSelectedRequestId = null;
+      document.getElementById('spvCode').textContent = 'N/A';
+      document.getElementById('spvType').textContent = '-';
+      document.getElementById('spvStatusBadge').className = 'badge bg-secondary';
+      document.getElementById('spvStatusBadge').textContent = 'None';
+      document.getElementById('spvTitle').textContent = 'No project requests found';
+      document.getElementById('spvClientName').textContent = '-';
+      document.getElementById('spvClientEmail').textContent = '';
+      document.getElementById('spvClientPhone').textContent = '';
+      document.getElementById('spvBudget').textContent = '₹0';
+      document.getElementById('spvDeadline').textContent = '-';
+      document.getElementById('spvDesc').innerHTML = '<span class="text-muted">No requests under this filter.</span>';
+      document.getElementById('spvFeatures').innerHTML = '<span class="text-muted">No details.</span>';
+      document.getElementById('spvSubmittedDate').textContent = 'Submitted: -';
+      document.getElementById('spvRevCount').textContent = '0 rounds';
+      document.getElementById('spvRevisionsList').innerHTML = '<div class="text-muted small text-center py-4">No records to display.</div>';
+      document.getElementById('spvActionBtns').innerHTML = '';
+    }
+
+    function renderSplitRequestsQueue(filteredList = null) {
+      const list = filteredList || allRequests;
+      const container = document.getElementById('splitRequestsList');
+      document.getElementById('splitReqCountBadge').textContent = `${list.length} Total`;
+
+      if (list.length === 0) {
+        container.innerHTML = '<div class="text-center text-muted small py-4">No requests found.</div>';
+        return;
+      }
+
+      container.innerHTML = list.map(r => {
+        const isActive = currentSelectedRequestId === r.id;
+        const hasCounter = r.latest_revision_status === 'Resubmitted' || (r.status === 'Under Admin Review' && r.latest_revision_id);
+        const isRevisionRequested = r.status === 'Revision Requested';
+
+        return `
+          <div class="req-queue-card ${isActive ? 'active-req' : ''}" id="queueCard-${r.id}" onclick="selectRequestForView(${r.id})">
+            <div class="d-flex justify-content-between align-items-center mb-1">
+              <span class="badge bg-light text-primary border fw-bold" style="font-size: 11px;">${r.request_code}</span>
+              <span class="badge-status ${getStatusClass(r.status)}" style="font-size: 11px; padding: 3px 8px;">${r.status}</span>
+            </div>
+            <div class="fw-bold text-dark fs-6 text-truncate mb-1">${r.project_name}</div>
+            <div class="d-flex justify-content-between align-items-center text-muted small" style="font-size: 12px;">
+              <span class="text-truncate" style="max-width: 140px;">${r.client_name}</span>
+              <span class="fw-bold text-primary">₹${r.expected_budget.toLocaleString('en-IN')}</span>
+            </div>
+            ${hasCounter ? `
+              <div class="mt-2 pt-1 border-top">
+                <span class="badge bg-info-subtle text-info border border-info" style="font-size: 10px;">
+                  <i class="bi bi-arrow-repeat me-1"></i> Client Countered (Round #${r.latest_revision_number || 1})
+                </span>
+              </div>
+            ` : ''}
+            ${isRevisionRequested ? `
+              <div class="mt-2 pt-1 border-top">
+                <span class="badge bg-warning-subtle text-dark border border-warning" style="font-size: 10px;">
+                  <i class="bi bi-hourglass me-1"></i> Awaiting Client (Round #${r.latest_revision_number || 1})
+                </span>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterSplitRequests() {
+      const term = (document.getElementById('splitReqSearchInput').value || '').trim().toLowerCase();
+      if (!term) {
+        renderSplitRequestsQueue();
+        return;
+      }
+      const filtered = allRequests.filter(r =>
+        (r.project_name || '').toLowerCase().includes(term) ||
+        (r.client_name || '').toLowerCase().includes(term) ||
+        (r.request_code || '').toLowerCase().includes(term) ||
+        (r.status || '').toLowerCase().includes(term)
+      );
+      renderSplitRequestsQueue(filtered);
+    }
+
+    // Interactive Select Request for Project View on Same Page Window
+    async function selectRequestForView(requestId) {
+      currentSelectedRequestId = requestId;
+
+      // Update active state in queue list
+      document.querySelectorAll('.req-queue-card').forEach(el => el.classList.remove('active-req'));
+      const activeCard = document.getElementById(`queueCard-${requestId}`);
+      if (activeCard) activeCard.classList.add('active-req');
+
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/requests/${requestId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!data.success) return;
+
+        const req = data.request;
+        const revs = req.revisions || [];
+
+        // 1. Populate Same-Page Project View
+        document.getElementById('spvCode').textContent = req.request_code;
+        document.getElementById('spvType').textContent = req.project_type;
+        document.getElementById('spvStatusBadge').className = `badge-status ${getStatusClass(req.status)}`;
+        document.getElementById('spvStatusBadge').textContent = req.status;
+
+        document.getElementById('spvTitle').textContent = req.project_name;
+        document.getElementById('spvClientName').textContent = req.client_name;
+        document.getElementById('spvClientEmail').textContent = req.client_email;
+        document.getElementById('spvClientPhone').textContent = req.client_phone ? `• ${req.client_phone}` : '';
+        document.getElementById('spvBudget').textContent = `₹${req.expected_budget.toLocaleString('en-IN')}`;
+        document.getElementById('spvDeadline').textContent = req.expected_deadline || 'Flexible';
+        document.getElementById('spvDesc').textContent = req.description;
+        document.getElementById('spvFeatures').textContent = req.required_features || req.additional_requirements || 'No extra features specified.';
+        document.getElementById('spvSubmittedDate').textContent = `Submitted: ${new Date(req.created_at).toLocaleDateString()}`;
+
+        document.getElementById('spvRevCount').textContent = `${revs.length} round${revs.length === 1 ? '' : 's'}`;
+
+        const spvRevList = document.getElementById('spvRevisionsList');
+        if (revs.length === 0) {
+          spvRevList.innerHTML = '<div class="text-muted small text-center py-4">No revision proposals have been created for this request.</div>';
+        } else {
+          spvRevList.innerHTML = revs.map(rv => `
+            <div class="p-2 bg-white border rounded-3 mb-2 small shadow-sm">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-bold text-dark"><i class="bi bi-arrow-repeat text-primary me-1"></i> Round #${rv.revision_number} (${new Date(rv.created_at).toLocaleDateString()})</span>
+                <span class="badge ${rv.status === 'Accepted' ? 'bg-success' : rv.status === 'Resubmitted' ? 'bg-primary' : rv.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark'}" style="font-size: 10px;">${rv.status}</span>
+              </div>
+              <div class="row g-1 mb-1" style="font-size: 12px;">
+                <div class="col-7"><strong>Admin Offer:</strong> <span class="text-primary fw-bold">₹${rv.proposed_budget.toLocaleString('en-IN')}</span></div>
+                <div class="col-5 text-end text-muted" style="font-size: 11px;">${rv.status}</div>
+              </div>
+              <div class="text-muted" style="font-size: 12px;"><strong>Reason:</strong> ${rv.reason_for_revision}</div>
+              ${rv.updated_requirements ? `<div class="text-muted mt-1" style="font-size: 12px;"><strong>Adjustments:</strong> ${rv.updated_requirements}</div>` : ''}
+              ${rv.admin_comments ? `<div class="text-muted mt-1" style="font-size: 12px;"><strong>Admin Comments:</strong> ${rv.admin_comments}</div>` : ''}
+              ${rv.user_response_notes ? `
+                <div class="mt-1 p-2 bg-light rounded text-dark border" style="font-size: 11px;">
+                  <strong><i class="bi bi-chat-left-dots text-primary me-1"></i> Client Response (${rv.responded_at ? new Date(rv.responded_at).toLocaleDateString() : ''}):</strong>
+                  <div>${rv.user_response_notes}</div>
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+        }
+
+        // Action Buttons in Project View
+        const spvActionBtns = document.getElementById('spvActionBtns');
+        if (req.status === 'Submitted' || req.status === 'Under Admin Review' || req.status === 'Revision Requested') {
+          spvActionBtns.innerHTML = `
+            <button class="btn btn-success rounded-pill px-3 fw-bold btn-sm shadow-sm" onclick="approveRequest(${req.id}, ${req.expected_budget})">
+              <i class="bi bi-check-lg me-1"></i> Approve (₹${req.expected_budget.toLocaleString('en-IN')})
+            </button>
+            <button class="btn btn-warning rounded-pill px-3 fw-bold text-dark btn-sm shadow-sm" onclick="openSendRevisionModal(${req.id}, '${req.project_name.replace(/'/g, "\\'")}', ${req.expected_budget})">
+              <i class="bi bi-arrow-repeat me-1"></i> Propose Revision
+            </button>
+            <button class="btn btn-outline-danger rounded-pill px-3 btn-sm" onclick="rejectRequest(${req.id})">
+              <i class="bi bi-x-lg me-1"></i> Reject
+            </button>
+            <button class="btn btn-outline-secondary rounded-pill px-2 btn-sm" onclick="openAdminRequestDetailsModal(${req.id})" title="Expand Popout View">
+              <i class="bi bi-arrows-angle-expand"></i>
+            </button>
+          `;
+        } else {
+          spvActionBtns.innerHTML = `
+            <span class="badge bg-light text-muted border p-2">Status: ${req.status}</span>
+            <button class="btn btn-outline-secondary rounded-pill px-2 btn-sm ms-2" onclick="openAdminRequestDetailsModal(${req.id})" title="Expand Popout View">
+              <i class="bi bi-arrows-angle-expand"></i>
+            </button>
+          `;
+        }
+      } catch (err) {
+        console.error('Error selecting request:', err);
+      }
+    }
+
+    function renderRequestsTable() {
+      const tbody = document.getElementById('requestsTableBody');
+      if (allRequests.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No requests found.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allRequests.map(r => {
+        const hasCounter = r.latest_revision_status === 'Resubmitted' || (r.status === 'Under Admin Review' && r.latest_revision_id);
+        const isRevisionRequested = r.status === 'Revision Requested';
+
+        return `
+        <tr>
+          <td><span class="badge bg-light text-primary border">${r.request_code}</span></td>
+          <td>
+            <div class="fw-bold text-dark">${r.client_name}</div>
+            <div class="text-muted small">${r.client_email}</div>
+          </td>
+          <td>
+            <div class="fw-semibold text-dark">${r.project_name}</div>
+            <div class="text-muted small text-truncate" style="max-width: 220px;">${r.description}</div>
+            ${hasCounter ? `
+              <div class="mt-1">
+                <span class="badge bg-info-subtle text-info border border-info" style="font-size: 11px;">
+                  <i class="bi bi-arrow-repeat me-1"></i> Client Countered (Round #${r.latest_revision_number || 1})
+                </span>
+                ${r.latest_revision_user_notes ? `<span class="text-muted small ms-1 fst-italic">"${r.latest_revision_user_notes}"</span>` : ''}
+              </div>
+            ` : ''}
+            ${isRevisionRequested ? `
+              <div class="mt-1">
+                <span class="badge bg-warning-subtle text-dark border border-warning" style="font-size: 11px;">
+                  <i class="bi bi-hourglass me-1"></i> Awaiting Client (Round #${r.latest_revision_number || 1}: ₹${(r.latest_revision_budget || r.expected_budget).toLocaleString('en-IN')})
+                </span>
+              </div>
+            ` : ''}
+          </td>
+          <td><span class="badge bg-light text-secondary border">${r.project_type}</span></td>
+          <td>
+            <div class="fw-bold">₹${r.expected_budget.toLocaleString('en-IN')}</div>
+            ${r.latest_revision_budget && r.status === 'Revision Requested' ? `
+              <div class="text-warning small fw-semibold" style="font-size: 11px;">Proposed: ₹${r.latest_revision_budget.toLocaleString('en-IN')}</div>
+            ` : ''}
+          </td>
+          <td><span class="badge-status ${getStatusClass(r.status)}">${r.status}</span></td>
+          <td class="text-muted small">${new Date(r.created_at).toLocaleDateString()}</td>
+          <td>
+            <div class="d-flex gap-1 flex-wrap">
+              <button class="btn btn-sm btn-outline-primary rounded-pill px-2" onclick="selectRequestForView(${r.id}); toggleRequestView('split');" title="View Specs & Negotiation in Window">
+                <i class="bi bi-eye me-1"></i> View
+              </button>
+              ${r.status === 'Submitted' || r.status === 'Under Admin Review' || r.status === 'Revision Requested' ? `
+                <button class="btn btn-sm btn-success rounded-pill px-2" onclick="approveRequest(${r.id}, ${r.expected_budget})" title="Approve Request">Approve</button>
+                <button class="btn btn-sm btn-warning rounded-pill px-2 fw-semibold text-dark" onclick="openSendRevisionModal(${r.id}, '${r.project_name.replace(/'/g, "\\'")}', ${r.expected_budget})" title="Propose Scope/Budget Revision">Propose Revision</button>
+                <button class="btn btn-sm btn-outline-danger rounded-pill px-2" onclick="rejectRequest(${r.id})" title="Reject Request">Reject</button>
+              ` : `
+                <span class="badge bg-light text-muted border">Completed</span>
+              `}
+            </div>
+          </td>
+        </tr>
+      `;
+      }).join('');
+    }
+
+    // Open Admin Request Details & History Modal (if popout clicked)
+    async function openAdminRequestDetailsModal(requestId) {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/requests/${requestId}`, {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (!data.success) {
+          alert('Could not retrieve request details.');
+          return;
+        }
+
+        const req = data.request;
+        const revs = req.revisions || [];
+
+        document.getElementById('admReqActiveId').value = req.id;
+        document.getElementById('admReqCode').textContent = req.request_code;
+        document.getElementById('admReqType').textContent = req.project_type;
+        document.getElementById('admReqStatusBadge').className = `badge-status ${getStatusClass(req.status)}`;
+        document.getElementById('admReqStatusBadge').textContent = req.status;
+
+        document.getElementById('admReqTitle').textContent = req.project_name;
+        document.getElementById('admReqClientName').textContent = req.client_name;
+        document.getElementById('admReqClientEmail').textContent = `${req.client_email} ${req.client_phone ? '• ' + req.client_phone : ''}`;
+        document.getElementById('admReqBudget').textContent = `₹${req.expected_budget.toLocaleString('en-IN')}`;
+        document.getElementById('admReqDeadline').textContent = req.expected_deadline || 'Flexible';
+        document.getElementById('admReqDesc').textContent = req.description;
+        document.getElementById('admReqFeatures').textContent = req.required_features || req.additional_requirements || 'No extra features specified.';
+
+        document.getElementById('admReqRevCount').textContent = `${revs.length} round${revs.length === 1 ? '' : 's'}`;
+
+        const histList = document.getElementById('admReqRevisionsList');
+        if (revs.length === 0) {
+          histList.innerHTML = '<div class="text-muted small text-center py-3">No revision proposals have been created for this request.</div>';
+        } else {
+          histList.innerHTML = revs.map(rv => `
+            <div class="p-2 bg-white border rounded-3 mb-2 small shadow-sm">
+              <div class="d-flex justify-content-between align-items-center mb-1">
+                <span class="fw-bold text-dark"><i class="bi bi-arrow-repeat text-primary me-1"></i> Round #${rv.revision_number} (${new Date(rv.created_at).toLocaleDateString()})</span>
+                <span class="badge ${rv.status === 'Accepted' ? 'bg-success' : rv.status === 'Resubmitted' ? 'bg-primary' : rv.status === 'Rejected' ? 'bg-danger' : 'bg-warning text-dark'}" style="font-size: 10px;">${rv.status}</span>
+              </div>
+              <div class="row g-1 mb-1" style="font-size: 12px;">
+                <div class="col-7"><strong>Admin Proposed:</strong> <span class="text-primary fw-bold">₹${rv.proposed_budget.toLocaleString('en-IN')}</span></div>
+                <div class="col-5 text-end text-muted" style="font-size: 11px;">${rv.status}</div>
+              </div>
+              <div class="text-muted" style="font-size: 12px;"><strong>Reason:</strong> ${rv.reason_for_revision}</div>
+              ${rv.updated_requirements ? `<div class="text-muted mt-1" style="font-size: 12px;"><strong>Adjustments:</strong> ${rv.updated_requirements}</div>` : ''}
+              ${rv.admin_comments ? `<div class="text-muted mt-1" style="font-size: 12px;"><strong>Admin Comments:</strong> ${rv.admin_comments}</div>` : ''}
+              ${rv.user_response_notes ? `
+                <div class="mt-1 p-2 bg-light rounded text-dark border" style="font-size: 11px;">
+                  <strong><i class="bi bi-chat-left-dots text-primary me-1"></i> Client Response (${rv.responded_at ? new Date(rv.responded_at).toLocaleDateString() : ''}):</strong>
+                  <div>${rv.user_response_notes}</div>
+                </div>
+              ` : ''}
+            </div>
+          `).join('');
+        }
+
+        // Action Buttons inside modal
+        const actionContainer = document.getElementById('admReqActionBtns');
+        if (req.status === 'Submitted' || req.status === 'Under Admin Review' || req.status === 'Revision Requested') {
+          actionContainer.innerHTML = `
+            <button class="btn btn-success rounded-pill px-3 fw-bold btn-sm shadow-sm" onclick="approveRequest(${req.id}, ${req.expected_budget})">
+              <i class="bi bi-check-lg me-1"></i> Approve (₹${req.expected_budget.toLocaleString('en-IN')})
+            </button>
+            <button class="btn btn-warning rounded-pill px-3 fw-bold text-dark btn-sm shadow-sm" onclick="openSendRevisionModal(${req.id}, '${req.project_name.replace(/'/g, "\\'")}', ${req.expected_budget})">
+              <i class="bi bi-arrow-repeat me-1"></i> Propose Revision
+            </button>
+            <button class="btn btn-outline-danger rounded-pill px-3 btn-sm" onclick="rejectRequest(${req.id})">
+              <i class="bi bi-x-lg me-1"></i> Reject
+            </button>
+          `;
+        } else {
+          actionContainer.innerHTML = `<span class="badge bg-light text-muted border p-2">Status: ${req.status}</span>`;
+        }
+
+        const modal = new bootstrap.Modal(document.getElementById('adminRequestDetailsModal'));
+        modal.show();
+      } catch (e) {
+        console.error(e);
+        alert('Error loading request details.');
+      }
+    }
+
+    // Direct Approve Request
+    async function approveRequest(requestId, budget) {
+      if (!confirm('Approve this request and convert into an active project?')) return;
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/requests/${requestId}/approve`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ final_budget: budget })
+        });
+        const data = await res.json();
+        alert(data.message);
+
+        // Hide request details modal if open
+        const modalEl = document.getElementById('adminRequestDetailsModal');
+        const modalInstance = bootstrap.Modal.getInstance(modalEl);
+        if (modalInstance) modalInstance.hide();
+
+        loadRequestsList();
+        loadProjectsList();
+        loadPaymentsList();
+        loadAdminOverview();
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Direct Reject Request
+    async function rejectRequest(requestId) {
+      const reason = prompt('Please enter rejection reason:');
+      if (reason === null) return;
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/requests/${requestId}/reject`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ reason })
+        });
+        const data = await res.json();
+        alert(data.message);
+        loadRequestsList();
+        loadAdminOverview();
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Open Send Revision Proposal Modal
+    function openSendRevisionModal(requestId, title, budget) {
+      document.getElementById('revReqId').value = requestId;
+      document.getElementById('revReqTitleDisplay').textContent = title;
+      document.getElementById('revReqBudgetDisplay').textContent = `₹${budget.toLocaleString('en-IN')}`;
+      document.getElementById('adminRevBudget').value = Math.round(budget * 1.3); // suggest 30% higher as starting point
+      document.getElementById('adminRevReason').value = '';
+      document.getElementById('adminRevScope').value = '';
+
+      const modal = new bootstrap.Modal(document.getElementById('sendRevisionModal'));
+      modal.show();
+    }
+
+    // Handle Send Revision Proposal
+    async function handleSendRevisionProposal(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const requestId = document.getElementById('revReqId').value;
+      const proposed_budget = document.getElementById('adminRevBudget').value;
+      const reason_for_revision = document.getElementById('adminRevReason').value.trim();
+      const updated_requirements = document.getElementById('adminRevScope').value.trim();
+      const admin_comments = document.getElementById('adminRevComments').value.trim();
+
+      try {
+        const res = await fetch(`/api/requests/${requestId}/revision`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            proposed_budget,
+            reason_for_revision,
+            updated_requirements,
+            admin_comments
+          })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Revision proposal sent! Client has been notified in-app and by email.');
+          const modalEl = document.getElementById('sendRevisionModal');
+          const instance = bootstrap.Modal.getInstance(modalEl);
+          if (instance) instance.hide();
+          loadRequestsList();
+          loadAdminOverview();
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Load Payments List
+    async function loadPaymentsList() {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch('/api/payments', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          allPayments = data.payments;
+          renderPaymentsTable();
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
+    function renderPaymentsTable() {
+      const tbody = document.getElementById('adminPaymentsTableBody');
+      if (allPayments.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="9" class="text-center text-muted py-4">No payments recorded.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = allPayments.map(p => `
+        <tr>
+          <td><span class="fw-bold text-primary">${p.invoice_number}</span></td>
+          <td>
+            <div class="fw-semibold text-dark">${p.client_name}</div>
+            <div class="text-muted small">${p.client_email}</div>
+          </td>
+          <td>${p.project_title}</td>
+          <td class="fw-bold">₹${p.total_amount.toLocaleString('en-IN')}</td>
+          <td class="text-success fw-bold">₹${p.amount_paid.toLocaleString('en-IN')}</td>
+          <td class="${p.remaining_balance > 0 ? 'text-danger fw-bold' : 'text-muted'}">₹${p.remaining_balance.toLocaleString('en-IN')}</td>
+          <td><span class="badge-status ${getStatusClass(p.status)}">${p.status}</span></td>
+          <td class="text-muted small">${p.due_date || 'N/A'}</td>
+          <td>
+            <div class="d-flex gap-1">
+              <button class="btn btn-sm btn-outline-success rounded-pill" onclick="openRecordPaymentModal(${p.id}, '${p.invoice_number}', ${p.total_amount}, ${p.amount_paid}, '${p.status}')" title="Record Payment">
+                <i class="bi bi-pencil-square"></i> Record
+              </button>
+              ${p.remaining_balance > 0 ? `
+                <button class="btn btn-sm btn-outline-warning text-dark rounded-pill" onclick="sendPaymentReminder(${p.id})" title="Send Reminder Email">
+                  <i class="bi bi-bell"></i> Remind
+                </button>
+              ` : ''}
+              <a href="/invoice/${p.id}" class="btn btn-sm btn-outline-secondary rounded-pill" title="View Full Invoice PDF">
+                <i class="bi bi-file-earmark-pdf"></i>
+              </a>
+            </div>
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // Send 1-Click Payment Reminder
+    async function sendPaymentReminder(paymentId) {
+      if (!confirm('Dispatch an official payment reminder email and in-app alert to the client?')) return;
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch(`/api/payments/${paymentId}/remind`, {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        alert(data.message);
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Open Record Payment Modal
+    function openRecordPaymentModal(id, invNum, total, paid, status) {
+      document.getElementById('recPaymentId').value = id;
+      document.getElementById('recInvoiceNum').value = invNum;
+      document.getElementById('recTotalAmount').value = total;
+      document.getElementById('recAmountPaid').value = paid;
+      document.getElementById('recStatus').value = status;
+      const modal = new bootstrap.Modal(document.getElementById('recordPaymentModal'));
+      modal.show();
+    }
+
+    // Handle Save Payment Record
+    async function handleSavePaymentRecord(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const id = document.getElementById('recPaymentId').value;
+      const total_amount = document.getElementById('recTotalAmount').value;
+      const amount_paid = document.getElementById('recAmountPaid').value;
+      const status = document.getElementById('recStatus').value;
+      const transaction_id = document.getElementById('recTxnId').value.trim();
+
+      try {
+        const res = await fetch(`/api/payments/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ total_amount, amount_paid, status, transaction_id })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert('Payment record saved successfully.');
+          const modalEl = document.getElementById('recordPaymentModal');
+          const instance = bootstrap.Modal.getInstance(modalEl);
+          if (instance) instance.hide();
+          loadPaymentsList();
+          loadProjectsList();
+          loadAdminOverview();
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Populate Invoice Project Dropdown
+    function populateInvoiceProjectSelect() {
+      const select = document.getElementById('invoiceProjSelect');
+      select.innerHTML = '<option value="">Choose project...</option>' +
+        allProjects.map(p => `<option value="${p.id}" data-cost="${p.total_cost}">${p.title} (${p.client_name})</option>`).join('');
+    }
+
+    function handleInvoiceProjectChange() {
+      const select = document.getElementById('invoiceProjSelect');
+      const selectedOption = select.options[select.selectedIndex];
+      const cost = selectedOption.getAttribute('data-cost');
+      if (cost) {
+        document.getElementById('invoiceAmount').value = cost;
+        document.getElementById('invoiceAdvance').value = Math.round(cost * 0.5);
+      }
+    }
+
+    // Open Create Payment Modal
+    function openCreatePaymentModal() {
+      const modal = new bootstrap.Modal(document.getElementById('createPaymentModal'));
+      modal.show();
+    }
+
+    // Handle Create Payment
+    async function handleCreatePayment(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const project_id = document.getElementById('invoiceProjSelect').value;
+      const total_amount = document.getElementById('invoiceAmount').value;
+      const advance_required = document.getElementById('invoiceAdvance').value;
+      const due_date = document.getElementById('invoiceDueDate').value;
+      const notes = document.getElementById('invoiceNotes').value.trim();
+
+      try {
+        const res = await fetch('/api/payments', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({ project_id, total_amount, advance_required, due_date, notes })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert(`Invoice ${data.invoiceNumber} created and client notified!`);
+          document.getElementById('createPaymentForm').reset();
+          const modalEl = document.getElementById('createPaymentModal');
+          const instance = bootstrap.Modal.getInstance(modalEl);
+          if (instance) instance.hide();
+          loadPaymentsList();
+          loadAdminOverview();
+        } else {
+          alert(data.message);
+        }
+      } catch (e) {
+        alert('Server error.');
+      }
+    }
+
+    // Load Full Activity Audit Trail
+    async function loadFullActivity() {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch('/api/reports/activity?limit=100', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          const tbody = document.getElementById('fullActivityTableBody');
+          tbody.innerHTML = data.activities.map(a => `
+            <tr>
+              <td><span class="fw-bold text-dark">${a.action}</span></td>
+              <td><span class="badge bg-light text-secondary border">${a.entity_type}</span></td>
+              <td>${a.user_name || 'System'}</td>
+              <td class="text-muted small">${a.details || ''}</td>
+              <td class="text-muted small font-monospace">${a.ip_address || '::1'}</td>
+              <td class="text-muted small">${new Date(a.created_at).toLocaleString()}</td>
+            </tr>
+          `).join('');
+        }
+      } catch (e) {}
+    }
+
+    // Load Admin Notifications
+    async function loadAdminNotifications() {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch('/api/notifications', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          const badge = document.getElementById('adminNotifBadge');
+          const list = document.getElementById('adminNotifList');
+          if (data.unreadCount > 0) {
+            badge.textContent = data.unreadCount;
+            badge.classList.remove('d-none');
+          } else {
+            badge.classList.add('d-none');
+          }
+
+          if (data.notifications.length === 0) {
+            list.innerHTML = '<div class="p-4 text-center text-muted small">No notifications.</div>';
+          } else {
+            list.innerHTML = data.notifications.map(n => `
+              <div class="p-3 border-bottom ${n.is_read ? '' : 'bg-light'}">
+                <div class="fw-semibold text-dark small">${n.title}</div>
+                <div class="text-muted" style="font-size: 12px;">${n.message}</div>
+                <div class="text-muted" style="font-size: 10px; margin-top: 4px;">${new Date(n.created_at).toLocaleString()}</div>
+              </div>
+            `).join('');
+          }
+        }
+      } catch (e) {}
+    }
+
+    async function markAllNotificationsRead() {
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        await fetch('/api/notifications/read-all', {
+          method: 'PUT',
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        loadAdminNotifications();
+      } catch (e) {}
+    }
+
+    function getStatusClass(status) {
+      switch (status) {
+        case 'In Progress': return 'status-in-progress';
+        case 'Approved': return 'status-approved';
+        case 'Completed': return 'status-completed';
+        case 'Pending':
+        case 'Submitted':
+        case 'Under Admin Review': return 'status-pending';
+        case 'Revision Requested': return 'status-revision';
+        case 'On Hold': return 'status-on-hold';
+        case 'Paid': return 'status-completed';
+        case 'Partially Paid': return 'status-in-progress';
+        default: return 'status-rejected';
+      }
+    }
+
+    async function handleLogout() {
+      try {
+        await fetch('/api/auth/logout', { method: 'POST' });
+      } catch (e) {}
+      localStorage.removeItem('devhorizan_admin_token');
+      localStorage.removeItem('devhorizan_admin_user');
+      localStorage.removeItem('devhorizan_token');
+      localStorage.removeItem('devhorizan_user');
+      window.location.href = '/login';
+    }
+  </script>
+</body>
+</html>
+

@@ -1,0 +1,32 @@
+{
+  "name": "devhorizan-unified",
+  "version": "2.0.0",
+  "description": "DevHorizan Unified Enterprise Web Platform, Dashboard & Invoicing Engine",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/test_e2e.js",
+    "seed": "node db/seed.js",
+    "init-db": "node db/init.js"
+  },
+  "keywords": [
+    "devhorizan",
+    "saas",
+    "dashboard",
+    "invoicing",
+    "project-management"
+  ],
+  "author": "DevHorizan",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.2",
+    "multer": "^1.4.5-lts.1",
+    "nodemailer": "^6.9.16",
+    "sqlite3": "^5.1.7"
+  }
+}

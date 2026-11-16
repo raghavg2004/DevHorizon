@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Admin Console Login | DevHorizan</title>
+  <link href="assets/img/logo.png" rel="icon">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet">
+
+  <style>
+    :root {
+      --admin-navy: #091a33;
+      --admin-card: #0d2342;
+      --primary: #2f6fed;
+      --accent: #388da8;
+      --danger: #ef4444;
+      --text-light: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    body {
+      background: radial-gradient(circle at 10% 20%, rgba(47, 111, 237, 0.12), transparent 40%),
+                  radial-gradient(circle at 90% 80%, rgba(239, 68, 68, 0.1), transparent 40%),
+                  var(--admin-navy);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      padding: 24px;
+      color: var(--text-light);
+    }
+
+    .login-container {
+      width: 100%;
+      max-width: 440px;
+    }
+
+    .admin-card {
+      background: var(--admin-card);
+      border-radius: 20px;
+      padding: 36px 32px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 25px 60px rgba(0,0,0,0.4);
+    }
+
+    .admin-badge {
+      background: var(--danger);
+      color: white;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 10px;
+      border-radius: 999px;
+      display: inline-block;
+      letter-spacing: 0.08em;
+      margin-bottom: 12px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+    }
+
+    .form-control-custom {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 10px;
+      color: white;
+      font-size: 14px;
+      transition: all 0.2s;
+    }
+
+    .form-control-custom:focus {
+      outline: none;
+      background: rgba(255,255,255,0.1);
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(47, 111, 237, 0.2);
+    }
+
+    .btn-admin {
+      width: 100%;
+      padding: 13px;
+      background: linear-gradient(135deg, var(--primary), var(--accent));
+      color: white;
+      border: none;
+      border-radius: 10px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 4px 15px rgba(47, 111, 237, 0.4);
+      transition: all 0.2s;
+    }
+
+    .btn-admin:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(47, 111, 237, 0.6);
+      color: white;
+    }
+
+    .demo-pill {
+      background: rgba(255,255,255,0.05);
+      border: 1px dashed rgba(255,255,255,0.2);
+      border-radius: 12px;
+      padding: 14px;
+      margin-top: 24px;
+      font-size: 12px;
+    }
+
+    .alert-banner {
+      padding: 12px 16px;
+      border-radius: 10px;
+      font-size: 13px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    .alert-banner.show { display: block; }
+    .alert-danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
+    .alert-success { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+  </style>
+</head>
+<body>
+
+  <div class="login-container">
+    <div class="text-center mb-4">
+      <div class="admin-badge">EXECUTIVE ACCESS ONLY</div>
+      <h2 class="fw-bold mb-1" style="letter-spacing: -0.02em;">Admin Command Center</h2>
+      <p class="text-muted small">DevHorizan Unified Platform • Port 4000</p>
+    </div>
+
+    <div class="admin-card">
+      <div id="alertBox" class="alert-banner"></div>
+
+      <form id="adminLoginForm" onsubmit="handleAdminLogin(event)">
+        <div class="form-group">
+          <label>Administrator Email</label>
+          <input type="email" id="adminEmail" class="form-control-custom" placeholder="admin@devhorizan.com" required autocomplete="email">
+        </div>
+
+        <div class="form-group">
+          <label>Password</label>
+          <input type="password" id="adminPassword" class="form-control-custom" placeholder="••••••••••••" required autocomplete="current-password">
+        </div>
+
+        <button type="submit" id="btnAdminLogin" class="btn-admin mb-3">
+          Sign In to Admin Console
+        </button>
+
+        <div class="text-center">
+          <a href="http://localhost:3000" class="text-decoration-none text-muted small" target="_blank">
+            <i class="bi bi-box-arrow-up-right me-1"></i> Switch to Client Portal (Port 3000)
+          </a>
+        </div>
+
+        <div class="demo-pill">
+          <div class="d-flex justify-content-between align-items-center">
+            <div>
+              <div class="fw-bold text-white"><i class="bi bi-shield-lock-fill text-warning me-1"></i> Default Admin Credentials:</div>
+              <div class="text-muted" style="font-size: 11px;">admin@devhorizan.com</div>
+            </div>
+            <button type="button" class="btn btn-sm btn-outline-light py-1 px-2 rounded-pill" onclick="fillAdminCredentials()" style="font-size: 11px;">
+              Auto-Fill
+            </button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    function fillAdminCredentials() {
+      document.getElementById('adminEmail').value = 'admin@devhorizan.com';
+      document.getElementById('adminPassword').value = 'Admin@12345';
+    }
+
+    function showAlert(msg, isError = true) {
+      const b = document.getElementById('alertBox');
+      b.className = `alert-banner ${isError ? 'alert-danger' : 'alert-success'} show`;
+      b.textContent = msg;
+    }
+
+    async function handleAdminLogin(e) {
+      e.preventDefault();
+      const email = document.getElementById('adminEmail').value.trim();
+      const password = document.getElementById('adminPassword').value;
+      const btn = document.getElementById('btnAdminLogin');
+
+      btn.disabled = true;
+      btn.textContent = 'Verifying admin authorization...';
+
+      try {
+        const res = await fetch('/api/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+        const data = await res.json();
+
+        if (!data.success) {
+          showAlert(data.message || 'Invalid credentials.');
+          btn.disabled = false;
+          btn.textContent = 'Sign In to Admin Console';
+          return;
+        }
+
+        if (data.user.role !== 'admin') {
+          showAlert('Access denied: This portal is reserved for administrators. Clients must log in on Port 3000.', true);
+          btn.disabled = false;
+          btn.textContent = 'Sign In to Admin Console';
+          return;
+        }
+
+        showAlert('Admin authorization verified! Loading console...', false);
+        localStorage.setItem('devhorizan_admin_token', data.token);
+        localStorage.setItem('devhorizan_token', data.token);
+        localStorage.setItem('devhorizan_admin_user', JSON.stringify(data.user));
+
+        setTimeout(() => {
+          window.location.href = '/admin';
+        }, 500);
+      } catch (err) {
+        showAlert('Server or network error connecting to Admin API.');
+        btn.disabled = false;
+        btn.textContent = 'Sign In to Admin Console';
+      }
+    }
+  </script>
+</body>
+</html>
+
