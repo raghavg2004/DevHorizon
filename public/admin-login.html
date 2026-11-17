@@ -206,7 +206,7 @@
         }
 
         if (data.user.role !== 'admin') {
-          showAlert('Access denied: This portal is reserved for administrators. Clients must log in on Port 3000.', true);
+          showAlert('Access denied: This portal is reserved for administrators. Clients must log in at Client Portal (/login).', true);
           btn.disabled = false;
           btn.textContent = 'Sign In to Admin Console';
           return;

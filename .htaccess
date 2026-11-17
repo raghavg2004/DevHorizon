@@ -31,6 +31,7 @@
     RewriteRule ^dashboard/?$ public/dashboard.html [L]
     RewriteRule ^admin/?$ public/admin.html [L]
     RewriteRule ^admin-login/?$ public/admin-login.html [L]
+    RewriteRule ^admin/login/?$ public/admin-login.html [L]
     RewriteRule ^forgot-password/?$ public/forgot-password.html [L]
     RewriteRule ^reset-password/?$ public/reset-password.html [L]
     RewriteRule ^invoice/?(.*)$ public/invoice.html [L]

@@ -478,8 +478,10 @@
 
         setTimeout(() => {
           if (data.user.role === 'admin') {
-            showAlert('Admin credentials detected. Redirecting to Admin Console on Port 4000...', false);
-            window.location.href = 'http://' + window.location.hostname + ':4000/admin';
+            localStorage.setItem('devhorizan_admin_token', data.token);
+            localStorage.setItem('devhorizan_admin_user', JSON.stringify(data.user));
+            showAlert('Admin credentials detected. Redirecting to Admin Console...', false);
+            window.location.href = '/admin';
           } else {
             const hasPendingEstimate = localStorage.getItem('devhorizan_pending_estimate');
             window.location.href = hasPendingEstimate ? '/dashboard?from=calculator' : '/dashboard';

@@ -1754,7 +1754,7 @@
             const user = data.user;
             const navAuth = document.getElementById('navAuthContainer');
             if (navAuth) {
-              const dashUrl = user.role === 'admin' ? ('http://' + window.location.hostname + ':4000/admin') : '/dashboard';
+              const dashUrl = user.role === 'admin' ? '/admin' : '/dashboard';
               navAuth.innerHTML = `
                 <a class="btn-getstarted" href="${dashUrl}">
                   <i class="bi ${user.role === 'admin' ? 'bi-shield-check' : 'bi-speedometer2'} me-1"></i> ${user.role === 'admin' ? 'Admin Console' : 'Client Portal'}

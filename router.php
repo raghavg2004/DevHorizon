@@ -6,6 +6,10 @@
 
 $uri = parse_url($_SERVER['REQUEST_URI'], PHP_URL_PATH);
 $uri = rawurldecode($uri);
+$cleanUri = rtrim($uri, '/');
+if (empty($cleanUri)) {
+    $cleanUri = '/';
+}
 
 // 1. Static Uploads
 if (strpos($uri, '/uploads/') === 0) {
@@ -55,19 +59,20 @@ $pageRoutes = [
     '/dashboard' => '/public/dashboard.html',
     '/admin' => '/public/admin.html',
     '/admin-login' => '/public/admin-login.html',
+    '/admin/login' => '/public/admin-login.html',
     '/forgot-password' => '/public/forgot-password.html',
     '/reset-password' => '/public/reset-password.html',
     '/invoice' => '/public/invoice.html'
 ];
 
-if (isset($pageRoutes[$uri])) {
+if (isset($pageRoutes[$cleanUri])) {
     header('Content-Type: text/html; charset=UTF-8');
-    readfile(__DIR__ . $pageRoutes[$uri]);
+    readfile(__DIR__ . $pageRoutes[$cleanUri]);
     return true;
 }
 
 // Invoice with ID: /invoice/123 or /invoice/INV-...
-if (preg_match('#^/invoice/([^/]+)$#', $uri)) {
+if (preg_match('#^/invoice/([^/]+)$#', $cleanUri)) {
     header('Content-Type: text/html; charset=UTF-8');
     readfile(__DIR__ . '/public/invoice.html');
     return true;

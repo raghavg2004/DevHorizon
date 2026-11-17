@@ -412,7 +412,7 @@
       </div>
 
       <div class="d-flex align-items-center gap-2 gap-sm-3">
-        <a href="http://localhost:3000" id="linkToPublicSite" target="_blank" class="btn btn-outline-secondary rounded-pill btn-sm px-2 px-sm-3 fw-medium d-none d-md-inline-flex align-items-center">
+        <a href="/" id="linkToPublicSite" class="btn btn-outline-secondary rounded-pill btn-sm px-2 px-sm-3 fw-medium d-none d-md-inline-flex align-items-center">
           <i class="bi bi-globe me-1"></i> Public Website
         </a>
 
@@ -1308,11 +1308,11 @@
     document.addEventListener('DOMContentLoaded', async () => {
       // Set link to public site based on current hostname
       const pubLink = document.getElementById('linkToPublicSite');
-      if (pubLink) pubLink.href = 'http://' + window.location.hostname + ':3000';
+      if (pubLink) pubLink.href = '/';
 
       const token = localStorage.getItem('devhorizan_admin_token') || localStorage.getItem('devhorizan_token');
       if (!token) {
-        window.location.href = '/login';
+        window.location.href = '/admin-login';
         return;
       }
 
@@ -1323,7 +1323,7 @@
         const data = await res.json();
 
         if (!data.success || !data.user || data.user.role !== 'admin') {
-          window.location.href = '/login';
+          window.location.href = '/admin-login';
           return;
         }
 
@@ -1343,7 +1343,7 @@
         }
       } catch (err) {
         console.error('Admin auth check failed:', err);
-        window.location.href = '/login';
+        window.location.href = '/admin-login';
       }
     });
 
@@ -2894,7 +2894,7 @@
       localStorage.removeItem('devhorizan_admin_user');
       localStorage.removeItem('devhorizan_token');
       localStorage.removeItem('devhorizan_user');
-      window.location.href = '/login';
+      window.location.href = '/admin-login';
     }
   </script>
 </body>
