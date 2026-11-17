@@ -69,9 +69,9 @@ async function seedDatabase() {
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       clientId,
-      'DevHorizan Mobile Client App',
-      'Android Development',
-      'Native Android mobile application featuring push notifications, offline syncing, real-time tracking, and dashboard integration.',
+      'DevHorizan Mobile Client App (iOS & Android)',
+      'iOS & Android Development',
+      'Native iOS and Android mobile application featuring push notifications, offline syncing, real-time tracking, and dashboard integration.',
       'Approved',
       20,
       95000.00,
@@ -137,7 +137,7 @@ async function seedDatabase() {
       'REQ-2026-1001',
       clientId,
       'E-Commerce Mobile Marketplace',
-      'Android Development',
+      'iOS & Android Development',
       'Cross-platform marketplace app supporting vendor onboarding, in-app checkout, live order tracking, and push notifications.',
       'Payment gateway, multi-vendor dashboard, geolocation tracking, review system',
       60000.00,
@@ -172,7 +172,7 @@ async function seedDatabase() {
       'REQ-2026-1002',
       clientId,
       'Custom AI Analytics Microservice',
-      'API Development & Integration',
+      'Custom Software',
       'RESTful API microservice predicting client inventory replenishment utilizing machine learning models and webhook notifications.',
       'JWT auth, Docker containerization, webhook triggers, CSV reporting',
       40000.00,
@@ -180,6 +180,25 @@ async function seedDatabase() {
       'Fast response times under 200ms.',
       'Submitted',
       null
+    ]
+  );
+
+  // Salesforce Admin & Development request
+  await db.run(
+    `INSERT INTO project_requests (request_code, user_id, project_name, project_type, description, required_features, expected_budget, expected_deadline, additional_requirements, status, admin_notes)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [
+      'REQ-2026-1005',
+      clientId,
+      'Enterprise Salesforce Sales Cloud & LWC Architecture',
+      'Salesforce Admin & Development',
+      'Complete Salesforce CRM rollout including Sales Cloud configuration, Custom Objects, Automated Flows, custom Apex Triggers, and responsive Lightning Web Components (LWC).',
+      'Lead and Opportunity scoring, Record-Triggered Flows, custom LWC modules, role hierarchy & sharing rules, REST API sync with accounting',
+      85000.00,
+      '2026-05-15',
+      'Require test coverage above 85% and governor limits optimization.',
+      'Under Admin Review',
+      'Assigned to Raghav Gupta (Salesforce Admin & Dev Lead)'
     ]
   );
 

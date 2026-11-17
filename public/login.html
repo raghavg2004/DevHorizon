@@ -260,6 +260,31 @@
     .hidden {
       display: none !important;
     }
+
+    @media (max-width: 575px) {
+      body.auth-page {
+        padding: 16px 12px;
+      }
+      .auth-container {
+        max-width: 100%;
+      }
+      .auth-card {
+        border-radius: 16px;
+      }
+      .auth-header {
+        padding: 24px 18px;
+      }
+      .auth-header h2 {
+        font-size: 20px;
+      }
+      .auth-body {
+        padding: 24px 18px;
+      }
+      .form-control-custom {
+        font-size: 16px !important;
+        padding: 11px 14px;
+      }
+    }
   </style>
 </head>
 
@@ -273,8 +298,8 @@
 
     <div class="auth-card">
       <div class="auth-header">
-        <img src="assets/img/logo.png" alt="DevHorizan" class="logo-img">
-        <h2 id="headerTitle">Welcome Back</h2>
+        <img src="assets/img/DH.png" alt="DevHorizan" class="logo-img">
+        <!--<h2 id="headerTitle">Welcome Back</h2>-->
         <p id="headerSubtitle">Sign in to your centralized portal</p>
       </div>
 
@@ -310,18 +335,6 @@
             Don't have an account yet? <a onclick="toggleMode('signup')">Create an Account</a>
           </div>
 
-          <!-- Quick Test Credentials -->
-          <div class="demo-credentials">
-            <div class="fw-bold mb-1"><i class="bi bi-key-fill text-primary"></i> Quick Demo Access:</div>
-            <div class="d-flex justify-content-between align-items-center mt-1">
-              <span><strong>Admin:</strong> admin@devhorizan.com</span>
-              <button type="button" class="demo-btn" onclick="fillCredentials('admin@devhorizan.com', 'Admin@12345')">Fill Admin</button>
-            </div>
-            <div class="d-flex justify-content-between align-items-center mt-1">
-              <span><strong>Client:</strong> client@devhorizan.com</span>
-              <button type="button" class="demo-btn" onclick="fillCredentials('client@devhorizan.com', 'Client@12345')">Fill Client</button>
-            </div>
-          </div>
         </form>
 
         <!-- REGISTER FORM -->
@@ -468,7 +481,8 @@
             showAlert('Admin credentials detected. Redirecting to Admin Console on Port 4000...', false);
             window.location.href = 'http://' + window.location.hostname + ':4000/admin';
           } else {
-            window.location.href = '/dashboard';
+            const hasPendingEstimate = localStorage.getItem('devhorizan_pending_estimate');
+            window.location.href = hasPendingEstimate ? '/dashboard?from=calculator' : '/dashboard';
           }
         }, 500);
       } catch (err) {
@@ -523,7 +537,8 @@
         localStorage.setItem('devhorizan_user', JSON.stringify(data.user));
 
         setTimeout(() => {
-          window.location.href = '/dashboard';
+          const hasPendingEstimate = localStorage.getItem('devhorizan_pending_estimate');
+          window.location.href = hasPendingEstimate ? '/dashboard?from=calculator' : '/dashboard';
         }, 800);
       } catch (err) {
         showAlert('Network or server error during registration.');

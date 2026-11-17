@@ -32,7 +32,7 @@
 </head>
 
 <body class="policy-page">
-  <header id="header" class="header d-flex align-items-center fixed-top">
+  <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
       <a href="index.html" class="logo d-flex align-items-center me-auto">
         <img src="assets/img/Dh.png">
@@ -42,45 +42,74 @@
           <li><a href="index.html#hero">Home</a></li>
           <li><a href="index.html#about">About</a></li>
           <li><a href="index.html#services">Services</a></li>
-                    <li><a href="index.html#faq">FAQ</a></li>
-                    <li><a href="team.html">Team</a></li>
-          <a class="btn-getstarted" href="index.html#contact">Contact</a>
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#calculator">Estimator</a></li>
+          <li><a href="index.html#testimonials">Reviews</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li class="d-xl-none pt-2 border-top"><a href="/login" class="portal-menu-link"><i class="bi bi-person-circle me-2"></i> Client Portal</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
+      <a class="btn-portal-header d-inline-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-3 me-2 me-sm-0" href="/login">
+        <i class="bi bi-person-circle"></i>
+        <span>Client Portal</span>
+      </a>
     </div>
   </header>
 
   <main class="main">
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Privacy Policy</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">Legal</a></li>
+            <li class="current">Privacy Policy</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!-- End Page Title -->
+
     <!-- Policy Page Section -->
     <section class="policy-section">
       <div class="container">
-        <div class="policy-header">
-          <h1>Privacy Policy</h1>
-          <p class="last-updated"><strong>Last Updated: <span id="last-updated"></span></strong></p>
-        </div>
+        <div class="policy-card" data-aos="fade-up">
+          <div class="policy-header">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-semibold text-uppercase mb-3" style="font-size: 11px;">Data Protection & Trust</span>
+            <h1>Privacy Policy</h1>
+            <p class="last-updated"><i class="bi bi-shield-check me-1"></i> Effective: <span id="last-updated"></span></p>
+          </div>
 
-        <div class="policy-content">
-          <h2>1. Introduction</h2>
-          <p>At DevHorizan, we value and protect your privacy. This policy explains how we collect, use, and safeguard your information when you interact with our website and services.</p>
+          <div class="policy-content">
+            <h2><i class="bi bi-lock text-primary"></i> 1. Introduction</h2>
+            <p>At DevHorizan, we place the utmost value on client confidentiality and data security. This Privacy Policy details how we collect, process, and protect your information when you browse our website, request project quotes, or interact with our Client Portal.</p>
 
-          <h2>2. Information We Collect</h2>
-          <p>We may collect personal details such as name, email address, contact information, and company details when you contact us. Additionally, we collect analytics data related to website usage.</p>
+            <h2><i class="bi bi-file-earmark-person text-primary"></i> 2. Information We Collect</h2>
+            <p>We only collect information required to evaluate, engineer, and deliver software solutions:</p>
+            <p>• <b>Contact Information:</b> Your name, email address, phone number, and company name provided via our contact forms or project estimator.</p>
+            <p>• <b>Project Specifications:</b> Feature checklists, technology stack preferences, and architectural requirements submitted through our estimator or client portal.</p>
+            <p>• <b>Technical Log Data:</b> Anonymous analytics including browser type, operating system, and session timestamps to continuously optimize platform performance.</p>
 
-          <h2>3. How We Use Your Information</h2>
-          <p>Your data helps us improve our services, communicate with you effectively, and ensure the security of our platform. We do not sell or rent your personal information.</p>
+            <h2><i class="bi bi-cpu text-primary"></i> 3. How We Use Your Information</h2>
+            <p>Your data is used solely to provide accurate cost estimations, build tailored software, manage project milestones, and communicate delivery status. <b>DevHorizan does not sell, rent, monetize, or disclose your personal details or project concepts to any third party.</b></p>
 
-          <h2>4. Data Protection</h2>
-          <p>We employ industry-standard security measures to safeguard your data. While we take all necessary precautions, no data transmission over the internet is completely secure.</p>
+            <h2><i class="bi bi-shield-shaded text-primary"></i> 4. Enterprise-Grade Security</h2>
+            <p>We deploy robust industry security practices including HTTPS/TLS 1.3 encryption in transit, bcrypt password hashing with salt rounds, parameterized database queries, and secure session management. Your intellectual property and repository tokens are stored in strictly isolated environments.</p>
 
-          <h2>5. Third-Party Services</h2>
-          <p>We may use third-party tools for analytics and payment processing. These services have their own privacy policies, which we encourage you to review.</p>
+            <h2><i class="bi bi-credit-card text-primary"></i> 5. Payment Security & UPI Handling</h2>
+            <p>DevHorizan supports zero-transaction-fee direct UPI verification and standard bank transfers. We never store debit/credit card numbers or UPI PINs on our servers. All transaction reference IDs are solely used for ledger reconciliation.</p>
 
-          <h2>6. Your Rights</h2>
-          <p>You have the right to access, modify, or delete your personal information upon request. If you wish to make any changes, please contact us.</p>
+            <h2><i class="bi bi-check2-circle text-primary"></i> 6. Your Rights & Data Ownership</h2>
+            <p>You maintain full control of your personal data. At any time, you may request an export or complete deletion of your account, submitted requirements, or contact records by emailing our engineering leads at <a href="mailto:devhorizan@gmail.com" class="text-primary fw-semibold">devhorizan@gmail.com</a>.</p>
 
-          <h2>7. Changes to This Policy</h2>
-          <p>We may update this Privacy Policy periodically. Any changes will be reflected on this page, and continued use of our services indicates your acceptance of these updates.</p>
+            <h2><i class="bi bi-arrow-repeat text-primary"></i> 7. Policy Revisions</h2>
+            <p>We may periodically update this policy to reflect enhancements in our portal features or data protection regulations. The latest effective date will always be visible at the top of this document.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -118,6 +147,7 @@
             <li><a href="index.html#about">About us</a></li>
             <li><a href="index.html#services">Services</a></li>
             <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="team.html">Team</a></li>
             <li><a href="tos.html">Terms of service</a></li>
             <li><a href="pp.html">Privacy policy</a></li>
           </ul>
@@ -125,10 +155,10 @@
         <div class="col-lg-3 col-md-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="android-service.html">Android Development</a></li>
+            <li><a href="salesforce-service.html">Salesforce Admin & Development</a></li>
+            <li><a href="android-service.html">iOS & Android Development</a></li>
             <li><a href="web-service.html">Web Development</a></li>
             <li><a href="uiux-service.html">UI/UX Design</a></li>
-            <li><a href="api-service.html">API Development & Integration</a></li>
             <li><a href="ms-service.html">Maintenance and Support</a></li>
             <li><a href="consultation-service.html">Consultation</a></li>
           </ul>
@@ -154,82 +184,6 @@
       </script>
     </div>
   </footer>
-
-  <style>
-    .policy-page {
-      padding-top: 80px;
-    }
-
-    .policy-section {
-      padding: 60px 0;
-      min-height: calc(100vh - 80px);
-    }
-
-    .policy-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .policy-header h1 {
-      font-size: 48px;
-      font-weight: 700;
-      color: #0f3460;
-      margin-bottom: 15px;
-    }
-
-    .last-updated {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .policy-content {
-      background: white;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-      max-width: 900px;
-      margin: 0 auto;
-      line-height: 1.8;
-    }
-
-    .policy-content h2 {
-      color: #0f3460;
-      font-size: 24px;
-      font-weight: 600;
-      margin-top: 35px;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #4a9eff;
-      padding-bottom: 10px;
-    }
-
-    .policy-content h2:first-child {
-      margin-top: 0;
-    }
-
-    .policy-content p {
-      color: #555;
-      font-size: 15px;
-      margin-bottom: 15px;
-    }
-
-    @media (max-width: 768px) {
-      .policy-page {
-        padding-top: 70px;
-      }
-
-      .policy-header h1 {
-        font-size: 36px;
-      }
-
-      .policy-content {
-        padding: 25px;
-      }
-
-      .policy-content h2 {
-        font-size: 20px;
-      }
-    }
-  </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

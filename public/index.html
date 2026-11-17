@@ -3,9 +3,9 @@
 <head>
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
-  <title>DevHorizan - Transforming Ideas into Innovative Digital Solutions | Android & Web Development</title>
-  <meta name="description" content="DevHorizan offers expert Android development, web development, UI/UX design, API integration, and technology consulting services. Transform your ideas into reality with our innovative digital solutions.">
-  <meta name="keywords" content="DevHorizan, Android development, web development, UI/UX design, API development, mobile app development, technology consulting, digital solutions, software development, Dehradun, India">
+  <title>DevHorizan - Transforming Ideas into Innovative Digital Solutions | iOS, Android & Web Development</title>
+  <meta name="description" content="DevHorizan offers expert iOS & Android mobile app development, web development, Salesforce administration & development, UI/UX design, and technology consulting services. Transform your ideas into reality with our innovative digital solutions.">
+  <meta name="keywords" content="DevHorizan, Salesforce developer, Salesforce admin, iOS development, Android development, mobile app development, Swift, Kotlin, Flutter, React Native, web development, UI/UX design, technology consulting, digital solutions, software development, Dehradun, India">
   <meta name="author" content="DevHorizan">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://devhorizan.vercel.app/">
@@ -14,7 +14,7 @@
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://devhorizan.vercel.app/">
   <meta property="og:title" content="DevHorizan - Transforming Ideas into Innovative Digital Solutions">
-  <meta property="og:description" content="Expert Android & Web Development, UI/UX Design, API Integration services. Transform your ideas into reality with DevHorizan.">
+  <meta property="og:description" content="Expert Salesforce Admin & Development, iOS & Android Mobile App Development, Web Development, UI/UX Design services. Transform your ideas into reality with DevHorizan.">
   <meta property="og:image" content="https://devhorizan.vercel.app/assets/img/logo.png">
   <meta property="og:site_name" content="DevHorizan">
   <meta property="og:locale" content="en_US">
@@ -23,7 +23,7 @@
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:url" content="https://devhorizan.vercel.app/">
   <meta name="twitter:title" content="DevHorizan - Transforming Ideas into Innovative Digital Solutions">
-  <meta name="twitter:description" content="Expert Android & Web Development, UI/UX Design, API Integration services. Transform your ideas into reality.">
+  <meta name="twitter:description" content="Expert Salesforce Admin & Development, iOS & Android Mobile App Development, Web Development, UI/UX Design services. Transform your ideas into reality.">
   <meta name="twitter:image" content="https://devhorizan.vercel.app/assets/img/logo.png">
 
   <!-- Additional SEO -->
@@ -58,7 +58,7 @@
     "@context": "https://schema.org",
     "@type": "Organization",
     "name": "DevHorizan",
-    "description": "DevHorizan offers expert Android development, web development, UI/UX design, and technology consulting services.",
+    "description": "DevHorizan offers expert iOS & Android mobile app development, web development, Salesforce administration & development, UI/UX design, and technology consulting services.",
     "url": "https://devhorizan.vercel.app",
     "logo": "https://devhorizan.vercel.app/assets/img/logo.png",
     "image": "https://devhorizan.vercel.app/assets/img/logo.png",
@@ -132,7 +132,7 @@
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "Android Development"
+            "name": "iOS & Android Development"
           }
         },
         {
@@ -153,7 +153,7 @@
           "@type": "Offer",
           "itemOffered": {
             "@type": "Service",
-            "name": "API Development & Integration"
+            "name": "Salesforce Admin & Development"
           }
         }
       ]
@@ -161,6 +161,194 @@
   }
   </script>
 
+  <style>
+    /* Calculator & Estimator Styles */
+    .calc-section {
+      background: #f8fafc;
+      position: relative;
+    }
+    .calc-card {
+      background: #ffffff;
+      border-radius: 20px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.06);
+      border: 1px solid rgba(0,0,0,0.06);
+      padding: 32px;
+    }
+    .calc-option-btn {
+      cursor: pointer;
+      border: 2px solid #e2e8f0;
+      border-radius: 14px;
+      padding: 14px 18px;
+      transition: all 0.25s ease;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      user-select: none;
+      height: 100%;
+    }
+    .calc-option-btn:hover {
+      border-color: #2f6fed;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(47, 111, 237, 0.08);
+    }
+    .calc-option-btn.selected {
+      border-color: #2f6fed;
+      background: rgba(47, 111, 237, 0.06);
+      box-shadow: 0 6px 20px rgba(47, 111, 237, 0.12);
+    }
+    .calc-option-btn .icon-box {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+      background: #f1f5f9;
+      color: #2f6fed;
+      transition: all 0.25s ease;
+    }
+    .calc-option-btn.selected .icon-box {
+      background: #2f6fed;
+      color: #fff;
+    }
+    .calc-feature-pill {
+      cursor: pointer;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 12px 16px;
+      transition: all 0.2s ease;
+      background: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      user-select: none;
+      margin-bottom: 10px;
+    }
+    .calc-feature-pill:hover {
+      border-color: #2f6fed;
+    }
+    .calc-feature-pill.active {
+      border-color: #2f6fed;
+      background: rgba(47, 111, 237, 0.05);
+    }
+    .calc-sticky-summary {
+      position: sticky;
+      top: 100px;
+      background: linear-gradient(145deg, #091a33 0%, #0d284f 100%);
+      color: #fff;
+      border-radius: 20px;
+      padding: 32px 28px;
+      box-shadow: 0 20px 40px rgba(9, 26, 51, 0.25);
+    }
+    .calc-price-display {
+      font-size: 34px;
+      font-weight: 800;
+      color: #38bdf8;
+      letter-spacing: -0.5px;
+    }
+
+    /* Verified Reviews Styles */
+    .review-card {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border: 1px solid rgba(0,0,0,0.06);
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .review-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 15px 35px rgba(0,0,0,0.09);
+    }
+    .review-stars {
+      color: #f59e0b;
+      font-size: 15px;
+      letter-spacing: 2px;
+    }
+    .verified-badge {
+      background: rgba(16, 185, 129, 0.12);
+      color: #059669;
+      font-weight: 600;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    /* Navbar Client Portal Button */
+    .btn-portal-header {
+      background: linear-gradient(135deg, #0d6efd 0%, #388da8 100%);
+      color: #ffffff !important;
+      font-size: 13.5px;
+      font-weight: 600;
+      padding: 8px 18px;
+      border-radius: 999px;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(13, 110, 253, 0.25);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      white-space: nowrap;
+    }
+    .btn-portal-header:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 22px rgba(13, 110, 253, 0.38);
+      color: #ffffff !important;
+    }
+
+    /* Hero Trust Badges */
+    .hero-trust-badges {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+    .trust-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(56, 141, 168, 0.2);
+      border-radius: 999px;
+      padding: 8px 18px;
+      font-size: 13px;
+      font-weight: 600;
+      color: #1e293b;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .trust-badge:hover {
+      transform: translateY(-3px);
+      border-color: #388da8;
+      box-shadow: 0 8px 24px rgba(56, 141, 168, 0.18);
+      background: #ffffff;
+    }
+
+    /* Animated Card Elevations */
+    .service-item {
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease !important;
+      border: 1px solid rgba(0, 0, 0, 0.06);
+    }
+    .service-item:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+      border-color: rgba(56, 141, 168, 0.35) !important;
+    }
+    .calc-card {
+      border: 1px solid rgba(0,0,0,0.06);
+    }
+    .calc-option-btn.selected {
+      border-color: #0d6efd !important;
+      box-shadow: 0 0 0 2px rgba(13, 110, 253, 0.4), 0 8px 22px rgba(13, 110, 253, 0.15) !important;
+      background: linear-gradient(180deg, #ffffff 0%, #f0f7ff 100%) !important;
+    }
+  </style>
 </head>
 
 <body class="index-page">
@@ -175,18 +363,21 @@
         <ul>
           <li><a href="#hero" class="active">Home</a></li>
           <li><a href="#about">About</a></li>
-          <li><a href="#features">Features</a></li>
           <li><a href="#services">Services</a></li>
           <li><a href="#portfolio">Portfolio</a></li>
+          <li><a href="#calculator">Estimator</a></li>
+          <li><a href="#testimonials">Reviews</a></li>
           <li><a href="#faq">FAQ</a></li>
           <li><a href="team.html">Team</a></li>
           <li><a href="#contact">Contact</a></li>
-          <!--<li id="navAuthContainer">
-            <a class="btn-getstarted" id="navAuthBtn" href="/login">Client Portal</a>
-          </li>-->
+          <li class="d-xl-none pt-2 border-top"><a href="/login" class="portal-menu-link"><i class="bi bi-person-circle me-2"></i> Client Portal</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
+      <a class="btn-portal-header d-inline-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-3 me-2 me-sm-0" href="/login">
+        <i class="bi bi-person-circle"></i>
+        <span>Client Portal</span>
+      </a>
     </div>
   </header>
 
@@ -207,6 +398,27 @@
               <i class="bi bi-play-circle"></i><span>Watch Video</span>
             </a>
           </div>  
+
+          <!-- Floating Hero Trust Badges -->
+          <div class="hero-trust-badges mt-4 pt-2 d-flex flex-wrap justify-content-center gap-2 gap-md-3" data-aos="fade-up" data-aos-delay="250">
+            <div class="trust-badge">
+              <i class="bi bi-lightning-charge-fill text-warning"></i>
+              <span>2-Week MVP Delivery</span>
+            </div>
+            <div class="trust-badge">
+              <i class="bi bi-shield-check text-success"></i>
+              <span>100% Source Code Ownership</span>
+            </div>
+            <div class="trust-badge">
+              <i class="bi bi-star-fill text-warning"></i>
+              <span>5.0 Star Client Rating</span>
+            </div>
+            <div class="trust-badge">
+              <i class="bi bi-qr-code text-primary"></i>
+              <span>Direct Secure UPI Verification</span>
+            </div>
+          </div>
+
           <img src="assets/img/hero-img.png" class="img-fluid hero-img" alt="" data-aos="zoom-out" data-aos-delay="300">
         </div>
       </div>
@@ -221,7 +433,7 @@
             <p class="who-we-are">Who We Are</p>
             <h3>Your Trusted Technology Partners</h3>
             <p class="fst-italic">
-              At DevHorizan, we are a passionate team of skilled developers, designers, and consultants committed to creating impactful digital solutions. With a focus on innovation, quality, and client satisfaction, we transform ideas into reality by delivering tailored services in Android development, web development, and strategic consultation.<br><br>
+              At DevHorizan, we are a passionate team of skilled developers, designers, and consultants committed to creating impactful digital solutions. With a focus on innovation, quality, and client satisfaction, we transform ideas into reality by delivering tailored services in iOS & Android mobile app development, web development, and strategic consultation.<br><br>
               Our mission is to empower businesses by combining technical expertise with a deep understanding of industry needs. Whether you're a startup looking to make a mark or an established business aiming to grow, we are here to guide you every step of the way.<br><br>
               With a strong commitment to excellence, creativity, and collaboration, DevHorizan is dedicated to helping you achieve your goals and stay ahead in today’s competitive digital landscape.
             </p>
@@ -531,8 +743,8 @@
             <div class="service-item item-cyan position-relative">
               <i class="bi bi-activity icon"></i>
               <div>
-                <h3>Android Development</h3>
-                <p>We specialize in delivering custom, high-performance Android applications that meet your unique business needs. From concept to launch, we focus on creating intuitive, user-friendly mobile solutions designed for success.</p>
+                <h3>iOS & Android Development</h3>
+                <p>We specialize in delivering custom, high-performance iOS and Android mobile applications tailored to your business needs. From concept to launch on the App Store and Google Play, we craft intuitive, native and cross-platform mobile solutions designed for success.</p>
                 <a href="android-service.html" class="read-more stretched-link">Learn More <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
@@ -558,12 +770,12 @@
             </div>
           </div><!-- End Service Item -->
           <div class="col-lg-6" data-aos="fade-up" data-aos-delay="400">
-            <div class="service-item item-red position-relative">
-              <i class="bi bi-bounding-box-circles icon"></i>
+            <div class="service-item item-cyan position-relative">
+              <i class="bi bi-cloud-check icon"></i>
               <div>
-                <h3>API Development & Integration</h3>
-                <p>We offer custom API development and seamless integration to enhance your app's functionality and performance. Whether you need to connect third-party services or build your own API, we ensure smooth communication between your systems.                </p>
-                <a href="api-service.html" class="read-more stretched-link">Learn More <i class="bi bi-arrow-right"></i></a>
+                <h3>Salesforce Admin & Development</h3>
+                <p>Maximize your CRM potential with certified Salesforce solutions. We deliver Sales & Service Cloud customization, Flow automations, custom Apex coding, and Lightning Web Components (LWC).</p>
+                <a href="salesforce-service.html" class="read-more stretched-link">Learn More <i class="bi bi-arrow-right"></i></a>
               </div>
             </div>
           </div><!-- End Service Item -->
@@ -634,13 +846,14 @@
                   <span class="badge bg-info-subtle text-info fw-semibold px-2 py-1 rounded">Mobile App</span>
                   <span class="badge bg-primary-subtle text-primary fw-semibold px-2 py-1 rounded">Active</span>
                 </div>
-                <h4 class="card-title fw-bold fs-5 text-dark">DevHorizan Mobile Client App</h4>
-                <p class="card-text text-muted flex-grow-1 fs-6">Native Android mobile application featuring instant push notifications, offline syncing, milestone checklists, and biometric authentication.</p>
+                <h4 class="card-title fw-bold fs-5 text-dark">DevHorizan Mobile Client App (iOS & Android)</h4>
+                <p class="card-text text-muted flex-grow-1 fs-6">Native iOS and Android mobile application featuring instant push notifications, offline syncing, milestone checklists, and biometric authentication.</p>
                 <div class="d-flex flex-wrap gap-1 mt-2 mb-3">
+                  <span class="badge bg-light text-secondary border">iOS</span>
                   <span class="badge bg-light text-secondary border">Android</span>
+                  <span class="badge bg-light text-secondary border">Swift</span>
                   <span class="badge bg-light text-secondary border">Kotlin</span>
                   <span class="badge bg-light text-secondary border">Firebase</span>
-                  <span class="badge bg-light text-secondary border">Material UI</span>
                 </div>
                 <a href="/login" class="btn btn-outline-primary w-100 rounded-pill fw-medium">View in Client Portal</a>
               </div>
@@ -679,6 +892,238 @@
       </div>
     </section><!-- /Portfolio Section -->
 
+    <!-- Project Cost Estimator Section -->
+    <section id="calculator" class="calc-section section">
+      <div class="container section-title" data-aos="fade-up">
+        <h2>Interactive Project Cost Estimator</h2>
+        <p>Calculate an instant ballpark budget & timeline for your project across our affordable ₹3,500 – ₹25,000 service range</p>
+      </div>
+
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-4">
+          <!-- Left Column: Estimator Options -->
+          <div class="col-lg-8">
+            <div class="calc-card">
+              <!-- Step 1: Service Category -->
+              <div class="mb-4">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="badge bg-primary rounded-circle px-2 py-1">1</span>
+                  <h5 class="fw-bold mb-0 text-dark">Select Core Service / Platform</h5>
+                </div>
+                <div class="row g-3" id="calcServiceGroup">
+                  <div class="col-md-6">
+                    <div class="calc-option-btn selected" data-type="service" data-val="Web Development" data-base="5000" data-time="2" onclick="selectCalcOption(this)">
+                      <div class="icon-box"><i class="bi bi-window"></i></div>
+                      <div>
+                        <div class="fw-bold text-dark">Web Platform</div>
+                        <div class="small text-muted">React, Node.js, Next.js, PWAs</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="calc-option-btn" data-type="service" data-val="iOS & Android Development" data-base="6500" data-time="2" onclick="selectCalcOption(this)">
+                      <div class="icon-box"><i class="bi bi-phone"></i></div>
+                      <div>
+                        <div class="fw-bold text-dark">iOS & Android Mobile App</div>
+                        <div class="small text-muted">Swift, Kotlin, Flutter, Firebase</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="calc-option-btn" data-type="service" data-val="Salesforce Admin & Development" data-base="8000" data-time="2" onclick="selectCalcOption(this)">
+                      <div class="icon-box"><i class="bi bi-cloud-check"></i></div>
+                      <div>
+                        <div class="fw-bold text-dark">Salesforce CRM Suite</div>
+                        <div class="small text-muted">Apex, LWC, Flows & Pipelines</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="calc-option-btn" data-type="service" data-val="UI/UX Design" data-base="3500" data-time="1" onclick="selectCalcOption(this)">
+                      <div class="icon-box"><i class="bi bi-palette"></i></div>
+                      <div>
+                        <div class="fw-bold text-dark">UI/UX & Design System</div>
+                        <div class="small text-muted">Figma Prototypes & Wireframing</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 2: Project Scope & Size -->
+              <div class="mb-4 pt-3 border-top">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="badge bg-primary rounded-circle px-2 py-1">2</span>
+                  <h5 class="fw-bold mb-0 text-dark">Project Scope & Complexity</h5>
+                </div>
+                <div class="row g-3" id="calcScopeGroup">
+                  <div class="col-md-6 col-xl-3">
+                    <div class="calc-option-btn selected text-center flex-column" data-type="scope" data-val="MVP / Starter (1-5 Screens)" data-multiplier="1.0" data-extratime="0" onclick="selectCalcOption(this)">
+                      <span class="fw-bold text-dark">MVP / Starter</span>
+                      <span class="small text-muted">1 - 5 Screens</span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-xl-3">
+                    <div class="calc-option-btn text-center flex-column" data-type="scope" data-val="Standard Business (6-15 Screens)" data-multiplier="1.3" data-extratime="1" onclick="selectCalcOption(this)">
+                      <span class="fw-bold text-dark">Standard Growth</span>
+                      <span class="small text-muted">6 - 15 Screens</span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-xl-3">
+                    <div class="calc-option-btn text-center flex-column" data-type="scope" data-val="Advanced Platform (16-30 Screens)" data-multiplier="1.6" data-extratime="2" onclick="selectCalcOption(this)">
+                      <span class="fw-bold text-dark">Advanced Platform</span>
+                      <span class="small text-muted">16 - 30 Screens</span>
+                    </div>
+                  </div>
+                  <div class="col-md-6 col-xl-3">
+                    <div class="calc-option-btn text-center flex-column" data-type="scope" data-val="Enterprise Scale (30+ Screens)" data-multiplier="2.0" data-extratime="3" onclick="selectCalcOption(this)">
+                      <span class="fw-bold text-dark">Enterprise Scale</span>
+                      <span class="small text-muted">30+ Screens</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 3: Key Features & Architecture Add-ons -->
+              <div class="mb-4 pt-3 border-top">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="badge bg-primary rounded-circle px-2 py-1">3</span>
+                  <h5 class="fw-bold mb-0 text-dark">Key Features & Modules (Select all needed)</h5>
+                </div>
+                <div class="row g-2">
+                  <div class="col-md-6">
+                    <label class="calc-feature-pill active" onclick="toggleCalcFeature(this)">
+                      <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input mt-0" checked data-name="User Auth & Roles" data-cost="1200" data-time="0.5">
+                        <span class="small fw-semibold text-dark">User Auth & RBAC Roles</span>
+                      </div>
+                      <span class="badge bg-light text-secondary border">+₹1,200</span>
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="calc-feature-pill active" onclick="toggleCalcFeature(this)">
+                      <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input mt-0" checked data-name="UPI & Payment Gateway" data-cost="1500" data-time="0.5">
+                        <span class="small fw-semibold text-dark">UPI & Payment Gateway</span>
+                      </div>
+                      <span class="badge bg-light text-secondary border">+₹1,500</span>
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="calc-feature-pill" onclick="toggleCalcFeature(this)">
+                      <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input mt-0" data-name="Executive Admin Dashboard" data-cost="2000" data-time="1">
+                        <span class="small fw-semibold text-dark">Admin & Analytics Dashboard</span>
+                      </div>
+                      <span class="badge bg-light text-secondary border">+₹2,000</span>
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="calc-feature-pill" onclick="toggleCalcFeature(this)">
+                      <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input mt-0" data-name="Real-time Alerts & Notifications" data-cost="1000" data-time="0.5">
+                        <span class="small fw-semibold text-dark">Push Notifications & Alerts</span>
+                      </div>
+                      <span class="badge bg-light text-secondary border">+₹1,000</span>
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="calc-feature-pill" onclick="toggleCalcFeature(this)">
+                      <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input mt-0" data-name="SEO & High-Performance Tuning" data-cost="800" data-time="0.5">
+                        <span class="small fw-semibold text-dark">SEO & Core Web Vitals Tuning</span>
+                      </div>
+                      <span class="badge bg-light text-secondary border">+₹800</span>
+                    </label>
+                  </div>
+                  <div class="col-md-6">
+                    <label class="calc-feature-pill" onclick="toggleCalcFeature(this)">
+                      <div class="d-flex align-items-center gap-2">
+                        <input type="checkbox" class="form-check-input mt-0" data-name="1-Month SLA Maintenance" data-cost="2000" data-time="0">
+                        <span class="small fw-semibold text-dark">1-Month SLA Maintenance</span>
+                      </div>
+                      <span class="badge bg-light text-secondary border">+₹2,000</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Step 4: Speed / Priority -->
+              <div class="pt-3 border-top">
+                <div class="d-flex align-items-center gap-2 mb-3">
+                  <span class="badge bg-primary rounded-circle px-2 py-1">4</span>
+                  <h5 class="fw-bold mb-0 text-dark">Delivery Schedule</h5>
+                </div>
+                <div class="row g-3" id="calcSpeedGroup">
+                  <div class="col-md-6">
+                    <div class="calc-option-btn selected" data-type="speed" data-val="Standard Schedule" data-surge="1.0" onclick="selectCalcOption(this)">
+                      <i class="bi bi-clock-history text-primary fs-4"></i>
+                      <div>
+                        <div class="fw-bold text-dark">Standard Delivery</div>
+                        <div class="small text-muted">Standard agile sprints</div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-6">
+                    <div class="calc-option-btn" data-type="speed" data-val="Priority Express (+15%)" data-surge="1.15" onclick="selectCalcOption(this)">
+                      <i class="bi bi-lightning-charge-fill text-warning fs-4"></i>
+                      <div>
+                        <div class="fw-bold text-dark">Priority Express Track</div>
+                        <div class="small text-muted">Dedicated rapid sprint delivery (+15%)</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column: Sticky Summary & Instant Action Card -->
+          <div class="col-lg-4">
+            <div class="calc-sticky-summary">
+              <span class="badge bg-primary-subtle text-primary fw-bold text-uppercase px-2 py-1 mb-2">Live Ballpark Estimate</span>
+              <div class="calc-price-display mb-1" id="calcPriceDisplay">₹7,250 - ₹8,500</div>
+              <div class="text-light opacity-75 small mb-3">Estimated Investment (INR ₹)</div>
+
+              <div class="p-3 rounded-3 mb-4" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);">
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="small opacity-75"><i class="bi bi-calendar3 me-1"></i> Target Timeline:</span>
+                  <strong class="text-white" id="calcTimelineDisplay">2 - 3 Weeks</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center mb-2">
+                  <span class="small opacity-75"><i class="bi bi-layers me-1"></i> Selected Platform:</span>
+                  <strong class="text-info text-truncate ms-2" id="calcPlatformDisplay">Web Platform</strong>
+                </div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <span class="small opacity-75"><i class="bi bi-check2-circle me-1"></i> Modules Included:</span>
+                  <strong class="text-white" id="calcModulesCountDisplay">2 Modules</strong>
+                </div>
+              </div>
+
+              <div class="mb-4">
+                <div class="small fw-semibold text-uppercase opacity-75 mb-2" style="font-size: 11px; letter-spacing: 0.5px;">DevHorizan Guarantees:</div>
+                <ul class="list-unstyled small mb-0 opacity-90 d-flex flex-column gap-2">
+                  <li><i class="bi bi-shield-check text-success me-2"></i>100% Full Source Code Ownership</li>
+                  <li><i class="bi bi-arrow-repeat text-info me-2"></i>Transparent Project Negotiations</li>
+                  <li><i class="bi bi-qr-code text-warning me-2"></i>Secure UPI Direct Verification</li>
+                  <li><i class="bi bi-headset text-primary me-2"></i>Direct Architect & Founder Support</li>
+                </ul>
+              </div>
+
+              <button class="btn btn-primary w-100 py-3 rounded-pill fw-bold fs-6 shadow d-flex align-items-center justify-content-center gap-2" onclick="launchEstimatedProject()">
+                <span>Launch This Project Request</span>
+                <i class="bi bi-arrow-right"></i>
+              </button>
+              <div class="text-center mt-2" style="font-size: 12px; opacity: 0.75;">
+                Pre-fills your request in our Client Portal with 1 click.
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- /Project Cost Estimator Section -->
+
     <!-- Faq Frequently Asked Questions Section -->
     <section id="faq" class="faq section">
       <!-- Section Title -->
@@ -692,7 +1137,7 @@
               <div class="faq-item faq-active">
                 <h3>What services does DevHorizan provide?</h3>
                 <div class="faq-content">
-                  <p>At DevHorizan, we offer a range of digital solutions, including Android Development, Web Development, UI/UX Design, API Development & Integration, Maintenance & Support, and Consultation. Our goal is to provide high-quality, tailored solutions to help businesses grow and succeed in the digital space.</p>
+                  <p>At DevHorizan, we offer a range of digital solutions, including iOS & Android Development, Web Development, Salesforce Admin & Development, UI/UX Design, Maintenance & Support, and Consultation. Our goal is to provide high-quality, tailored solutions to help businesses grow and succeed in the digital space.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
               </div><!-- End Faq item-->
@@ -718,9 +1163,9 @@
                 <i class="faq-toggle bi bi-chevron-right"></i>
               </div><!-- End Faq item-->
               <div class="faq-item">
-                <h3>Can you integrate third-party services or APIs into my project?</h3>
+                <h3>Do you provide Salesforce CRM setup and custom automation?</h3>
                 <div class="faq-content">
-                  <p>Absolutely! We specialize in API development and integration, enabling seamless communication between platforms, payment gateways, CRMs, and other services.</p>
+                  <p>Yes! We provide complete Salesforce administration and custom development, including Sales/Service Cloud setup, Flow automation, Apex coding, and Lightning Web Components (LWC) tailored to your business workflows.</p>
                 </div>
                 <i class="faq-toggle bi bi-chevron-right"></i>
               </div><!-- End Faq item-->
@@ -737,104 +1182,32 @@
       </div>
     </section><!-- /Faq Section -->
 
-    <!-- Team Members Section 
+    <!-- Verified Client Reviews & Testimonials Section -->
     <section id="testimonials" class="testimonials section light-background">
       <div class="container section-title" data-aos="fade-up">
-        <h2>Meet Our Team</h2>
-        <p>Collaboration. Creativity. Success.</p>
+        <h2>Verified Client Reviews</h2>
+        <p>Real feedback from founders and enterprises built and scaled with DevHorizan</p>
       </div>
-      <div class="container" data-aos="fade-up" data-aos-delay="100">
 
-        <div class="swiper init-swiper">
-          <script type="application/json" class="swiper-config">
-            {
-              "loop": true,
-              "speed": 600,
-              "autoplay": {
-                "delay": 5000
-              },
-              "slidesPerView": "auto",
-              "pagination": {
-                "el": ".swiper-pagination",
-                "type": "bullets",
-                "clickable": true
-              },
-              "breakpoints": {
-                "320": {
-                  "slidesPerView": 1,
-                  "spaceBetween": 40
-                },
-                "1200": {
-                  "slidesPerView": 3,
-                  "spaceBetween": 1
-                }
-              }
-            }
-          </script>
-          <div class="swiper-wrapper">
-            <!--<div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>
-                  As a UI/UX Designer, I focus on creating intuitive and visually appealing interfaces that enhance the overall user experience. I aim to understand user needs, craft engaging designs, and improve usability, ensuring smooth and seamless interactions with digital products.
-                </p>
-                   <div class="profile mt-auto">
-                 <img src="assets/img/team/team-3.png" class="testimonial-img" alt="">
-                  <h3>Disha</h3>
-                  <h4>UI/UX Designer</h4>
-                </div>
-              </div>
-            </div>-->
-            <!--<div class="swiper-slide"></div>-->
-            <!--<div class="swiper-slid">
-              <div class="testimonial-item">
-                <p>
-                  As an Android Developer, I am the backbone of the team, specializing in creating high-performance, user-friendly, and scalable mobile applications. With my expertise in Java, Kotlin, and modern Android frameworks, I ensure seamless functionality and deliver top-tier user experiences.</p>
-                <div class="profile mt-auto">
-                  <img src="assets/img/team/team-12.jpg" class="testimonial-img" alt="">
-                  <h3>Raghav Gupta</h3>
-                  <h4>Android Development & SEO Expert </h4>
-                </div>
-              </div>
+      <div class="container" data-aos="fade-up" data-aos-delay="100">
+        <div class="row g-4" id="verifiedReviewsContainer">
+          <!-- Live Verified Reviews populated from /api/reviews/public via JS -->
+          <div class="col-12 text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+              <span class="visually-hidden">Loading verified testimonials...</span>
             </div>
-                        <!--<div class="swiper-slide"></div>-->
-            <!--<div class="swiper-slid">
-              <div class="testimonial-item">
-                <p>
-                  As a Web Developer, I excel in building dynamic and responsive websites using the latest technologies. My focus is on creating user-friendly, high-performance web solutions that elevate the digital experience and meet the specific needs of users.</p>
-                </p>
-                <div class="profile mt-auto">
-                  <img src="assets/img/team/team-24.jpg" class="testimonial-img" alt="">
-                  <h3>Aastha Agarwal</h3>
-                  <h4>Web Development Expert & UI/UX Designer</h4>
-                </div>
-              </div>
-            </div>
-                        <!--<div class="swiper-slide"></div>-->
-            <!--<div class="swiper-slid">
-              <div class="testimonial-item">
-                <p>As an API Developer, I specialize in designing and integrating robust APIs that enable smooth communication between applications. My focus is on building scalable, secure, and high-performance backend solutions to improve functionality and overall system efficiency.</p>
-                <div class="profile mt-auto">
-                  <img src="assets/img/team/team-p.jpg" class="testimonial-img" alt="">
-                  <h3>Upanshu Pal</h3>
-                  <h4>Technology Consultant & Support Lead</h4>
-                </div>
-              </div>
-            </div>
-            <!--<div class="swiper-slide">
-              <div class="testimonial-item">
-                <p>As a Technology Consultant & Support Lead, I guide clients in adopting the right technology solutions to meet their business needs. I also oversee the technical support team, ensuring seamless implementation, troubleshooting, and providing ongoing assistance to resolve any challenges that arise.</p>
-                <div class="profile mt-auto">
-                 <img src="assets/img/team/team-5.jpg" class="testimonial-img" alt="">
-                  <h3>Anjali</h3>
-                  <h4>API Development & Integration Engineer</h4>
-                </div>
-              </div>
-            </div>
-          </div>-->
-          <!--<div class="swiper-pagination"></div>
+          </div>
+        </div>
+
+        <div class="text-center mt-5">
+          <p class="text-muted small mb-2">Are you a DevHorizan client? We value your experience.</p>
+          <a href="/login" class="btn btn-outline-primary px-4 py-2 rounded-pill fw-bold">
+            <i class="bi bi-star-fill text-warning me-1"></i> Submit a Project Review in Client Portal
+          </a>
         </div>
       </div>
-    </section><!-- End Team Members Section -->
+    </section>
+    <!-- /Verified Client Reviews Section -->
 
     <!-- Contact Section -->
     <section id="contact" class="contact section">
@@ -906,6 +1279,7 @@
             <li><a href="index.html#about">About us</a></li>
             <li><a href="index.html#services">Services</a></li>
             <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="team.html">Team</a></li>
             <li><a href="tos.html">Terms of service</a></li>
             <li><a href="pp.html">Privacy policy</a></li>
           </ul>
@@ -913,10 +1287,10 @@
         <div class="col-lg-3 col-md-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="android-service.html">Android Development</a></li>
+            <li><a href="android-service.html">iOS & Android Development</a></li>
             <li><a href="web-service.html">Web Development</a></li>
+            <li><a href="salesforce-service.html">Salesforce Admin & Development</a></li>
             <li><a href="uiux-service.html">UI/UX Design</a></li>
-            <li><a href="api-service.html">API Development & Integration</a></li>
             <li><a href="ms-service.html">Maintenance and Support</a></li>
             <li><a href="consultation-service.html">Consultation</a></li>
           </ul>
@@ -1011,7 +1385,6 @@
   <!-- Vendor JS Files -->
   <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
@@ -1103,6 +1476,21 @@
     .btn-send:hover {
       background: #20bd5a;
     }
+    @media (max-width: 575px) {
+      .dialog-content {
+        padding: 20px 16px;
+        width: 95%;
+      }
+      .dialog-header h3 {
+        font-size: 20px;
+      }
+      .form-actions {
+        flex-direction: column;
+      }
+      .btn-cancel, .btn-send {
+        width: 100%;
+      }
+    }
   </style>
 
   <script>
@@ -1160,8 +1548,201 @@
         closeWhatsAppDialog();
       }
     });
-    // Dynamic Auth State Checker
+
+    // -----------------------------------------------------------------
+    // Interactive Project Cost Estimator Logic
+    // -----------------------------------------------------------------
+    let calcState = {
+      service: 'Web Development',
+      serviceBase: 5000,
+      serviceBaseWeeks: 2,
+      scope: 'MVP / Starter (1-5 Screens)',
+      scopeMultiplier: 1.0,
+      scopeExtraWeeks: 0,
+      features: [
+        { name: 'User Auth & Roles', cost: 1200, weeks: 0.5 },
+        { name: 'UPI & Payment Gateway', cost: 1500, weeks: 0.5 }
+      ],
+      speed: 'Standard Schedule',
+      speedSurge: 1.0
+    };
+
+    function selectCalcOption(el) {
+      const type = el.dataset.type;
+      const parent = el.closest('.row');
+      parent.querySelectorAll('.calc-option-btn').forEach(b => b.classList.remove('selected'));
+      el.classList.add('selected');
+
+      if (type === 'service') {
+        calcState.service = el.dataset.val;
+        calcState.serviceBase = parseFloat(el.dataset.base) || 5000;
+        calcState.serviceBaseWeeks = parseFloat(el.dataset.time) || 2;
+      } else if (type === 'scope') {
+        calcState.scope = el.dataset.val;
+        calcState.scopeMultiplier = parseFloat(el.dataset.multiplier) || 1.0;
+        calcState.scopeExtraWeeks = parseFloat(el.dataset.extratime) || 0;
+      } else if (type === 'speed') {
+        calcState.speed = el.dataset.val;
+        calcState.speedSurge = parseFloat(el.dataset.surge) || 1.0;
+      }
+
+      recalculateEstimator();
+    }
+
+    function toggleCalcFeature(labelEl) {
+      const checkbox = labelEl.querySelector('input[type="checkbox"]');
+      setTimeout(() => {
+        if (checkbox.checked) {
+          labelEl.classList.add('active');
+        } else {
+          labelEl.classList.remove('active');
+        }
+        recalculateEstimator();
+      }, 10);
+    }
+
+    function recalculateEstimator() {
+      const featureCheckboxes = document.querySelectorAll('#calculator input[type="checkbox"]:checked');
+      calcState.features = [];
+      let featureCostTotal = 0;
+      let featureWeeksTotal = 0;
+
+      featureCheckboxes.forEach(cb => {
+        const cost = parseFloat(cb.dataset.cost) || 0;
+        const weeks = parseFloat(cb.dataset.time) || 0;
+        calcState.features.push({
+          name: cb.dataset.name,
+          cost,
+          weeks
+        });
+        featureCostTotal += cost;
+        featureWeeksTotal += weeks;
+      });
+
+      const basePlusScope = calcState.serviceBase * calcState.scopeMultiplier;
+      const rawTotal = (basePlusScope + featureCostTotal) * calcState.speedSurge;
+      
+      // Calculate realistic ballpark range clamped strictly within ₹3,500 - ₹25,000
+      let minEst = Math.round(rawTotal * 0.95 / 250) * 250;
+      let maxEst = Math.round(rawTotal * 1.10 / 250) * 250;
+
+      if (minEst < 3500) minEst = 3500;
+      if (minEst > 24000) minEst = 24000;
+
+      if (maxEst < minEst) maxEst = minEst;
+      if (maxEst > 25000) maxEst = 25000;
+
+      const totalWeeks = Math.max(1, Math.round((calcState.serviceBaseWeeks + calcState.scopeExtraWeeks + featureWeeksTotal) / calcState.speedSurge));
+      const minWeeks = totalWeeks;
+      const maxWeeks = totalWeeks + (totalWeeks > 2 ? 2 : 1);
+
+      const priceEl = document.getElementById('calcPriceDisplay');
+      const timelineEl = document.getElementById('calcTimelineDisplay');
+      const platformEl = document.getElementById('calcPlatformDisplay');
+      const modulesEl = document.getElementById('calcModulesCountDisplay');
+
+      if (priceEl) priceEl.textContent = `₹${minEst.toLocaleString('en-IN')} - ₹${maxEst.toLocaleString('en-IN')}`;
+      if (timelineEl) timelineEl.textContent = `${minWeeks} - ${maxWeeks} Weeks`;
+      if (platformEl) platformEl.textContent = calcState.service;
+      if (modulesEl) modulesEl.textContent = `${calcState.features.length} Modules`;
+
+      calcState.finalMinBudget = minEst;
+      calcState.finalMaxBudget = maxEst;
+      calcState.finalEstimatedBudget = Math.round((minEst + maxEst) / 2);
+      calcState.finalTimeline = `${minWeeks} - ${maxWeeks} Weeks`;
+    }
+
+    function launchEstimatedProject() {
+      recalculateEstimator();
+      const featuresListStr = calcState.features.map(f => f.name).join(', ');
+      
+      const payload = {
+        title: `${calcState.service} Platform (${calcState.scope.split('(')[0].trim()})`,
+        type: calcState.service,
+        expected_budget: calcState.finalEstimatedBudget,
+        expected_deadline: calcState.finalTimeline,
+        required_features: featuresListStr,
+        description: `Project Specification: ${calcState.service}\nScope: ${calcState.scope}\nSelected Modules: ${featuresListStr}\nDelivery Mode: ${calcState.speed}`
+      };
+
+      localStorage.setItem('devhorizan_pending_estimate', JSON.stringify(payload));
+
+      const token = localStorage.getItem('devhorizan_token');
+      if (token) {
+        window.location.href = `/dashboard?from=calculator`;
+      } else {
+        window.location.href = `/login?redirect=estimate`;
+      }
+    }
+
+    // -----------------------------------------------------------------
+    // Verified Client Reviews Loader
+    // -----------------------------------------------------------------
+    async function loadVerifiedReviews() {
+      const container = document.getElementById('verifiedReviewsContainer');
+      if (!container) return;
+
+      try {
+        const res = await fetch('/api/reviews/public');
+        const data = await res.json();
+
+        if (data.success && data.reviews && data.reviews.length > 0) {
+          container.innerHTML = data.reviews.map(r => {
+            const stars = Array(r.rating).fill('<i class="bi bi-star-fill"></i>').join(' ');
+            return `
+              <div class="col-lg-4 col-md-6" data-aos="fade-up">
+                <div class="review-card">
+                  <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="review-stars">${stars}</div>
+                    <span class="verified-badge"><i class="bi bi-patch-check-fill"></i> Verified Client</span>
+                  </div>
+                  <p class="text-dark fs-6 flex-grow-1 fst-italic mb-3" style="line-height: 1.6;">
+                    "${escapeHtml(r.review_text)}"
+                  </p>
+                  <div class="pt-3 border-top mt-auto">
+                    <div class="d-flex align-items-center gap-3">
+                      <div class="rounded-circle bg-primary-subtle text-primary fw-bold d-flex align-items-center justify-content-center" style="width: 44px; height: 44px; font-size: 18px;">
+                        ${r.client_name ? r.client_name.charAt(0).toUpperCase() : 'C'}
+                      </div>
+                      <div>
+                        <div class="fw-bold text-dark">${escapeHtml(r.client_name)}</div>
+                        <div class="small text-muted">${escapeHtml(r.company_or_role || 'Client Partner')}</div>
+                        <div class="badge bg-light text-secondary border mt-1" style="font-size: 11px;">${escapeHtml(r.service_category || 'Digital Solution')}</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            `;
+          }).join('');
+        } else {
+          container.innerHTML = `
+            <div class="col-12 text-center text-muted py-5">
+              <i class="bi bi-chat-square-heart fs-1 text-primary opacity-50 d-block mb-2"></i>
+              <h5>Be the first to leave a verified review!</h5>
+              <p class="small">Our clients' reviews appear here once verified.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        console.warn('Could not load reviews:', err);
+      }
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    // Dynamic Auth State Checker & Initializers
     document.addEventListener('DOMContentLoaded', async function() {
+      recalculateEstimator();
+      loadVerifiedReviews();
+
       try {
         const token = localStorage.getItem('devhorizan_token');
         const res = await fetch('/api/auth/me', {
@@ -1176,7 +1757,7 @@
               const dashUrl = user.role === 'admin' ? ('http://' + window.location.hostname + ':4000/admin') : '/dashboard';
               navAuth.innerHTML = `
                 <a class="btn-getstarted" href="${dashUrl}">
-                  <i class="bi ${user.role === 'admin' ? 'bi-shield-check' : 'bi-speedometer2'} me-1"></i> ${label}
+                  <i class="bi ${user.role === 'admin' ? 'bi-shield-check' : 'bi-speedometer2'} me-1"></i> ${user.role === 'admin' ? 'Admin Console' : 'Client Portal'}
                 </a>
               `;
             }

@@ -32,7 +32,7 @@
 </head>
 
 <body class="policy-page">
-  <header id="header" class="header d-flex align-items-center fixed-top">
+  <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
       <a href="index.html" class="logo d-flex align-items-center me-auto">
         <img src="assets/img/Dh.png">
@@ -42,45 +42,71 @@
           <li><a href="index.html#hero">Home</a></li>
           <li><a href="index.html#about">About</a></li>
           <li><a href="index.html#services">Services</a></li>
-                    <li><a href="index.html#faq">FAQ</a></li>
-                    <li><a href="team.html">Team</a></li>
-          <a class="btn-getstarted" href="index.html#contact">Contact</a>
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#calculator">Estimator</a></li>
+          <li><a href="index.html#testimonials">Reviews</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li class="d-xl-none pt-2 border-top"><a href="/login" class="portal-menu-link"><i class="bi bi-person-circle me-2"></i> Client Portal</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
+      <a class="btn-portal-header d-inline-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-3 me-2 me-sm-0" href="/login">
+        <i class="bi bi-person-circle"></i>
+        <span>Client Portal</span>
+      </a>
     </div>
   </header>
 
   <main class="main">
+    <!-- Page Title -->
+    <div class="page-title" data-aos="fade">
+      <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Terms of Service</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="index.html#about">Legal</a></li>
+            <li class="current">Terms of Service</li>
+          </ol>
+        </nav>
+      </div>
+    </div>
+    <!-- End Page Title -->
+
     <!-- Policy Page Section -->
     <section class="policy-section">
       <div class="container">
-        <div class="policy-header">
-          <h1>Terms of Service</h1>
-          <p class="last-updated"><strong>Last Updated: <span id="last-updated"></span></strong></p>
-        </div>
+        <div class="policy-card" data-aos="fade-up">
+          <div class="policy-header">
+            <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-semibold text-uppercase mb-3" style="font-size: 11px;">Service Agreement & Terms</span>
+            <h1>Terms of Service</h1>
+            <p class="last-updated"><i class="bi bi-calendar3 me-1"></i> Effective: <span id="last-updated"></span></p>
+          </div>
 
-        <div class="policy-content">
-          <h2>1. Introduction</h2>
-          <p>Welcome to DevHorizan. These Terms of Service outline the rules and regulations for the use of our website and services. By accessing or using our services, you agree to abide by these terms. If you do not agree, please refrain from using our services.</p>
+          <div class="policy-content">
+            <h2><i class="bi bi-shield-check text-primary"></i> 1. Introduction</h2>
+            <p>Welcome to DevHorizan. These Terms of Service outline the rules and regulations for the use of our website, client portal, software engineering deliverables, and consultation services. By engaging with or retaining our services, you agree to abide by these terms. If you do not agree with any part, please do not use our services.</p>
 
-          <h2>2. Services Offered</h2>
-          <p>We provide comprehensive digital solutions, including Android Development, Web Development, UI/UX Design, API Development, Maintenance & Support, and Consultation. Each service is tailored to meet individual client needs.</p>
+            <h2><i class="bi bi-gear-wide-connected text-primary"></i> 2. Services Offered</h2>
+            <p>DevHorizan provides bespoke technology solutions including iOS & Android Mobile Engineering, Full-Stack Web Development, Salesforce Admin & CRM Development, UI/UX Product Design, Ongoing Maintenance & Support, and Strategic Technical Consultation. Every project is executed with dedicated milestones, scope definitions, and transparent pricing in the range of ₹3,500 to ₹25,000.</p>
 
-          <h2>3. User Responsibilities</h2>
-          <p>As a user, you must provide accurate and truthful information when engaging with our services. Any attempt to misuse, exploit, or disrupt our platform will result in immediate suspension of access.</p>
+            <h2><i class="bi bi-person-badge text-primary"></i> 3. User & Client Responsibilities</h2>
+            <p>Clients and portal users must provide accurate, complete, and authentic information when submitting project requests, credentials, or communicating requirements. Any unauthorized penetration testing, scraping, credential sharing, or malicious platform usage will result in immediate termination of portal privileges.</p>
 
-          <h2>4. Payments & Refunds</h2>
-          <p>All payments for services must be agreed upon in advance. Refund policies depend on the nature and progress of the project. Partial or full refunds may be issued in specific circumstances at our discretion.</p>
+            <h2><i class="bi bi-credit-card-2-front text-primary"></i> 4. Payments, Estimates & Invoicing</h2>
+            <p>All work is governed by upfront quotation or milestone estimates confirmed in the DevHorizan Client Portal. Project invoices are issued upon agreed development milestones and can be cleared via direct bank transfer, UPI (with zero gateway fees), or verified cards. Work is released upon verified invoice settlement.</p>
 
-          <h2>5. Intellectual Property</h2>
-          <p>All content, designs, and software developed by DevHorizan remain the property of our company unless otherwise agreed. Clients receive the rights to use the final product as per the contractual agreement.</p>
+            <h2><i class="bi bi-code-slash text-primary"></i> 5. Intellectual Property & Code Ownership</h2>
+            <p>DevHorizan believes in complete client empowerment. Upon full settlement of all project invoices, 100% of custom source code, design assets, and repository ownership are unconditionally transferred to the client, free of proprietary vendor lock-in.</p>
 
-          <h2>6. Limitation of Liability</h2>
-          <p>DevHorizan is not liable for any direct, indirect, incidental, or consequential damages resulting from the use or inability to use our services.</p>
+            <h2><i class="bi bi-exclamation-triangle text-primary"></i> 6. Limitation of Liability</h2>
+            <p>DevHorizan shall not be liable for any indirect, special, incidental, or consequential damages resulting from third-party hosting outages, external API changes, or unauthorized modifications made to the delivered codebase post-handoff.</p>
 
-          <h2>7. Changes to Terms</h2>
-          <p>We reserve the right to modify these terms at any time. Users are responsible for reviewing changes periodically. Continued use of our services indicates acceptance of revised terms.</p>
+            <h2><i class="bi bi-pencil-square text-primary"></i> 7. Modifications to Terms</h2>
+            <p>We reserve the right to revise these terms periodically to reflect updated legal requirements or technical capabilities. Continued engagement with our services following updates constitutes acceptance of the modified terms.</p>
+          </div>
         </div>
       </div>
     </section>
@@ -118,6 +144,7 @@
             <li><a href="index.html#about">About us</a></li>
             <li><a href="index.html#services">Services</a></li>
             <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="team.html">Team</a></li>
             <li><a href="tos.html">Terms of service</a></li>
             <li><a href="pp.html">Privacy policy</a></li>
           </ul>
@@ -125,10 +152,10 @@
         <div class="col-lg-3 col-md-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="android-service.html">Android Development</a></li>
+            <li><a href="salesforce-service.html">Salesforce Admin & Development</a></li>
+            <li><a href="android-service.html">iOS & Android Development</a></li>
             <li><a href="web-service.html">Web Development</a></li>
             <li><a href="uiux-service.html">UI/UX Design</a></li>
-            <li><a href="api-service.html">API Development & Integration</a></li>
             <li><a href="ms-service.html">Maintenance and Support</a></li>
             <li><a href="consultation-service.html">Consultation</a></li>
           </ul>
@@ -154,82 +181,6 @@
       </script>
     </div>
   </footer>
-
-  <style>
-    .policy-page {
-      padding-top: 80px;
-    }
-
-    .policy-section {
-      padding: 60px 0;
-      min-height: calc(100vh - 80px);
-    }
-
-    .policy-header {
-      text-align: center;
-      margin-bottom: 50px;
-    }
-
-    .policy-header h1 {
-      font-size: 48px;
-      font-weight: 700;
-      color: #0f3460;
-      margin-bottom: 15px;
-    }
-
-    .last-updated {
-      color: #666;
-      font-size: 14px;
-    }
-
-    .policy-content {
-      background: white;
-      padding: 40px;
-      border-radius: 10px;
-      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
-      max-width: 900px;
-      margin: 0 auto;
-      line-height: 1.8;
-    }
-
-    .policy-content h2 {
-      color: #0f3460;
-      font-size: 24px;
-      font-weight: 600;
-      margin-top: 35px;
-      margin-bottom: 15px;
-      border-bottom: 2px solid #4a9eff;
-      padding-bottom: 10px;
-    }
-
-    .policy-content h2:first-child {
-      margin-top: 0;
-    }
-
-    .policy-content p {
-      color: #555;
-      font-size: 15px;
-      margin-bottom: 15px;
-    }
-
-    @media (max-width: 768px) {
-      .policy-page {
-        padding-top: 70px;
-      }
-
-      .policy-header h1 {
-        font-size: 36px;
-      }
-
-      .policy-content {
-        padding: 25px;
-      }
-
-      .policy-content h2 {
-        font-size: 20px;
-      }
-    }
-  </style>
 
   <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

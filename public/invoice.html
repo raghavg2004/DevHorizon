@@ -281,6 +281,114 @@
       body { background: white; padding: 0; }
       .top-actions { display: none !important; }
       .invoice-card { box-shadow: none; border: none; padding: 0; }
+      .invoice-modal-overlay { display: none !important; }
+    }
+
+    /* Mobile Responsive Polish */
+    @media (max-width: 768px) {
+      body {
+        padding: 14px 10px;
+      }
+      .top-actions {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 8px;
+      }
+      .top-actions > div {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+        width: 100%;
+      }
+      .top-actions .btn {
+        width: 100%;
+        justify-content: center;
+      }
+      .invoice-card {
+        padding: 22px 14px;
+        border-radius: 14px;
+      }
+      .invoice-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 16px;
+      }
+      .invoice-header .invoice-meta {
+        text-align: left;
+      }
+      .bill-to-grid {
+        display: flex !important;
+        flex-direction: column;
+        gap: 16px !important;
+      }
+      .table-responsive {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin-bottom: 16px;
+      }
+      .invoice-table {
+        min-width: 500px;
+      }
+      .invoice-modal {
+        width: calc(100% - 24px) !important;
+        padding: 22px 16px !important;
+        margin: 12px;
+        border-radius: 16px !important;
+      }
+    }
+
+    /* UPI Modal for Invoice */
+    .invoice-modal-overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      padding: 16px;
+    }
+    .invoice-modal-dialog {
+      background: white;
+      border-radius: 16px;
+      max-width: 440px;
+      width: 100%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+      overflow: hidden;
+      animation: modalFadeIn 0.2s ease-out;
+    }
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    .invoice-modal-header {
+      padding: 18px 24px;
+      border-bottom: 1px solid #f1f5f9;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #f8fafc;
+    }
+    .close-modal-btn {
+      background: transparent;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #64748b;
+      line-height: 1;
+    }
+    .close-modal-btn:hover { color: #0f172a; }
+    .invoice-modal-body {
+      padding: 24px;
+    }
+    .invoice-modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #f1f5f9;
+      background: #f8fafc;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
     }
   </style>
 </head>
@@ -301,8 +409,8 @@
         <button class="btn btn-outline" id="btnEmailInvoice" onclick="dispatchInvoiceEmail()">
           <i class="fas fa-paper-plane"></i> Email Invoice
         </button>
-        <button class="btn btn-success d-none" id="btnPayOnline" onclick="triggerOnlinePayment()">
-          <i class="fas fa-credit-card"></i> Pay Online
+        <button class="btn btn-success d-none" id="btnPayOnline" onclick="openInvoicePayModal()">
+          <i class="fas fa-qrcode"></i> Pay via UPI
         </button>
       </div>
     </div>
@@ -321,7 +429,7 @@
 
         <div class="invoice-meta">
           <div class="invoice-num" id="invNumber">INV-2026-0001</div>
-          <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+          <div style="font-size: 13px; color: #64748b; margin-top: Paid4px;">
             Date: <span id="invDate">Jan 16, 2026</span>
           </div>
           <div style="font-size: 13px; color: #64748b;">
@@ -413,6 +521,25 @@
         <strong>Settlement Timestamp:</strong> <span id="invPaidDate">2026-01-16</span>
       </div>
 
+      <!-- UPI Payment QR Box for Pending / Partially Paid Invoices -->
+      <div id="invUpiCardBox" style="margin-bottom: 28px; padding: 18px 20px; border: 1.5px dashed #0284c7; border-radius: 12px; background: #f0f9ff; display: none; align-items: center; justify-content: space-between; gap: 20px;">
+        <div style="flex: 1;">
+          <div style="font-size: 14px; font-weight: 700; color: #0369a1; margin-bottom: 4px;">
+            <i class="fas fa-qrcode" style="margin-right: 6px;"></i> Scan & Pay via UPI
+          </div>
+          <div style="font-size: 13px; color: #334155; line-height: 1.6;">
+            <strong>UPI ID:</strong> <span style="font-family: monospace; font-weight: 700; color: #0284c7; background: #e0f2fe; padding: 2px 6px; border-radius: 4px;">raghavgupta98880@okaxis</span><br>
+            <strong>Payee Name:</strong> DevHorizan Technologies<br>
+            <strong>Supported Apps:</strong> Google Pay, PhonePe, Paytm, BHIM, Cred, Any UPI App<br>
+            <span style="font-size: 11px; color: #64748b;">The QR code is dynamic and pre-filled with the exact remaining balance.</span>
+          </div>
+        </div>
+        <div style="text-align: center; flex-shrink: 0;">
+          <img id="invPrintQrImg" src="" alt="UPI QR" style="width: 110px; height: 110px; border-radius: 8px; border: 1px solid #cbd5e1; background: #fff; padding: 4px; display: block;">
+          <div style="font-size: 10px; color: #0369a1; margin-top: 4px; font-weight: 700;">SCAN TO PAY</div>
+        </div>
+      </div>
+
       <!-- Footer Note -->
       <div class="footer-note">
         Thank you for partnering with <strong>DevHorizan</strong>! All payments are processed through encrypted channels.<br>
@@ -490,16 +617,20 @@
       document.getElementById('invPaidTotal').textContent = `₹${paid.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
       document.getElementById('invRemainingTotal').textContent = `₹${balance.toLocaleString('en-IN', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
-      // Status Badge
+      // Status Badge & UPI Box
       const badge = document.getElementById('invBadge');
       const payBtn = document.getElementById('btnPayOnline');
       const balanceRow = document.getElementById('invBalanceRow');
+      const upiCardBox = document.getElementById('invUpiCardBox');
+
+      const upiUri = `upi://pay?pa=raghavgupta98880@okaxis&pn=DevHorizan%20Technologies&am=${balance.toFixed(2)}&cu=INR&tn=${encodeURIComponent('Invoice ' + inv.invoice_number)}`;
 
       if (inv.status === 'Paid') {
         badge.className = 'invoice-status-badge status-paid';
         badge.textContent = 'PAID IN FULL';
         balanceRow.style.display = 'none';
         payBtn.classList.add('d-none');
+        if (upiCardBox) upiCardBox.style.display = 'none';
 
         // Show transaction box
         const txnBox = document.getElementById('invTransactionBox');
@@ -507,14 +638,32 @@
         document.getElementById('invTxnId').textContent = inv.transaction_id || 'VERIFIED';
         document.getElementById('invPayMethod').textContent = inv.payment_method || 'Online';
         document.getElementById('invPaidDate').textContent = inv.paid_date ? new Date(inv.paid_date).toLocaleString() : 'Confirmed';
-      } else if (inv.status === 'Partially Paid') {
+      } else if (inv.status === 'Under Review') {
         badge.className = 'invoice-status-badge status-partial';
-        badge.textContent = 'PARTIALLY PAID';
+        badge.style.background = '#fef3c7';
+        badge.style.color = '#b45309';
+        badge.textContent = 'PAYMENT IN REVIEW';
         balanceRow.style.display = 'flex';
-        payBtn.classList.remove('d-none');
+        payBtn.classList.add('d-none');
+        if (upiCardBox) upiCardBox.style.display = 'none';
+
+        showAlert(`Your payment submission of ₹${(inv.pending_review_amount || inv.remaining_balance).toLocaleString('en-IN')} (UTR: ${inv.transaction_id || 'Submitted'}) is currently under review by admin. Once accepted by admin, the invoice will be marked as Paid.`, false);
       } else {
-        badge.className = 'invoice-status-badge status-due';
-        badge.textContent = 'PAYMENT DUE';
+        if (upiCardBox) {
+          upiCardBox.style.display = 'flex';
+          const printQr = document.getElementById('invPrintQrImg');
+          if (printQr) {
+            printQr.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&margin=4&data=${encodeURIComponent(upiUri)}`;
+          }
+        }
+
+        if (inv.status === 'Partially Paid') {
+          badge.className = 'invoice-status-badge status-partial';
+          badge.textContent = 'PARTIALLY PAID';
+        } else {
+          badge.className = 'invoice-status-badge status-due';
+          badge.textContent = 'PAYMENT DUE';
+        }
         balanceRow.style.display = 'flex';
         payBtn.classList.remove('d-none');
       }
@@ -579,18 +728,125 @@
       }
     }
 
-    // Trigger Online Payment
-    async function triggerOnlinePayment() {
+    let invoiceTimerInterval = null;
+    let invoiceTimerSeconds = 300; // 5 minutes
+
+    function startInvoicePayTimer() {
+      clearInterval(invoiceTimerInterval);
+      invoiceTimerSeconds = 300;
+      updateInvoiceTimerDisplay();
+      const btn = document.getElementById('btnConfirmInvoicePay');
+      if (btn) btn.disabled = false;
+
+      invoiceTimerInterval = setInterval(() => {
+        invoiceTimerSeconds--;
+        if (invoiceTimerSeconds <= 0) {
+          clearInterval(invoiceTimerInterval);
+          invoiceTimerSeconds = 0;
+          updateInvoiceTimerDisplay();
+          const timerEl = document.getElementById('invPayCountdownTimer');
+          if (timerEl) timerEl.textContent = 'EXPIRED';
+          const btnConfirm = document.getElementById('btnConfirmInvoicePay');
+          if (btnConfirm) btnConfirm.disabled = true;
+          alert('UPI Payment session expired (5 minute limit). Please restart the timer.');
+        } else {
+          updateInvoiceTimerDisplay();
+        }
+      }, 1000);
+    }
+
+    function updateInvoiceTimerDisplay() {
+      const m = Math.floor(invoiceTimerSeconds / 60);
+      const s = invoiceTimerSeconds % 60;
+      const timerEl = document.getElementById('invPayCountdownTimer');
+      if (timerEl) {
+        timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+    }
+
+    function restartInvoicePayTimer() {
+      startInvoicePayTimer();
+    }
+
+    // Open UPI Payment Modal for Invoice
+    function openInvoicePayModal() {
       if (!currentInvoice) return;
+      const upiId = 'raghavgupta98880@okaxis';
+      const payeeName = 'DevHorizan Technologies';
+      const invNum = currentInvoice.invoice_number;
+      const balance = currentInvoice.remaining_balance;
+
+      document.getElementById('invModalInvoiceNum').textContent = invNum;
+      document.getElementById('invModalAmount').textContent = `₹${balance.toLocaleString('en-IN')}`;
+      if (document.getElementById('invModalUtr')) document.getElementById('invModalUtr').value = '';
+
+      const note = `Invoice ${invNum}`;
+      const upiUri = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&am=${balance.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
+
+      const qrImg = document.getElementById('invModalQrImg');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(upiUri)}`;
+      }
+
+      const deepLink = document.getElementById('invModalDeepLink');
+      if (deepLink) {
+        deepLink.href = upiUri;
+        if (/Android|iPhone|iPad|iPod/i.test(navigator.userAgent)) {
+          deepLink.style.display = 'inline-block';
+        } else {
+          deepLink.style.display = 'none';
+        }
+      }
+
+      startInvoicePayTimer();
+      document.getElementById('invoicePayModal').style.display = 'flex';
+    }
+
+    // Close UPI Payment Modal
+    function closeInvoicePayModal() {
+      clearInterval(invoiceTimerInterval);
+      document.getElementById('invoicePayModal').style.display = 'none';
+    }
+
+    // Copy UPI ID
+    function copyInvoiceUpiId() {
+      const upiId = 'raghavgupta98880@okaxis';
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(upiId).then(() => {
+          const btnText = document.getElementById('invCopyText');
+          if (btnText) {
+            btnText.textContent = 'Copied!';
+            setTimeout(() => { btnText.textContent = 'Copy'; }, 2000);
+          }
+        }).catch(() => {
+          prompt('Copy UPI ID:', upiId);
+        });
+      } else {
+        prompt('Copy UPI ID:', upiId);
+      }
+    }
+
+    // Confirm & Pay Now (UPI - Submitted for Admin Review)
+    async function confirmInvoiceUpiPayment() {
+      if (!currentInvoice) return;
+      if (invoiceTimerSeconds <= 0) {
+        alert('Payment session expired. Please restart the 5-minute timer.');
+        return;
+      }
       const token = localStorage.getItem('devhorizan_token');
       if (!token) {
-        alert('Please log in to your client portal to complete online payment.');
+        alert('Please log in to your client portal to confirm payment.');
         window.location.href = '/login';
         return;
       }
 
       const amountToPay = currentInvoice.remaining_balance;
-      if (!confirm(`Confirm online payment of ₹${amountToPay.toLocaleString('en-IN')} for invoice ${currentInvoice.invoice_number}?`)) return;
+      const utr = document.getElementById('invModalUtr') ? document.getElementById('invModalUtr').value.trim() : '';
+      const txnId = utr || `UPI_TXN_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+      const btn = document.getElementById('btnConfirmInvoicePay');
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
 
       try {
         const res = await fetch(`/api/payments/${currentInvoice.id}/pay`, {
@@ -601,19 +857,23 @@
           },
           body: JSON.stringify({
             amount: amountToPay,
-            payment_method: 'Online UPI / NetBanking',
-            transaction_id: `TXN_ONLINE_${Date.now()}`
+            payment_method: 'UPI (raghavgupta98880@okaxis)',
+            transaction_id: txnId
           })
         });
         const data = await res.json();
         if (data.success) {
-          showAlert('Payment successful! Transaction recorded.', false);
+          closeInvoicePayModal();
+          showAlert(`Payment is in review! Your UPI payment of ₹${amountToPay.toLocaleString('en-IN')} (UTR: ${txnId}) has been submitted. The admin will verify and accept the payment shortly, after which the status will show as Paid.`, false);
           await loadInvoiceData(currentInvoice.id);
         } else {
-          showAlert(data.message || 'Payment failed.', true);
+          showAlert(data.message || 'Payment submission failed.', true);
         }
       } catch (e) {
         showAlert('Payment server error.', true);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fas fa-check-circle"></i> Confirm & Pay Now';
       }
     }
 
@@ -624,6 +884,76 @@
       setTimeout(() => { el.style.display = 'none'; }, 6000);
     }
   </script>
+
+  <!-- UPI Payment Modal for Invoice -->
+  <div id="invoicePayModal" class="invoice-modal-overlay" style="display: none;">
+    <div class="invoice-modal-dialog">
+      <div class="invoice-modal-header">
+        <h3 style="margin: 0; font-size: 17px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-qrcode" style="color: #2563eb;"></i> Scan & Pay via UPI
+        </h3>
+        <button type="button" class="close-modal-btn" onclick="closeInvoicePayModal()">&times;</button>
+      </div>
+      <div class="invoice-modal-body">
+        <!-- 5-Minute Timer Display -->
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px; margin-bottom: 14px; color: #b91c1c;">
+          <div style="font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-clock"></i> UPI Session Expires In:
+          </div>
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <span id="invPayCountdownTimer" style="font-family: monospace; font-size: 16px; font-weight: 800; color: #dc2626;">05:00</span>
+            <button type="button" onclick="restartInvoicePayTimer()" style="background: none; border: none; color: #dc2626; cursor: pointer; font-size: 14px;" title="Restart Timer">
+              <i class="fas fa-redo"></i>
+            </button>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-bottom: 16px;">
+          <div style="font-size: 12px; color: #64748b;">Invoice Reference: <strong id="invModalInvoiceNum">INV-2026-0001</strong></div>
+          <div style="font-size: 12px; color: #64748b; margin-top: 4px;">Remaining Balance (Pre-filled):</div>
+          <div style="font-size: 26px; font-weight: 800; color: #10b981; margin-top: 2px;" id="invModalAmount">₹0</div>
+        </div>
+
+        <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; padding: 16px; text-align: center; margin-bottom: 16px;">
+          <div style="display: inline-block; padding: 8px; background: #fff; border-radius: 10px; box-shadow: 0 1px 4px rgba(0,0,0,0.08); border: 1px solid #e2e8f0;">
+            <img id="invModalQrImg" src="" alt="UPI QR Code" style="width: 200px; height: 200px; display: block; margin: 0 auto; object-fit: contain;">
+            <div style="font-size: 11px; color: #64748b; font-weight: 600; margin-top: 6px;">Scan with Google Pay, PhonePe, Paytm, or BHIM</div>
+          </div>
+
+          <div style="display: flex; align-items: center; justify-content: space-between; background: #fff; border: 1px solid #cbd5e1; border-radius: 8px; padding: 8px 12px; margin-top: 14px; text-align: left;">
+            <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap; margin-right: 8px;">
+              <div style="font-size: 10px; color: #64748b; text-transform: uppercase; font-weight: 700; letter-spacing: 0.5px;">Payee UPI ID</div>
+              <div style="font-size: 13px; font-family: monospace; font-weight: 700; color: #0f172a;">raghavgupta98880@okaxis</div>
+            </div>
+            <button type="button" onclick="copyInvoiceUpiId()" class="btn btn-outline" style="padding: 4px 12px; font-size: 12px; border-radius: 20px; white-space: nowrap;">
+              <i class="fas fa-copy"></i> <span id="invCopyText">Copy</span>
+            </button>
+          </div>
+
+          <a id="invModalDeepLink" href="#" style="display: none; margin-top: 12px; padding: 10px 16px; background: #10b981; color: white; border-radius: 20px; text-decoration: none; font-size: 13px; font-weight: 700;">
+            <i class="fas fa-mobile-alt"></i> Tap to Open in UPI App
+          </a>
+        </div>
+
+        <div style="margin-bottom: 14px;">
+          <label style="display: block; font-size: 12px; font-weight: 600; color: #475569; margin-bottom: 4px;">
+            UPI Reference / UTR Number <span style="font-weight: 400; color: #94a3b8;">(Optional)</span>
+          </label>
+          <input type="text" id="invModalUtr" placeholder="e.g. 12-digit UTR from payment screen" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; font-size: 13px; box-sizing: border-box;">
+        </div>
+
+        <div style="background: #eff6ff; border: 1px solid #bfdbfe; border-radius: 8px; padding: 10px 12px; font-size: 12px; color: #1e40af;">
+          <i class="fas fa-info-circle"></i> Once scanned and paid via UPI, click <strong>Confirm & Pay Now</strong>. Your payment will be submitted for admin verification and marked as <strong>Paid</strong> once accepted.
+        </div>
+      </div>
+      <div class="invoice-modal-footer">
+        <button type="button" class="btn btn-outline" onclick="closeInvoicePayModal()">Cancel</button>
+        <button type="button" class="btn btn-success" id="btnConfirmInvoicePay" onclick="confirmInvoiceUpiPayment()">
+          <i class="fas fa-check-circle"></i> Confirm & Pay Now
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
 

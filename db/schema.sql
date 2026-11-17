@@ -105,13 +105,14 @@ CREATE TABLE IF NOT EXISTS payments (
   amount_paid REAL NOT NULL DEFAULT 0,
   remaining_balance REAL NOT NULL DEFAULT 0,
   advance_required REAL NOT NULL DEFAULT 0,
-  status TEXT NOT NULL DEFAULT 'Pending' CHECK(status IN ('Pending', 'Partially Paid', 'Paid', 'Overdue')),
+  status TEXT NOT NULL DEFAULT 'Pending' CHECK(status IN ('Pending', 'Partially Paid', 'Paid', 'Overdue', 'Under Review')),
   due_date DATE,
   paid_date DATETIME,
   payment_method TEXT DEFAULT 'UPI / Card',
   transaction_id TEXT,
   receipt_file TEXT,
   notes TEXT,
+  pending_review_amount REAL DEFAULT 0,
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
   updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
@@ -166,6 +167,22 @@ CREATE TABLE IF NOT EXISTS documents (
   created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 
+CREATE TABLE IF NOT EXISTS client_reviews (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  project_id INTEGER REFERENCES projects(id) ON DELETE SET NULL,
+  user_id INTEGER NOT NULL REFERENCES users(id) ON DELETE CASCADE,
+  client_name TEXT NOT NULL,
+  company_or_role TEXT,
+  project_title TEXT,
+  service_category TEXT,
+  rating INTEGER NOT NULL DEFAULT 5 CHECK(rating BETWEEN 1 AND 5),
+  review_text TEXT NOT NULL,
+  status TEXT NOT NULL DEFAULT 'Pending' CHECK(status IN ('Pending', 'Approved', 'Rejected')),
+  admin_feedback TEXT,
+  created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+  updated_at DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
 -- Indices for rapid querying
 CREATE INDEX IF NOT EXISTS idx_users_email ON users(email);
 CREATE INDEX IF NOT EXISTS idx_projects_user ON projects(user_id);
@@ -176,4 +193,6 @@ CREATE INDEX IF NOT EXISTS idx_payments_user ON payments(user_id);
 CREATE INDEX IF NOT EXISTS idx_payments_project ON payments(project_id);
 CREATE INDEX IF NOT EXISTS idx_notifications_user ON notifications(user_id, is_read);
 CREATE INDEX IF NOT EXISTS idx_activity_user ON activity_logs(user_id);
+CREATE INDEX IF NOT EXISTS idx_reviews_status ON client_reviews(status);
+CREATE INDEX IF NOT EXISTS idx_reviews_user ON client_reviews(user_id);
 

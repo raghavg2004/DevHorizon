@@ -20,6 +20,7 @@ const userRoutes = require('./routes/users');
 const notificationRoutes = require('./routes/notifications');
 const messageRoutes = require('./routes/messages');
 const reportRoutes = require('./routes/reports');
+const reviewRoutes = require('./routes/reviews');
 
 const CLIENT_PORT = process.env.PORT || process.env.CLIENT_PORT || 3000;
 const ADMIN_PORT = process.env.ADMIN_PORT || (process.env.PORT ? process.env.PORT : 4000);
@@ -37,9 +38,8 @@ function applyCommonMiddlewareAndRoutes(app) {
   app.use(express.urlencoded({ extended: true, limit: '50mb' }));
   app.use(cookieParser());
 
-  // Static uploads & public assets
+  // Static uploads
   app.use('/uploads', express.static(uploadsDir));
-  app.use(express.static(publicDir));
 
   // Mount API endpoints
   app.use('/api/auth', authRoutes);
@@ -50,6 +50,7 @@ function applyCommonMiddlewareAndRoutes(app) {
   app.use('/api/notifications', notificationRoutes);
   app.use('/api/messages', messageRoutes);
   app.use('/api/reports', reportRoutes);
+  app.use('/api/reviews', reviewRoutes);
 
   // Backward compatibility with Project 3 email server
   app.post('/send-invoice-email', (req, res, next) => {
@@ -69,10 +70,13 @@ function applyCommonMiddlewareAndRoutes(app) {
 
 // -------------------------------------------------------------
 // 1. CLIENT APP (Port 3000)
-// Public Website, Client Project Portal, Client Invoicing
+// Public Company Website, Client Project Portal, Client Invoicing
 // -------------------------------------------------------------
 const clientApp = express();
 applyCommonMiddlewareAndRoutes(clientApp);
+
+// Static assets & complete company website files
+clientApp.use(express.static(publicDir));
 
 // Client UI Page Routes
 clientApp.get('/', (req, res) => res.sendFile(path.join(publicDir, 'index.html')));
@@ -83,16 +87,17 @@ clientApp.get('/reset-password', (req, res) => res.sendFile(path.join(publicDir,
 clientApp.get('/dashboard', (req, res) => res.sendFile(path.join(publicDir, 'dashboard.html')));
 clientApp.get('/invoice', (req, res) => res.sendFile(path.join(publicDir, 'invoice.html')));
 clientApp.get('/invoice/:id', (req, res) => res.sendFile(path.join(publicDir, 'invoice.html')));
+clientApp.get(['/ios-service.html', '/mobile-service.html', '/ios-android-service.html'], (req, res) => {
+  res.sendFile(path.join(publicDir, 'android-service.html'));
+});
 
-// Admin Console Routing (Single-Port Cloud Mode vs Local Dual-Port Mode)
-clientApp.get('/admin', (req, res) => {
+// Admin Console Routing: Redirect to dedicated Admin Port 4000
+clientApp.get(['/admin', '/admin-login', '/admin/login'], (req, res) => {
   if (process.env.NODE_ENV === 'production' || CLIENT_PORT == ADMIN_PORT || !process.env.ADMIN_PORT) {
     return res.sendFile(path.join(publicDir, 'admin.html'));
   }
-  res.redirect(`http://${req.hostname}:${ADMIN_PORT}/admin`);
+  res.redirect(`http://${req.hostname}:${ADMIN_PORT}/`);
 });
-clientApp.get('/admin/login', (req, res) => res.sendFile(path.join(publicDir, 'admin-login.html')));
-clientApp.get('/admin-login', (req, res) => res.sendFile(path.join(publicDir, 'admin-login.html')));
 
 // API 404 handler
 clientApp.use('/api', (req, res) => {
@@ -106,35 +111,50 @@ clientApp.use((req, res) => {
 
 // -------------------------------------------------------------
 // 2. ADMIN APP (Port 4000)
-// Dedicated Executive Command Center
+// Dedicated Admin Login & Executive Management Console ONLY
+// (Strictly NO Company Website on Port 4000)
 // -------------------------------------------------------------
 const adminApp = express();
 applyCommonMiddlewareAndRoutes(adminApp);
 
-// Admin UI Page Routes
-adminApp.get('/', (req, res) => res.sendFile(path.join(publicDir, 'admin.html')));
-adminApp.get('/admin', (req, res) => res.sendFile(path.join(publicDir, 'admin.html')));
+// Only serve necessary styling, scripts & logos for Admin interface
+// (Does NOT serve publicDir as a whole so company website is NEVER exposed on Port 4000)
+adminApp.use('/assets', express.static(path.join(publicDir, 'assets')));
+adminApp.get(['/DH.png', '/Dh.png'], (req, res) => res.sendFile(path.join(publicDir, 'DH.png')));
+adminApp.get(['/favicon.ico', '/logo.png'], (req, res) => res.sendFile(path.join(publicDir, 'assets/img/logo.png')));
+
+// Redirect any company website pages from Port 4000 to Port 3000
+const companyWebsitePages = [
+  '/index.html', '/about.html', '/team.html', '/android-service.html',
+  '/ios-service.html', '/mobile-service.html', '/ios-android-service.html',
+  '/web-service.html', '/salesforce-service.html', '/uiux-service.html',
+  '/ms-service.html', '/consultation-service.html',
+  '/pp.html', '/tos.html', '/dashboard', '/register', '/forgot-password', '/reset-password'
+];
+adminApp.get(companyWebsitePages, (req, res) => {
+  res.redirect(`http://${req.hostname}:${CLIENT_PORT}${req.originalUrl}`);
+});
+
+// Dedicated Admin Login Screen on Root & /login
+adminApp.get('/', (req, res) => res.sendFile(path.join(publicDir, 'admin-login.html')));
 adminApp.get('/login', (req, res) => res.sendFile(path.join(publicDir, 'admin-login.html')));
 adminApp.get('/admin-login', (req, res) => res.sendFile(path.join(publicDir, 'admin-login.html')));
+
+// Authenticated Executive Admin Console
+adminApp.get('/admin', (req, res) => res.sendFile(path.join(publicDir, 'admin.html')));
+
+// Invoices for admin viewing
 adminApp.get('/invoice', (req, res) => res.sendFile(path.join(publicDir, 'invoice.html')));
 adminApp.get('/invoice/:id', (req, res) => res.sendFile(path.join(publicDir, 'invoice.html')));
-
-// Redirect to Client Portal on Port 3000
-adminApp.get('/dashboard', (req, res) => {
-  if (process.env.NODE_ENV === 'production' || CLIENT_PORT == ADMIN_PORT || !process.env.CLIENT_PORT) {
-    return res.sendFile(path.join(publicDir, 'dashboard.html'));
-  }
-  res.redirect(`http://${req.hostname}:${CLIENT_PORT}/dashboard`);
-});
 
 // API 404 handler
 adminApp.use('/api', (req, res) => {
   res.status(404).json({ success: false, message: 'Admin API route not found' });
 });
 
-// Fallback to admin console
+// Fallback on Port 4000: Always return Admin Login Screen (Never Company Website)
 adminApp.use((req, res) => {
-  res.sendFile(path.join(publicDir, 'admin.html'));
+  res.sendFile(path.join(publicDir, 'admin-login.html'));
 });
 
 // -------------------------------------------------------------
@@ -173,9 +193,10 @@ async function startServer() {
 
       adminApp.listen(ADMIN_PORT, () => {
         console.log(`----------------------------------------------------------------`);
-        console.log(`⚡ [ADMIN CONSOLE]    Running on: http://localhost:${ADMIN_PORT}`);
-        console.log(`   - Admin Console:     http://localhost:${ADMIN_PORT}/`);
-        console.log(`   - Admin Login:       http://localhost:${ADMIN_PORT}/login`);
+        console.log(`⚡ [ADMIN PORT 4000]  Running on: http://localhost:${ADMIN_PORT}`);
+        console.log(`   - Admin Login Screen: http://localhost:${ADMIN_PORT}/`);
+        console.log(`   - Admin Dashboard:    http://localhost:${ADMIN_PORT}/admin`);
+        console.log(`   (Company website is restricted to Port 3000)`);
         console.log(`================================================================`);
         console.log(`✨ Both Client and Admin can now be opened simultaneously`);
         console.log(`   in separate browser tabs with zero session or cookie collisions!`);

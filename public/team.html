@@ -4,8 +4,8 @@
   <meta charset="utf-8">
   <meta content="width=device-width, initial-scale=1.0" name="viewport">
   <title>Meet Our Team - Expert Developers & Designers | DevHorizan</title>
-  <meta name="description" content="Meet the DevHorizan team of expert developers, designers, and consultants. Get to know Raghav Gupta, Aastha Agarwal, Upanshu Pal, and our talented professionals.">
-  <meta name="keywords" content="DevHorizan team, developers, designers, consultants, Raghav Gupta, Aastha Agarwal, Android developer, web developer, UI/UX designer">
+  <meta name="description" content="Meet the DevHorizan team of expert developers, designers, and Salesforce specialists. Get to know Raghav Gupta (Salesforce Admin & Dev), Aastha Agarwal, Upanshu Pal, and our talented professionals.">
+  <meta name="keywords" content="DevHorizan team, Salesforce developer, Salesforce admin, Apex, LWC, developers, designers, consultants, Raghav Gupta, Aastha Agarwal, Android developer, web developer, UI/UX designer">
   <meta name="author" content="DevHorizan">
   <meta name="robots" content="index, follow">
   <link rel="canonical" href="https://devhorizan.vercel.app/team.html">
@@ -47,26 +47,67 @@
   <style>
     .team-card {
       background: #fff;
-      border-radius: 16px;
+      border-radius: 18px;
       padding: 24px;
       height: 100%;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.07);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
+      display: flex;
+      flex-direction: column;
     }
     .team-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.12);
+      transform: translateY(-8px);
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.12);
+      border-color: rgba(56, 141, 168, 0.3);
     }
-    .team-card img {
-      width: 100%;
-      height: 280px;
-      object-fit: cover;
-      border-radius: 12px;
+    .team-img-wrapper {
+      position: relative;
+      overflow: hidden;
+      border-radius: 14px;
       margin-bottom: 16px;
+      background: #f1f5f9;
+    }
+    .team-img-wrapper img {
+      width: 100%;
+      height: 290px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    .team-card:hover .team-img-wrapper img {
+      transform: scale(1.06);
+    }
+    .badge-certified {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(15, 23, 42, 0.82);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      color: #ffffff;
+      font-size: 11.5px;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.22);
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
     }
     .team-card h4 {
       margin: 14px 0 4px;
       font-weight: 700;
+    }
+    .team-card .designation {
+      font-size: 13px;
+      font-weight: 700;
+      color: #0d6efd;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 2px;
     }
     .team-card .role {
       font-size: 14px;
@@ -78,28 +119,64 @@
       color: #4a4a4a;
       min-height: 72px;
     }
+    .skills-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+    }
+    .skills-tags .badge {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 5px 9px;
+      border-radius: 6px;
+    }
+    .team-social {
+      margin-top: auto;
+      padding-top: 10px;
+    }
     .team-social a {
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      width: 36px;
-      height: 36px;
+      width: 38px;
+      height: 38px;
       border-radius: 50%;
-      background: #f2f4f8;
-      color: #2c3e50;
+      background: #f1f5f9;
+      color: #334155;
       margin-right: 8px;
-      transition: all 0.3s ease;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      font-size: 16px;
     }
-    .team-social a:hover {
-      background: var(--accent-color);
-      color: #fff;
+    .team-social a.social-linkedin:hover {
+      background: #0a66c2 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 14px rgba(10, 102, 194, 0.35);
+      transform: translateY(-3px);
+    }
+    .team-social a.social-github:hover {
+      background: #24292e !important;
+      color: #fff !important;
+      box-shadow: 0 4px 14px rgba(36, 41, 46, 0.35);
+      transform: translateY(-3px);
+    }
+    .team-social a.social-instagram:hover {
+      background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285aeb 90%) !important;
+      color: #fff !important;
+      box-shadow: 0 4px 14px rgba(214, 36, 159, 0.35);
+      transform: translateY(-3px);
+    }
+    .team-social a.social-threads:hover {
+      background: #000000 !important;
+      color: #fff !important;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35);
+      transform: translateY(-3px);
     }
   </style>
 </head>
 
-<body class="index-page">
+<body class="team-page">
 
-  <header id="header" class="header d-flex align-items-center fixed-top">
+  <header id="header" class="header d-flex align-items-center sticky-top">
     <div class="container-fluid container-xl position-relative d-flex align-items-center">
 
       <a href="index.html" class="logo d-flex align-items-center me-auto">
@@ -109,22 +186,38 @@
         <ul>
           <li><a href="index.html#hero">Home</a></li>
           <li><a href="index.html#about">About</a></li>
-          <li><a href="index.html#features">Features</a></li>
           <li><a href="index.html#services">Services</a></li>
-                    <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#calculator">Estimator</a></li>
+          <li><a href="index.html#testimonials">Reviews</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
           <li><a href="team.html" class="active">Team</a></li>
-          <a class="btn-getstarted" href="index.html#contact">Contact</a>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li class="d-xl-none pt-2 border-top"><a href="/login" class="portal-menu-link"><i class="bi bi-person-circle me-2"></i> Client Portal</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
+      <a class="btn-portal-header d-inline-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-3 me-2 me-sm-0" href="/login">
+        <i class="bi bi-person-circle"></i>
+        <span>Client Portal</span>
+      </a>
     </div>
   </header>
 
   <main class="main">
-    <div class="page-title">
+    <!-- Page Title
+    <div class="page-title" data-aos="fade">
       <div class="container d-lg-flex justify-content-between align-items-center">
+        <h1 class="mb-2 mb-lg-0">Meet Our Team</h1>
+        <nav class="breadcrumbs">
+          <ol>
+            <li><a href="index.html">Home</a></li>
+            <li class="current">Team</li>
+          </ol>
+        </nav>
       </div>
     </div>
+    End Page Title -->
 
     <section id="team" class="section light-background">
       <div class="container section-title" data-aos="fade-up">
@@ -134,59 +227,96 @@
       </div>
 
       <div class="container">
-        <div class="row g-4">
+        <div class="row g-4 justify-content-center">
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="100">
             <div class="team-card">
-              <img src="assets/img/team/team-12.jpg" alt="Raghav Gupta">
+              <div class="team-img-wrapper">
+                <img src="assets/img/team/team-12.jpg" alt="Raghav Gupta">
+                <span class="badge-certified"><i class="bi bi-patch-check-fill text-warning me-1"></i> Salesforce Certified</span>
+              </div>
               <h4>Raghav Gupta</h4>
               <div class="designation">Founder / CEO</div>
-              <div class="role">Android Development & SEO Expert</div>
-              <p class="intro">Leads mobile experiences with scalable architecture, performance tuning, and app store growth strategies.</p>
+              <div class="role">Salesforce Admin & Developer | iOS & Android Specialist</div>
+              <p class="intro">Salesforce Certified Administrator & Developer specializing in Apex, Lightning Web Components (LWC), Flow Automation, and CRM cloud architectures, alongside high-performance iOS, Android, and cross-platform mobile systems.</p>
+              <div class="skills-tags mt-2 mb-3">
+                <span class="badge bg-primary text-white me-1">Salesforce Admin / Development</span>
+                <span class="badge bg-secondary text-white me-1">iOS & Android</span>
+                <span class="badge bg-secondary text-white me-1">Flutter & Swift</span>
+                <span class="badge bg-dark text-white me-1">SEO</span>
+                <span class="badge bg-secondary text-white me-1">AWS</span>
+                <span class="badge bg-dark text-white">DevOps & Delivery</span>
+              </div>
               <div class="team-social">
-                <a href="https://www.linkedin.com/in/raghavgupta2004" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                <a href="https://github.com/raghavg2004" aria-label="GitHub"><i class="bi bi-github"></i></a>
-                <a href="https://www.instagram.com/raghavgupta.04/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/raghavgupta2004" class="social-linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                <a href="https://github.com/raghavg2004" class="social-github" aria-label="GitHub"><i class="bi bi-github"></i></a>
+                <a href="https://www.instagram.com/raghavgupta.04/" class="social-instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
               </div>
             </div>
           </div>
 
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="200">
             <div class="team-card">
-              <img src="assets/img/team/team-u.jpg" alt="Upanshu Pal">
+              <div class="team-img-wrapper">
+                <img src="assets/img/team/team-u.jpg" alt="Upanshu Pal">
+                <span class="badge-certified"><i class="bi bi-shield-check text-info me-1"></i> Tech Architect</span>
+              </div>
               <h4>Upanshu Pal</h4>
               <div class="designation">Co-Founder (Tech)</div>
               <div class="role">Technology Consultant & Support Lead</div>
               <p class="intro">Guides clients with reliable architecture decisions and ensures smooth delivery post‑launch.</p>
+              <div class="skills-tags mt-2 mb-3">
+                <span class="badge bg-primary text-white me-1">Tech Consulting</span>
+                <span class="badge bg-info text-dark me-1">Web Development</span>
+                <span class="badge bg-info text-dark me-1">Cloud Architecture</span>
+                <span class="badge bg-secondary text-white me-1">System Support</span>
+                <span class="badge bg-dark text-white">DevOps & Delivery</span>
+              </div>
               <div class="team-social">
-                <a href="https://www.linkedin.com/in/upanshu-pal-2188b1276 " aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                <a href="https://github.com/Upanshupal" aria-label="GitHub"><i class="bi bi-github"></i></a>
-                <a href="https://www.instagram.com/upanshu_pal/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="https://www.linkedin.com/in/upanshu-pal-2188b1276 " class="social-linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                <a href="https://github.com/Upanshupal" class="social-github" aria-label="GitHub"><i class="bi bi-github"></i></a>
+                <a href="https://www.instagram.com/upanshu_pal/" class="social-instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
               </div>
             </div>
           </div>
-
+<!--
           <div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="150">
             <div class="team-card">
-              <img src="assets/img/team/team-24.jpg" alt="Aastha Aggarwal">
+              <div class="team-img-wrapper">
+                <img src="assets/img/team/team-24.jpg" alt="Aastha Aggarwal">
+                <span class="badge-certified"><i class="bi bi-stars text-danger me-1"></i> UI/UX & Growth</span>
+              </div>
               <h4>Aastha Aggarwal</h4>
               <div class="designation">Co-Founder (Product / Growth)</div>
               <div class="role">Web Development Expert & UI/UX Designer</div>
               <p class="intro">Crafts responsive, elegant web interfaces that balance user needs with business goals.</p>
+              <div class="skills-tags mt-2 mb-3">
+                <span class="badge bg-primary text-white me-1">UI/UX Design</span>
+                <span class="badge bg-info text-dark me-1">Web Development</span>
+                <span class="badge bg-secondary text-white me-1">Figma</span>
+                <span class="badge bg-dark text-white">Product Growth</span>
+                <span class="badge bg-secondary text-white me-1">AWS</span>
+              </div>
               <div class="team-social">
-                <!--<a href="https://www.linkedin.com/in/aastha-aggarwal" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                <a href="https://github.com/aasthaaggarwal" aria-label="GitHub"><i class="bi bi-github"></i></a>-->
-                <a href="https://www.instagram.com/aasttha.aggarwal/" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
-                <a href="https://www.threads.com/@aasttha.aggarwal" aria-label="Threads"><i class="bi bi-threads"></i></a>
+                <!-<a href="https://www.linkedin.com/in/aastha-aggarwal" class="social-linkedin" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                <a href="https://github.com/aasthaaggarwal" class="social-github" aria-label="GitHub"><i class="bi bi-github"></i></a>-->
+ <!--               <a href="https://www.instagram.com/aastha.agggarwal/" class="social-instagram" aria-label="Instagram"><i class="bi bi-instagram"></i></a>
+                <a href="https://www.threads.com/@aastha.agggarwal" class="social-threads" aria-label="Threads"><i class="bi bi-threads"></i></a>
               </div>
             </div>
           </div>
-
+-->
           <!--<div class="col-lg-4 col-md-6" data-aos="fade-up" data-aos-delay="250">
             <div class="team-card">
               <img src="assets/img/team/team-3.png" alt="Disha">
               <h4>Disha</h4>
               <div class="role">UI/UX Designer</div>
               <p class="intro">Focuses on intuitive design systems, usability testing, and delightful micro‑interactions.</p>
+              <div class="skills-tags mt-2 mb-3">
+                <span class="badge bg-primary text-white me-1">UI/UX Design</span>
+                <span class="badge bg-info text-dark me-1">Design Systems</span>
+                <span class="badge bg-secondary text-white me-1">Figma</span>
+                <span class="badge bg-dark text-white">Prototyping</span>
+              </div>
               <div class="team-social">
                 <a href="https://www.linkedin.com/in/disha-uiux" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
                 <a href="https://www.behance.net/disha" aria-label="Behance"><i class="bi bi-behance"></i></a>
@@ -199,11 +329,17 @@
             <div class="team-card">
               <img src="assets/img/team/team-5.jpg" alt="Anjali">
               <h4>Anjali</h4>
-              <div class="role">API Development & Integration Engineer</div>
-              <p class="intro">Builds secure APIs with clean documentation and smooth integrations across platforms.</p>
+              <div class="role">Cloud & Backend Solutions Engineer</div>
+              <p class="intro">Architects high-performance backend systems and reliable database infrastructures for web and mobile platforms.</p>
+              <div class="skills-tags mt-2 mb-3">
+                <span class="badge bg-primary text-white me-1">Backend Architecture</span>
+                <span class="badge bg-info text-dark me-1">Cloud Databases</span>
+                <span class="badge bg-secondary text-white me-1">Microservices</span>
+                <span class="badge bg-dark text-white">Node.js</span>
+              </div>
               <div class="team-social">
-                <a href="https://www.linkedin.com/in/anjali-api" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
-                <a href="https://github.com/anjali-api" aria-label="GitHub"><i class="bi bi-github"></i></a>
+                <a href="https://www.linkedin.com/in/anjali-dev" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
+                <a href="https://github.com/anjali-dev" aria-label="GitHub"><i class="bi bi-github"></i></a>
                 <a href="mailto:anjali@devhorizan.com" aria-label="Email"><i class="bi bi-envelope"></i></a>
               </div>
             </div>
@@ -215,6 +351,12 @@
               <h4>Rohan</h4>
               <div class="role">Quality Assurance & Automation</div>
               <p class="intro">Ensures product reliability through test automation, performance checks, and QA strategy.</p>
+              <div class="skills-tags mt-2 mb-3">
+                <span class="badge bg-primary text-white me-1">QA Automation</span>
+                <span class="badge bg-info text-dark me-1">Selenium & Cypress</span>
+                <span class="badge bg-secondary text-white me-1">Manual Testing</span>
+                <span class="badge bg-dark text-white">Performance QA</span>
+              </div>
               <div class="team-social">
                 <a href="https://www.linkedin.com/in/rohan-qa" aria-label="LinkedIn"><i class="bi bi-linkedin"></i></a>
                 <a href="https://github.com/rohan-qa" aria-label="GitHub"><i class="bi bi-github"></i></a>
@@ -259,6 +401,7 @@
             <li><a href="index.html#about">About us</a></li>
             <li><a href="index.html#services">Services</a></li>
             <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="team.html">Team</a></li>
             <li><a href="tos.html">Terms of service</a></li>
             <li><a href="pp.html">Privacy policy</a></li>
           </ul>
@@ -266,10 +409,10 @@
         <div class="col-lg-3 col-md-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="android-service.html">Android Development</a></li>
+            <li><a href="android-service.html">iOS & Android Development</a></li>
             <li><a href="web-service.html">Web Development</a></li>
+            <li><a href="salesforce-service.html">Salesforce Admin & Development</a></li>
             <li><a href="uiux-service.html">UI/UX Design</a></li>
-            <li><a href="api-service.html">API Development & Integration</a></li>
             <li><a href="ms-service.html">Maintenance and Support</a></li>
             <li><a href="consultation-service.html">Consultation</a></li>
           </ul>
@@ -336,7 +479,6 @@
   <!-- Vendor JS Files -->
   <script src="https://cdn.jsdelivr.net/npm/@srexi/purecounterjs/dist/purecounter_vanilla.js"></script>
   <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="assets/vendor/php-email-form/validate.js"></script>
   <script src="assets/vendor/aos/aos.js"></script>
   <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
   <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>

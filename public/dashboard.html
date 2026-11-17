@@ -206,23 +206,47 @@
     }
 
     .badge-status {
-      padding: 6px 12px;
+      padding: 5px 13px;
       border-radius: 999px;
       font-size: 12px;
       font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      letter-spacing: 0.2px;
     }
 
-    .status-in-progress { background: #e0f2fe; color: #0369a1; }
-    .status-approved { background: #ecfdf5; color: #047857; }
-    .status-completed { background: #dcfce7; color: #15803d; }
-    .status-pending { background: #fef3c7; color: #b45309; }
-    .status-revision { background: #fee2e2; color: #b91c1c; border: 1px solid #f87171; animation: pulse 2s infinite; }
-    .status-on-hold { background: #f1f5f9; color: #475569; }
-    .status-rejected { background: #f1f5f9; color: #94a3b8; }
+    .status-in-progress, .status-active { background: #e0f2fe; color: #0369a1; border: 1px solid #bae6fd; }
+    .status-approved, .status-completed, .status-paid { background: #dcfce7; color: #15803d; border: 1px solid #bbf7d0; }
+    .status-pending, .status-review { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
+    .status-revision { background: #fef2f2; color: #b91c1c; border: 1px solid #fecaca; animation: pulse 2s infinite; }
+    .status-on-hold { background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0; }
+    .status-rejected, .status-declined, .status-overdue { background: #fff1f2; color: #be123c; border: 1px solid #fecdd3; }
 
     @keyframes pulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.8; }
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.88; transform: scale(1.02); }
+    }
+
+    /* Glassmorphism Modals */
+    .modal-backdrop.show {
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      background-color: rgba(15, 23, 42, 0.65);
+    }
+    .modal-content {
+      border-radius: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+    .modal-header {
+      border-bottom: 1px solid #f1f5f9;
+      padding: 20px 24px;
+    }
+    .modal-footer {
+      border-top: 1px solid #f1f5f9;
+      padding: 18px 24px;
     }
 
     /* Counter-Propose / Edit Button - Black text on blue styling */
@@ -305,16 +329,89 @@
       border-radius: 999px;
       background: linear-gradient(90deg, var(--accent), var(--secondary));
     }
+
+    /* Mobile Responsive Dashboard System */
+    .sidebar-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.65);
+      backdrop-filter: blur(4px);
+      -webkit-backdrop-filter: blur(4px);
+      z-index: 1040;
+      opacity: 0;
+      visibility: hidden;
+      transition: all 0.3s ease;
+    }
+    .sidebar-backdrop.show {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    @media (max-width: 991px) {
+      .sidebar {
+        transform: translateX(-100%);
+        z-index: 1050;
+        box-shadow: 10px 0 35px rgba(0, 0, 0, 0.3);
+      }
+      .sidebar.show {
+        transform: translateX(0);
+      }
+      .main-wrapper {
+        margin-left: 0 !important;
+      }
+      .topbar {
+        padding: 0 16px;
+        height: 64px;
+      }
+      .content-area {
+        padding: 20px 14px;
+      }
+      .metric-card {
+        padding: 16px 12px !important;
+      }
+      .metric-icon {
+        width: 36px !important;
+        height: 36px !important;
+        font-size: 17px !important;
+      }
+      .metric-val {
+        font-size: 20px !important;
+      }
+      .metric-label {
+        font-size: 11.5px !important;
+      }
+      .notif-dropdown {
+        width: min(340px, 92vw) !important;
+        position: fixed !important;
+        top: 65px !important;
+        right: 12px !important;
+        left: auto !important;
+      }
+      .modal-dialog {
+        margin: 10px auto;
+        max-width: calc(100% - 20px);
+      }
+      .modal-header.p-4, .modal-body.p-4, .modal-footer.p-4 {
+        padding: 20px 16px !important;
+      }
+    }
   </style>
 </head>
 <body>
 
+  <!-- MOBILE SIDEBAR BACKDROP -->
+  <div class="sidebar-backdrop" id="sidebarBackdrop" onclick="toggleSidebar(false)"></div>
+
   <!-- SIDEBAR -->
   <aside class="sidebar">
-    <a href="/" class="sidebar-brand">
-      <img src="assets/img/DH.png" alt="DevHorizan">
-      <!--<span>DevHorizan</span>-->
-    </a>
+    <div class="d-flex align-items-center justify-content-between mb-2">
+      <a href="/" class="sidebar-brand mb-0 pb-0 border-0">
+        <img src="assets/img/DH.png" alt="DevHorizan">
+      </a>
+      <button class="btn btn-sm btn-outline-light border-0 d-lg-none" onclick="toggleSidebar(false)" aria-label="Close Sidebar">
+        <i class="bi bi-x-lg fs-5"></i>
+      </button>
+    </div>
 
     <ul class="sidebar-nav">
       <li class="nav-item">
@@ -336,6 +433,11 @@
       <li class="nav-item">
         <a href="#billing" onclick="switchTab('billing')">
           <i class="bi bi-credit-card-2-front"></i> Billing & Dues
+        </a>
+      </li>
+      <li class="nav-item">
+        <a href="#reviews" onclick="switchTab('reviews')">
+          <i class="bi bi-star"></i> Reviews & Feedback
         </a>
       </li>
       <li class="nav-item">
@@ -362,20 +464,25 @@
   <div class="main-wrapper">
     <!-- TOPBAR -->
     <header class="topbar">
-      <div>
-        <h4 id="pageHeading" class="fw-bold mb-0 text-dark fs-5">Dashboard Overview</h4>
-        <span class="text-muted small">Welcome back, <span id="topbarUserName">Client</span>!</span>
+      <div class="d-flex align-items-center gap-2">
+        <button class="btn btn-light rounded-circle border d-lg-none d-flex align-items-center justify-content-center" onclick="toggleSidebar(true)" style="width: 38px; height: 38px;" aria-label="Toggle Navigation">
+          <i class="bi bi-list fs-5"></i>
+        </button>
+        <div>
+          <h4 id="pageHeading" class="fw-bold mb-0 text-dark fs-5">Dashboard Overview</h4>
+          <span class="text-muted small d-none d-sm-inline">Welcome back, <span id="topbarUserName">Client</span>!</span>
+        </div>
       </div>
 
-      <div class="d-flex align-items-center gap-3">
+      <div class="d-flex align-items-center gap-2 gap-sm-3">
         <!-- New Request Button -->
-        <button class="btn btn-primary rounded-pill px-3 py-2 fw-semibold btn-sm shadow-sm" onclick="openNewRequestModal()">
-          <i class="bi bi-plus-lg me-1"></i> New Project Request
+        <button class="btn btn-primary rounded-pill px-2 px-sm-3 py-2 fw-semibold btn-sm shadow-sm" onclick="openNewRequestModal()">
+          <i class="bi bi-plus-lg"></i><span class="d-none d-sm-inline ms-1">New Project Request</span>
         </button>
 
         <!-- Notification Bell -->
         <div class="dropdown">
-          <button class="btn btn-light rounded-circle position-relative border" data-bs-toggle="dropdown" id="notifBellBtn" style="width: 42px; height: 42px;">
+          <button class="btn btn-light rounded-circle position-relative border" data-bs-toggle="dropdown" id="notifBellBtn" style="width: 40px; height: 40px;">
             <i class="bi bi-bell fs-5 text-secondary"></i>
             <span id="notifCountBadge" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger d-none" style="font-size: 10px;">
               0
@@ -442,8 +549,8 @@
         </div>
 
         <!-- Metric KPI Cards -->
-        <div class="row g-4 mb-4">
-          <div class="col-xl-3 col-sm-6">
+        <div class="row g-2 g-md-4 mb-4">
+          <div class="col-6 col-xl-3">
             <div class="metric-card">
               <div class="d-flex justify-content-between align-items-start">
                 <div>
@@ -458,7 +565,7 @@
             </div>
           </div>
 
-          <div class="col-xl-3 col-sm-6">
+          <div class="col-6 col-xl-3">
             <div class="metric-card">
               <div class="d-flex justify-content-between align-items-start">
                 <div>
@@ -473,7 +580,7 @@
             </div>
           </div>
 
-          <div class="col-xl-3 col-sm-6">
+          <div class="col-6 col-xl-3">
             <div class="metric-card">
               <div class="d-flex justify-content-between align-items-start">
                 <div>
@@ -488,7 +595,7 @@
             </div>
           </div>
 
-          <div class="col-xl-3 col-sm-6">
+          <div class="col-6 col-xl-3">
             <div class="metric-card">
               <div class="d-flex justify-content-between align-items-start">
                 <div>
@@ -678,6 +785,26 @@
         </div>
       </section>
 
+      <!-- TAB: REVIEWS & FEEDBACK -->
+      <section id="tab-reviews" class="tab-section">
+        <div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-2">
+          <div>
+            <h4 class="fw-bold mb-1 text-dark">Verified Reviews & Testimonials</h4>
+            <p class="text-muted small mb-0">Share your feedback on completed projects. Verified reviews are published on the DevHorizan website.</p>
+          </div>
+          <button class="btn btn-primary rounded-pill px-4 fw-semibold shadow-sm" onclick="openReviewModal()">
+            <i class="bi bi-star-fill text-warning me-1"></i> Write a Verified Review
+          </button>
+        </div>
+
+        <div id="clientReviewsListContainer">
+          <div class="card border-0 rounded-4 shadow-sm p-5 text-center text-muted bg-white">
+            <div class="spinner-border text-primary mx-auto mb-2" role="status"></div>
+            <div>Loading your reviews...</div>
+          </div>
+        </div>
+      </section>
+
     </main>
   </div>
 
@@ -693,6 +820,7 @@
         </div>
         <form id="newRequestForm" onsubmit="handleSubmitRequest(event)">
           <div class="modal-body p-4">
+            <div id="newReqModalAlert" class="d-none"></div>
             <div class="row g-3">
               <div class="col-md-7">
                 <label class="form-label small fw-bold">Project Name *</label>
@@ -702,9 +830,9 @@
                 <label class="form-label small fw-bold">Project Type *</label>
                 <select id="reqType" class="form-select" required>
                   <option value="Web Development">Web Development</option>
-                  <option value="Android Development">Android Development</option>
+                  <option value="iOS & Android Development">iOS & Android Development</option>
+                  <option value="Salesforce Admin & Development">Salesforce Admin & Development</option>
                   <option value="UI/UX Design">UI/UX Design</option>
-                  <option value="API Development & Integration">API Development & Integration</option>
                   <option value="Maintenance & Support">Maintenance & Support</option>
                   <option value="Consultation">Consultation</option>
                   <option value="Custom Software">Custom Software</option>
@@ -720,7 +848,7 @@
               </div>
               <div class="col-md-6">
                 <label class="form-label small fw-bold">Expected Budget (INR ₹) *</label>
-                <input type="number" id="reqBudget" class="form-control" placeholder="e.g. 75000" required min="1000">
+                <input type="number" id="reqBudget" class="form-control" placeholder="e.g. 10000" required min="1000">
               </div>
               <div class="col-md-6">
                 <label class="form-label small fw-bold">Expected Deadline</label>
@@ -941,7 +1069,7 @@
 
                 <div class="mb-3">
                   <label class="form-label small fw-bold text-dark">Message / Justification to Admin</label>
-                  <input type="text" id="counterNotes" class="form-control" placeholder="e.g. We have a hard budget cap of ₹60,000; happy to defer feature X to Phase 2.">
+                  <input type="text" id="counterNotes" class="form-control" placeholder="e.g. We have a hard budget cap of ₹15,000; happy to defer feature X to Phase 2.">
                 </div>
 
                 <button type="button" class="btn btn-counter-propose fw-bold px-4 py-2 rounded-pill shadow-sm" onclick="submitRevisionDecision('resubmit')" style="color: #000000 !important; -webkit-text-fill-color: #000000 !important; font-weight: 700 !important;">
@@ -970,41 +1098,167 @@
     </div>
   </div>
 
-  <!-- 4. Pay Online Modal -->
+  <!-- 4. Pay Online Modal (Strictly UPI with Dynamic Pre-filled QR) -->
   <div class="modal fade" id="payModal" tabindex="-1">
     <div class="modal-dialog modal-dialog-centered">
       <div class="modal-content border-0 rounded-4 shadow">
-        <div class="modal-header border-bottom p-4">
-          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-shield-lock-fill text-success me-2"></i> Secure Payment Gateway</h5>
+        <div class="modal-header border-bottom p-4 bg-light">
+          <h5 class="modal-title fw-bold text-dark"><i class="bi bi-qr-code-scan text-primary me-2"></i> Scan & Pay via UPI</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
         </div>
         <form id="payForm" onsubmit="handleProcessPayment(event)">
           <div class="modal-body p-4">
             <input type="hidden" id="payInvoiceId">
-            <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">Invoice Number</label>
-              <input type="text" id="payInvoiceNum" class="form-control" readonly disabled>
+
+            <!-- 5-Minute UPI Session Countdown Timer -->
+            <div class="p-2 px-3 bg-danger-subtle text-danger rounded-3 mb-3 border border-danger-subtle">
+              <div class="d-flex align-items-center justify-content-between">
+                <div class="d-flex align-items-center small fw-bold">
+                  <i class="bi bi-clock-history fs-5 me-2"></i>
+                  <span>UPI Payment Session Expires In:</span>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                  <span class="font-monospace fw-bold fs-5 text-danger" id="payCountdownTimer">05:00</span>
+                  <button type="button" class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill" onclick="restartPayTimer()" title="Restart 5-min timer">
+                    <i class="bi bi-arrow-clockwise"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="progress mt-2" style="height: 4px; background: rgba(220, 53, 69, 0.2);">
+                <div id="payTimerProgressBar" class="progress-bar bg-danger" style="width: 100%; transition: width 1s linear;"></div>
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">Payment Amount (INR ₹)</label>
-              <input type="number" id="payAmountInput" class="form-control fw-bold fs-5 text-primary" required min="1">
+
+            <div class="row g-2 mb-3">
+              <div class="col-6">
+                <label class="form-label small fw-bold text-muted">Invoice Number</label>
+                <input type="text" id="payInvoiceNum" class="form-control form-control-sm bg-white fw-bold" readonly disabled>
+              </div>
+              <div class="col-6">
+                <label class="form-label small fw-bold text-muted">Amount to Pay (₹)</label>
+                <input type="number" id="payAmountInput" class="form-control form-control-sm fw-bold text-primary" required min="1" oninput="updatePayQrCode()">
+              </div>
             </div>
-            <div class="mb-3">
-              <label class="form-label small fw-bold text-muted">Select Payment Method</label>
-              <select id="payMethod" class="form-select">
-                <option value="UPI / QR Code">UPI (GPay / PhonePe / Paytm)</option>
-                <option value="Credit / Debit Card">Credit / Debit Card</option>
-                <option value="Net Banking">Net Banking</option>
-                <option value="Direct Bank Transfer">Direct Bank Wire (NEFT / RTGS)</option>
-              </select>
+
+            <!-- UPI Scan & Pay Card -->
+            <div class="card border rounded-3 p-3 bg-light text-center mb-3">
+              <div class="d-flex align-items-center justify-content-between mb-2 pb-2 border-bottom">
+                <span class="small fw-bold text-muted"><i class="bi bi-shield-check text-success me-1"></i> DevHorizan Official</span>
+                <span class="badge bg-success text-white px-2 py-1"><i class="bi bi-lightning-charge-fill me-1"></i>Instant UPI</span>
+              </div>
+
+              <!-- Dynamic Pre-filled QR Code -->
+              <div class="d-flex justify-content-center my-2">
+                <div class="p-2 bg-white rounded-3 shadow-sm border text-center" style="display: inline-block;">
+                  <img id="payQrCodeImg" src="" alt="UPI Payment QR Code" style="width: 200px; height: 200px; display: block; margin: 0 auto; object-fit: contain;">
+                  <div class="small text-muted mt-2 fw-semibold"><i class="bi bi-camera me-1"></i> Scan with any UPI App</div>
+                </div>
+              </div>
+
+              <!-- Pre-filled Amount Notification -->
+              <div class="mt-2 mb-2">
+                <span class="small text-muted">Pre-filled QR Amount:</span>
+                <div class="fs-4 fw-bold text-success" id="payQrAmountDisplay">₹0</div>
+              </div>
+
+              <!-- UPI ID Row with 1-Click Copy -->
+              <div class="d-flex align-items-center justify-content-between p-2 bg-white rounded-3 border mb-2 text-start">
+                <div class="text-truncate me-2">
+                  <div class="text-muted" style="font-size: 11px; text-transform: uppercase; letter-spacing: 0.5px;">Payee UPI ID</div>
+                  <div class="fw-bold text-dark font-monospace" id="upiIdText" style="font-size: 14px;">raghavgupta98880@okaxis</div>
+                </div>
+                <button type="button" class="btn btn-sm btn-outline-primary rounded-pill px-3 py-1 text-nowrap" onclick="copyUpiId()">
+                  <i class="bi bi-clipboard me-1"></i> <span id="copyBtnText">Copy</span>
+                </button>
+              </div>
+
+              <!-- Mobile Deep Link (Opens UPI app directly on mobile devices) -->
+              <a id="payUpiDeepLink" href="#" class="btn btn-outline-success w-100 rounded-pill mb-2 fw-bold d-md-none">
+                <i class="bi bi-phone me-1"></i> Tap to Open in UPI App
+              </a>
+
+              <!-- Accepted UPI Apps -->
+              <div class="d-flex justify-content-center flex-wrap gap-1 mt-1">
+                <span class="badge bg-white text-secondary border">Google Pay</span>
+                <span class="badge bg-white text-secondary border">PhonePe</span>
+                <span class="badge bg-white text-secondary border">Paytm</span>
+                <span class="badge bg-white text-secondary border">BHIM</span>
+                <span class="badge bg-white text-secondary border">Cred</span>
+                <span class="badge bg-white text-secondary border">Any Bank UPI</span>
+              </div>
             </div>
+
+            <!-- Optional UPI Ref / UTR -->
+            <div class="mb-3">
+              <label class="form-label small fw-bold text-muted">UPI Reference / UTR Number <span class="fw-normal text-muted">(Optional)</span></label>
+              <input type="text" id="payUpiRef" class="form-control" placeholder="e.g. 12-digit UTR from payment screen">
+              <div class="form-text small" style="font-size: 11px;">After scanning and paying in your UPI app, click below to confirm.</div>
+            </div>
+
             <div class="alert alert-info py-2 px-3 small rounded-3 mb-0">
-              <i class="bi bi-info-circle me-1"></i> This transaction will instantly generate an authenticated payment confirmation and update your balance.
+              <i class="bi bi-info-circle me-1"></i> Once scanned and paid in your UPI app, click <strong>Confirm & Pay Now</strong>. Your payment will be submitted for admin verification and marked as <strong>Paid</strong> once accepted.
             </div>
           </div>
           <div class="modal-footer border-top p-3 bg-light">
             <button type="button" class="btn btn-secondary rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
-            <button type="submit" id="btnConfirmPay" class="btn btn-success rounded-pill px-4 fw-bold">Confirm & Pay Now</button>
+            <button type="submit" id="btnConfirmPay" class="btn btn-success rounded-pill px-4 fw-bold">
+              <i class="bi bi-check-circle me-1"></i> Confirm & Pay Now
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. Client Review Submission Modal -->
+  <div class="modal fade" id="clientReviewModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content rounded-4 border-0 shadow-lg">
+        <div class="modal-header border-0 pb-0">
+          <div>
+            <h5 class="modal-title fw-bold text-dark">Leave a Verified Client Review</h5>
+            <p class="text-muted small mb-0">Share your experience with DevHorizan. Approved reviews appear on our official website.</p>
+          </div>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <form id="clientReviewForm" onsubmit="submitClientReview(event)">
+          <div class="modal-body py-3">
+            <input type="hidden" id="revProjectId" value="">
+            <input type="hidden" id="revServiceCategory" value="">
+
+            <div class="mb-3 text-center p-3 bg-light rounded-3 border">
+              <label class="form-label small fw-bold text-secondary text-uppercase mb-2 d-block">Overall Rating</label>
+              <div class="rating-stars d-inline-flex gap-2 fs-3" id="starRatingContainer" style="cursor: pointer; color: #f59e0b;">
+                <i class="bi bi-star-fill star-item" data-val="1" onclick="setStarRating(1)" onmouseover="hoverStars(1)" onmouseout="resetStars()"></i>
+                <i class="bi bi-star-fill star-item" data-val="2" onclick="setStarRating(2)" onmouseover="hoverStars(2)" onmouseout="resetStars()"></i>
+                <i class="bi bi-star-fill star-item" data-val="3" onclick="setStarRating(3)" onmouseover="hoverStars(3)" onmouseout="resetStars()"></i>
+                <i class="bi bi-star-fill star-item" data-val="4" onclick="setStarRating(4)" onmouseover="hoverStars(4)" onmouseout="resetStars()"></i>
+                <i class="bi bi-star-fill star-item" data-val="5" onclick="setStarRating(5)" onmouseover="hoverStars(5)" onmouseout="resetStars()"></i>
+              </div>
+              <input type="hidden" id="revRatingInput" value="5">
+              <div class="small fw-semibold text-primary mt-1" id="starRatingLabel">5 Stars - Exceptional Delivery</div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Project or Service Highlight</label>
+              <input type="text" id="revProjectTitle" class="form-control" placeholder="e.g. Salesforce CRM & iOS / Android Platform" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Your Role / Company Name</label>
+              <input type="text" id="revCompanyRole" class="form-control" placeholder="e.g. Founder & CEO, Apex Innovations" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-bold">Your Review & Testimonial *</label>
+              <textarea id="revReviewText" class="form-control" rows="4" placeholder="Describe your experience working with DevHorizan, the technical quality, communication, and business results..." required minlength="10"></textarea>
+            </div>
+          </div>
+          <div class="modal-footer border-0 pt-0">
+            <button type="button" class="btn btn-light rounded-pill px-4" data-bs-dismiss="modal">Cancel</button>
+            <button type="submit" id="btnSubmitReview" class="btn btn-primary rounded-pill px-4 fw-bold">
+              Submit for Verification
+            </button>
           </div>
         </form>
       </div>
@@ -1067,6 +1321,9 @@
         // Handle URL Hash Routing (e.g. #requests?rev=6)
         handleUrlHashRouting();
         window.addEventListener('hashchange', handleUrlHashRouting);
+
+        // Check for Pending Cost Calculator Estimate from Homepage
+        checkPendingEstimator();
       } catch (err) {
         console.error('Auth verification error:', err);
         window.location.href = '/login';
@@ -1078,7 +1335,7 @@
       const rawHash = window.location.hash.replace('#', '');
       if (!rawHash) return;
       const [tabPart, queryPart] = rawHash.split('?');
-      if (['overview', 'projects', 'requests', 'billing', 'profile'].includes(tabPart)) {
+      if (['overview', 'projects', 'requests', 'billing', 'reviews', 'profile'].includes(tabPart)) {
         switchTab(tabPart);
       }
       if (queryPart) {
@@ -1090,8 +1347,22 @@
       }
     }
 
+    // Toggle Mobile Sidebar Drawer
+    function toggleSidebar(forceState) {
+      const sidebar = document.querySelector('.sidebar');
+      const backdrop = document.getElementById('sidebarBackdrop');
+      if (!sidebar) return;
+      const isShow = typeof forceState === 'boolean' ? forceState : !sidebar.classList.contains('show');
+      sidebar.classList.toggle('show', isShow);
+      if (backdrop) backdrop.classList.toggle('show', isShow);
+      document.body.style.overflow = (isShow && window.innerWidth < 992) ? 'hidden' : '';
+    }
+
     // Switch Dashboard Tabs
     function switchTab(tabId) {
+      if (window.innerWidth < 992) {
+        toggleSidebar(false);
+      }
       document.querySelectorAll('.tab-section').forEach(el => el.classList.remove('active'));
       document.querySelectorAll('.sidebar-nav .nav-item a').forEach(el => el.classList.remove('active'));
 
@@ -1107,10 +1378,13 @@
         projects: 'My Projects',
         requests: 'Project Requests & Negotiations',
         billing: 'Financial Overview & Invoices',
+        reviews: 'Verified Client Reviews',
         profile: 'Account Settings'
       };
       document.getElementById('pageHeading').textContent = headings[tabId] || 'Dashboard';
       window.location.hash = tabId;
+
+      if (tabId === 'reviews') loadClientReviews();
     }
 
     // Load Overall Dashboard Data
@@ -1290,7 +1564,16 @@
       const filtered = filter === 'ALL' ? clientProjects : clientProjects.filter(p => p.status === filter);
 
       if (filtered.length === 0) {
-        container.innerHTML = '<div class="card border-0 rounded-4 shadow-sm p-5 text-center text-muted bg-white">No projects found under this filter.</div>';
+        container.innerHTML = `
+          <div class="card border-0 rounded-4 shadow-sm p-5 text-center bg-white my-3">
+            <div class="mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; background: #f0f7ff; color: #0d6efd; font-size: 28px;">
+              <i class="bi bi-folder2-open"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-1">No Projects Found</h5>
+            <p class="text-muted small mb-3">No projects match the selected status filter.</p>
+            <div><button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="document.getElementById('projectFilterStatus').value='ALL'; renderProjectsList();">View All Projects</button></div>
+          </div>
+        `;
         return;
       }
 
@@ -1326,7 +1609,12 @@
               <span class="text-muted">Total Cost:</span> <strong class="text-dark">₹${p.total_cost.toLocaleString('en-IN')}</strong>
               <span class="text-muted ms-3">Balance Due:</span> <strong class="text-danger">₹${p.remaining_balance.toLocaleString('en-IN')}</strong>
             </div>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 flex-wrap">
+              ${p.status === 'Completed' ? `
+                <button class="btn btn-warning btn-sm rounded-pill px-3 fw-bold text-dark" onclick="openReviewModalForProject(${p.id}, '${escapeHtml(p.title)}', '${escapeHtml(p.category)}')">
+                  <i class="bi bi-star-fill text-dark me-1"></i> Leave Verified Review
+                </button>
+              ` : ''}
               <button class="btn btn-outline-primary btn-sm rounded-pill px-3" onclick="openProjectDetails(${p.id})">
                 <i class="bi bi-eye me-1"></i> View Milestones & Updates
               </button>
@@ -1340,7 +1628,16 @@
     function renderRequestsList() {
       const container = document.getElementById('requestsContainer');
       if (clientRequests.length === 0) {
-        container.innerHTML = '<div class="card border-0 rounded-4 shadow-sm p-5 text-center text-muted bg-white">No project requests submitted yet. Click "Submit New Request" to create one.</div>';
+        container.innerHTML = `
+          <div class="card border-0 rounded-4 shadow-sm p-5 text-center bg-white my-3">
+            <div class="mb-3 mx-auto d-flex align-items-center justify-content-center rounded-circle" style="width: 64px; height: 64px; background: #ecfdf5; color: #10b981; font-size: 28px;">
+              <i class="bi bi-file-earmark-plus"></i>
+            </div>
+            <h5 class="fw-bold text-dark mb-1">No Project Requests Yet</h5>
+            <p class="text-muted small mb-3">Ready to bring your idea to life? Submit a new project request and receive an instant estimate.</p>
+            <div><button class="btn btn-primary btn-sm rounded-pill px-4 py-2 fw-semibold" onclick="document.querySelector('#nav-requests a')?.click(); new bootstrap.Modal(document.getElementById('newRequestModal')).show();"><i class="bi bi-plus-circle me-1"></i> Submit New Request</button></div>
+          </div>
+        `;
         return;
       }
 
@@ -1457,11 +1754,38 @@
     function renderInvoicesList() {
       const tbody = document.getElementById('invoicesTableBody');
       if (clientPayments.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="text-center text-muted py-4">No invoices recorded yet.</td></tr>';
+        tbody.innerHTML = `
+          <tr>
+            <td colspan="8" class="text-center py-5">
+              <div class="d-inline-flex flex-column align-items-center">
+                <div class="d-flex align-items-center justify-content-center rounded-circle mb-2" style="width: 52px; height: 52px; background: #f8fafc; color: #64748b; font-size: 24px;">
+                  <i class="bi bi-receipt-cutoff"></i>
+                </div>
+                <div class="fw-semibold text-dark">No Invoices Recorded</div>
+                <div class="text-muted small">Invoices will appear here as your project milestones progress.</div>
+              </div>
+            </td>
+          </tr>
+        `;
         return;
       }
 
-      tbody.innerHTML = clientPayments.map(p => `
+      tbody.innerHTML = clientPayments.map(p => {
+        let statusBadge = `<span class="badge-status ${getStatusClass(p.status)}">${p.status}</span>`;
+        if (p.status === 'Under Review') {
+          statusBadge = `<span class="badge bg-warning text-dark py-1 px-2 rounded-pill"><i class="bi bi-clock-history me-1"></i> Payment In Review</span>`;
+        }
+
+        let actionButton = '';
+        if (p.status === 'Under Review') {
+          actionButton = `<span class="badge bg-warning-subtle text-warning-emphasis border border-warning-subtle py-2 px-3 rounded-pill" title="Payment of ₹${(p.pending_review_amount || p.remaining_balance).toLocaleString('en-IN')} submitted and awaiting admin approval"><i class="bi bi-hourglass-split me-1"></i> In Review</span>`;
+        } else if (p.remaining_balance > 0) {
+          actionButton = `<button class="btn btn-sm btn-success rounded-pill fw-semibold" onclick="openPayModal(${p.id}, '${p.invoice_number}', ${p.remaining_balance})">Pay Now</button>`;
+        } else {
+          actionButton = `<span class="badge bg-success-subtle text-success py-2 px-3 rounded-pill">Paid in Full</span>`;
+        }
+
+        return `
         <tr>
           <td><span class="fw-bold text-primary">${p.invoice_number}</span></td>
           <td><span class="fw-medium">${p.project_title}</span></td>
@@ -1469,23 +1793,18 @@
           <td class="text-success">₹${p.amount_paid.toLocaleString('en-IN')}</td>
           <td class="${p.remaining_balance > 0 ? 'text-danger fw-bold' : 'text-muted'}">₹${p.remaining_balance.toLocaleString('en-IN')}</td>
           <td>${p.due_date || 'N/A'}</td>
-          <td><span class="badge-status ${getStatusClass(p.status)}">${p.status}</span></td>
+          <td>${statusBadge}</td>
           <td>
-            <div class="d-flex gap-2">
+            <div class="d-flex gap-2 align-items-center">
               <a href="/invoice/${p.id}" class="btn btn-sm btn-outline-secondary rounded-pill" title="View Full Invoice PDF">
                 <i class="bi bi-file-earmark-pdf"></i>
               </a>
-              ${p.remaining_balance > 0 ? `
-                <button class="btn btn-sm btn-success rounded-pill fw-semibold" onclick="openPayModal(${p.id}, '${p.invoice_number}', ${p.remaining_balance})">
-                  Pay Now
-                </button>
-              ` : `
-                <span class="badge bg-success-subtle text-success py-2 px-3 rounded-pill">Paid in Full</span>
-              `}
+              ${actionButton}
             </div>
           </td>
         </tr>
-      `).join('');
+      `;
+      }).join('');
     }
 
     // Helper: Map status to styling class
@@ -1496,7 +1815,8 @@
         case 'Completed': return 'status-completed';
         case 'Pending':
         case 'Submitted':
-        case 'Under Admin Review': return 'status-pending';
+        case 'Under Admin Review':
+        case 'Under Review': return 'status-pending';
         case 'Revision Requested': return 'status-revision';
         case 'On Hold': return 'status-on-hold';
         case 'Paid': return 'status-completed';
@@ -1836,26 +2156,146 @@
       }
     }
 
-    // Open Pay Modal
+    let payTimerInterval = null;
+    let payTimerSeconds = 300; // 5 minutes
+
+    function startPayTimer() {
+      clearInterval(payTimerInterval);
+      payTimerSeconds = 300;
+      updatePayTimerDisplay();
+      const btnConfirm = document.getElementById('btnConfirmPay');
+      if (btnConfirm) btnConfirm.disabled = false;
+
+      payTimerInterval = setInterval(() => {
+        payTimerSeconds--;
+        if (payTimerSeconds <= 0) {
+          clearInterval(payTimerInterval);
+          payTimerSeconds = 0;
+          updatePayTimerDisplay();
+          const timerEl = document.getElementById('payCountdownTimer');
+          if (timerEl) timerEl.textContent = 'EXPIRED';
+          const btn = document.getElementById('btnConfirmPay');
+          if (btn) btn.disabled = true;
+          alert('UPI Payment session expired (5 minute limit). Please click the refresh icon next to the timer to restart.');
+        } else {
+          updatePayTimerDisplay();
+        }
+      }, 1000);
+    }
+
+    function updatePayTimerDisplay() {
+      const m = Math.floor(payTimerSeconds / 60);
+      const s = payTimerSeconds % 60;
+      const timerEl = document.getElementById('payCountdownTimer');
+      if (timerEl) {
+        timerEl.textContent = `${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+      }
+      const progressEl = document.getElementById('payTimerProgressBar');
+      if (progressEl) {
+        const pct = Math.max(0, Math.min(100, (payTimerSeconds / 300) * 100));
+        progressEl.style.width = `${pct}%`;
+      }
+    }
+
+    function restartPayTimer() {
+      startPayTimer();
+      updatePayQrCode();
+    }
+
+    // Open Pay Modal (Strictly UPI with Dynamic QR & 5-Min Timer)
     function openPayModal(id, invNum, remaining) {
       document.getElementById('payInvoiceId').value = id;
       document.getElementById('payInvoiceNum').value = invNum;
       document.getElementById('payAmountInput').value = remaining;
-      const modal = new bootstrap.Modal(document.getElementById('payModal'));
+      if (document.getElementById('payUpiRef')) document.getElementById('payUpiRef').value = '';
+      updatePayQrCode();
+      startPayTimer();
+      const modalEl = document.getElementById('payModal');
+      modalEl.addEventListener('hidden.bs.modal', () => {
+        clearInterval(payTimerInterval);
+      }, { once: true });
+      const modal = new bootstrap.Modal(modalEl);
       modal.show();
     }
 
-    // Handle Process Payment
+    // Dynamic UPI QR Code Generator with pre-filled amount
+    function updatePayQrCode() {
+      const upiId = 'raghavgupta98880@okaxis';
+      const payeeName = 'DevHorizan Technologies';
+      const invNum = document.getElementById('payInvoiceNum').value || 'DEVHORIZAN';
+      const rawVal = document.getElementById('payAmountInput').value;
+      const amountVal = Math.max(0, parseFloat(rawVal) || 0);
+
+      const amtDisplay = document.getElementById('payQrAmountDisplay');
+      if (amtDisplay) {
+        amtDisplay.textContent = `₹${amountVal.toLocaleString('en-IN')}`;
+      }
+
+      const note = `Invoice ${invNum}`;
+      // UPI URI standard with pa, pn, am, cu, tn
+      const upiUri = `upi://pay?pa=${encodeURIComponent(upiId)}&pn=${encodeURIComponent(payeeName)}&am=${amountVal.toFixed(2)}&cu=INR&tn=${encodeURIComponent(note)}`;
+
+      const qrImg = document.getElementById('payQrCodeImg');
+      if (qrImg) {
+        qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&margin=8&data=${encodeURIComponent(upiUri)}`;
+      }
+
+      const deepLink = document.getElementById('payUpiDeepLink');
+      if (deepLink) {
+        deepLink.href = upiUri;
+      }
+    }
+
+    // 1-Click Copy UPI ID with Animated Feedback
+    function copyUpiId() {
+      const upiId = 'raghavgupta98880@okaxis';
+      const copyBtn = document.querySelector('button[onclick="copyUpiId()"]');
+      const copyBtnText = document.getElementById('copyBtnText');
+
+      const triggerCopied = () => {
+        if (copyBtnText) copyBtnText.textContent = 'Copied!';
+        if (copyBtn) {
+          copyBtn.classList.remove('btn-outline-primary');
+          copyBtn.classList.add('btn-success');
+          const icon = copyBtn.querySelector('i');
+          if (icon) icon.className = 'bi bi-check2 me-1';
+        }
+        setTimeout(() => {
+          if (copyBtnText) copyBtnText.textContent = 'Copy';
+          if (copyBtn) {
+            copyBtn.classList.remove('btn-success');
+            copyBtn.classList.add('btn-outline-primary');
+            const icon = copyBtn.querySelector('i');
+            if (icon) icon.className = 'bi bi-clipboard me-1';
+          }
+        }, 2200);
+      };
+
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(upiId).then(triggerCopied).catch(() => {
+          prompt('Copy UPI ID:', upiId);
+        });
+      } else {
+        prompt('Copy UPI ID:', upiId);
+      }
+    }
+
+    // Handle Process Payment (Strictly UPI - Submitted for Admin Review)
     async function handleProcessPayment(e) {
       e.preventDefault();
+      if (payTimerSeconds <= 0) {
+        alert('Payment session expired. Please restart the 5-minute timer to proceed.');
+        return;
+      }
       const token = localStorage.getItem('devhorizan_token');
       const id = document.getElementById('payInvoiceId').value;
       const amount = document.getElementById('payAmountInput').value;
-      const method = document.getElementById('payMethod').value;
+      const utr = document.getElementById('payUpiRef') ? document.getElementById('payUpiRef').value.trim() : '';
+      const txnId = utr || `UPI_TXN_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
       const btn = document.getElementById('btnConfirmPay');
 
       btn.disabled = true;
-      btn.textContent = 'Processing payment...';
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-1" role="status"></span> Submitting...';
 
       try {
         const res = await fetch(`/api/payments/${id}/pay`, {
@@ -1864,24 +2304,29 @@
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
           },
-          body: JSON.stringify({ amount, payment_method: method })
+          body: JSON.stringify({
+            amount,
+            payment_method: 'UPI (raghavgupta98880@okaxis)',
+            transaction_id: txnId
+          })
         });
         const data = await res.json();
 
         if (data.success) {
-          alert(`Payment of ₹${amount} completed successfully!\nTransaction ID: ${data.transactionId}`);
+          clearInterval(payTimerInterval);
+          alert(`Payment is in review!\n\nYour UPI payment submission of ₹${parseFloat(amount).toLocaleString('en-IN')} (UTR: ${txnId}) has been received.\n\nThe admin will verify and accept your payment shortly, after which your payment status will show as Paid.`);
           const modalEl = document.getElementById('payModal');
           const modalInstance = bootstrap.Modal.getInstance(modalEl);
           if (modalInstance) modalInstance.hide();
           loadDashboardData();
         } else {
-          alert(data.message || 'Payment processing failed.');
+          alert(data.message || 'Payment submission failed.');
         }
       } catch (err) {
-        alert('Server error during payment.');
+        alert('Server error during payment submission.');
       } finally {
         btn.disabled = false;
-        btn.textContent = 'Confirm & Pay Now';
+        btn.innerHTML = '<i class="bi bi-check-circle me-1"></i> Confirm & Pay Now';
       }
     }
 
@@ -2087,6 +2532,248 @@
         }
       } catch (err) {
         alert('Server error changing password.');
+      }
+    }
+
+    // -----------------------------------------------------------------
+    // Estimator Pre-fill Check
+    // -----------------------------------------------------------------
+    function checkPendingEstimator() {
+      const pendingRaw = localStorage.getItem('devhorizan_pending_estimate');
+      if (pendingRaw) {
+        try {
+          const est = JSON.parse(pendingRaw);
+          localStorage.removeItem('devhorizan_pending_estimate');
+
+          switchTab('requests');
+          openNewRequestModal();
+
+          setTimeout(() => {
+            if (est.title) document.getElementById('reqName').value = est.title;
+            if (est.type) {
+              const typeSelect = document.getElementById('reqType');
+              for (let opt of typeSelect.options) {
+                if (opt.value === est.type) {
+                  typeSelect.value = est.type;
+                  break;
+                }
+              }
+            }
+            if (est.expected_budget) document.getElementById('reqBudget').value = est.expected_budget;
+            if (est.required_features) document.getElementById('reqFeatures').value = est.required_features;
+            if (est.description) document.getElementById('reqDesc').value = est.description;
+
+            const targetDate = new Date();
+            targetDate.setDate(targetDate.getDate() + 21);
+            document.getElementById('reqDeadline').value = targetDate.toISOString().split('T')[0];
+
+            const alertEl = document.getElementById('newReqModalAlert');
+            if (alertEl) {
+              alertEl.className = 'alert alert-info py-2 px-3 small rounded-3 mb-3 d-flex align-items-center gap-2';
+              alertEl.innerHTML = '<i class="bi bi-magic fs-5 text-primary"></i> <div><strong>Estimate Loaded!</strong> Pre-filled with specifications and investment range calculated on the homepage.</div>';
+              alertEl.classList.remove('d-none');
+            }
+          }, 350);
+        } catch (e) {
+          console.warn('Error restoring estimator:', e);
+        }
+      }
+    }
+
+    // -----------------------------------------------------------------
+    // Verified Client Reviews & Testimonials Pipeline
+    // -----------------------------------------------------------------
+    let clientReviewsList = [];
+
+    async function loadClientReviews() {
+      const container = document.getElementById('clientReviewsListContainer');
+      const token = localStorage.getItem('devhorizan_token');
+      try {
+        const res = await fetch('/api/reviews/my', {
+          headers: { 'Authorization': `Bearer ${token}` }
+        });
+        const data = await res.json();
+        if (data.success) {
+          clientReviewsList = data.reviews || [];
+          renderClientReviews();
+        } else {
+          container.innerHTML = '<div class="card border-0 rounded-4 shadow-sm p-5 text-center text-muted bg-white">Unable to load reviews.</div>';
+        }
+      } catch (err) {
+        console.error('Error loading client reviews:', err);
+        container.innerHTML = '<div class="card border-0 rounded-4 shadow-sm p-5 text-center text-muted bg-white">Failed to connect to reviews service.</div>';
+      }
+    }
+
+    function renderClientReviews() {
+      const container = document.getElementById('clientReviewsListContainer');
+      if (clientReviewsList.length === 0) {
+        container.innerHTML = `
+          <div class="card border-0 rounded-4 shadow-sm p-5 text-center bg-white">
+            <i class="bi bi-star text-warning fs-1 mb-2"></i>
+            <h5 class="fw-bold text-dark">No Reviews Submitted Yet</h5>
+            <p class="text-muted small mb-3">Completed a project with DevHorizan? Share your experience! Approved reviews appear live on our website.</p>
+            <div>
+              <button class="btn btn-primary rounded-pill px-4 fw-semibold" onclick="openReviewModal()">
+                <i class="bi bi-pencil-square me-1"></i> Write Your First Review
+              </button>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="row g-3">
+          ${clientReviewsList.map(r => {
+            const stars = Array(r.rating).fill('<i class="bi bi-star-fill text-warning"></i>').join(' ');
+            let badgeClass = 'bg-warning-subtle text-warning border-warning';
+            let statusIcon = 'bi-hourglass-split';
+            let statusLabel = 'Under Admin Verification';
+
+            if (r.status === 'Approved') {
+              badgeClass = 'bg-success-subtle text-success border-success';
+              statusIcon = 'bi-check-circle-fill';
+              statusLabel = 'Approved & Published Live 🌟';
+            } else if (r.status === 'Rejected') {
+              badgeClass = 'bg-danger-subtle text-danger border-danger';
+              statusIcon = 'bi-x-circle-fill';
+              statusLabel = 'Needs Revision';
+            }
+
+            return `
+              <div class="col-md-6">
+                <div class="card border-0 rounded-4 shadow-sm p-4 bg-white h-100">
+                  <div class="d-flex justify-content-between align-items-center mb-2">
+                    <div>${stars}</div>
+                    <span class="badge ${badgeClass} border small px-2 py-1">
+                      <i class="bi ${statusIcon} me-1"></i> ${statusLabel}
+                    </span>
+                  </div>
+                  <h6 class="fw-bold text-dark mb-1">${escapeHtml(r.project_title || 'Project Feedback')}</h6>
+                  <div class="text-muted small mb-2">${escapeHtml(r.service_category || 'General')} • ${new Date(r.created_at).toLocaleDateString()}</div>
+                  <p class="text-dark fst-italic small bg-light p-3 rounded-3 mb-2 flex-grow-1">
+                    "${escapeHtml(r.review_text)}"
+                  </p>
+                  ${r.admin_feedback ? `
+                    <div class="small text-muted border-top pt-2 mt-2">
+                      <strong class="text-secondary">Admin Note:</strong> ${escapeHtml(r.admin_feedback)}
+                    </div>
+                  ` : ''}
+                </div>
+              </div>
+            `;
+          }).join('')}
+        </div>
+      `;
+    }
+
+    function openReviewModal() {
+      document.getElementById('clientReviewForm').reset();
+      document.getElementById('revProjectId').value = '';
+      document.getElementById('revServiceCategory').value = '';
+      setStarRating(5);
+      if (currentUser) {
+        document.getElementById('revCompanyRole').value = currentUser.profile.company_name || 'Client Partner';
+      }
+      const modal = new bootstrap.Modal(document.getElementById('clientReviewModal'));
+      modal.show();
+    }
+
+    function openReviewModalForProject(projectId, title, category) {
+      document.getElementById('clientReviewForm').reset();
+      document.getElementById('revProjectId').value = projectId || '';
+      document.getElementById('revProjectTitle').value = title || '';
+      document.getElementById('revServiceCategory').value = category || '';
+      setStarRating(5);
+      if (currentUser) {
+        document.getElementById('revCompanyRole').value = currentUser.profile.company_name || 'Client Partner';
+      }
+      const modal = new bootstrap.Modal(document.getElementById('clientReviewModal'));
+      modal.show();
+    }
+
+    function setStarRating(val) {
+      document.getElementById('revRatingInput').value = val;
+      const labels = {
+        1: '1 Star - Needs Improvement',
+        2: '2 Stars - Fair Experience',
+        3: '3 Stars - Satisfactory',
+        4: '4 Stars - Great Delivery',
+        5: '5 Stars - Exceptional Delivery'
+      };
+      document.getElementById('starRatingLabel').textContent = labels[val] || `${val} Stars`;
+      renderStarDisplay(val);
+    }
+
+    function hoverStars(val) {
+      renderStarDisplay(val);
+    }
+
+    function resetStars() {
+      const currentVal = parseInt(document.getElementById('revRatingInput').value, 10) || 5;
+      renderStarDisplay(currentVal);
+    }
+
+    function renderStarDisplay(val) {
+      const stars = document.querySelectorAll('#starRatingContainer .star-item');
+      stars.forEach((s, idx) => {
+        if (idx < val) {
+          s.style.color = '#f59e0b';
+        } else {
+          s.style.color = '#cbd5e1';
+        }
+      });
+    }
+
+    async function submitClientReview(e) {
+      e.preventDefault();
+      const token = localStorage.getItem('devhorizan_token');
+      const project_id = document.getElementById('revProjectId').value || null;
+      const project_title = document.getElementById('revProjectTitle').value.trim();
+      const service_category = document.getElementById('revServiceCategory').value.trim();
+      const company_or_role = document.getElementById('revCompanyRole').value.trim();
+      const rating = parseInt(document.getElementById('revRatingInput').value, 10) || 5;
+      const review_text = document.getElementById('revReviewText').value.trim();
+      const btn = document.getElementById('btnSubmitReview');
+
+      btn.disabled = true;
+      btn.textContent = 'Submitting Review...';
+
+      try {
+        const res = await fetch('/api/reviews', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            project_id: project_id ? parseInt(project_id, 10) : null,
+            project_title,
+            service_category,
+            company_or_role,
+            rating,
+            review_text
+          })
+        });
+
+        const data = await res.json();
+        if (data.success) {
+          alert('🌟 ' + data.message);
+          const modalEl = document.getElementById('clientReviewModal');
+          const modalInstance = bootstrap.Modal.getInstance(modalEl);
+          if (modalInstance) modalInstance.hide();
+          switchTab('reviews');
+          loadClientReviews();
+        } else {
+          alert(data.message || 'Failed to submit review.');
+        }
+      } catch (err) {
+        console.error('Error submitting review:', err);
+        alert('Server error submitting review.');
+      } finally {
+        btn.disabled = false;
+        btn.textContent = 'Submit for Verification';
       }
     }
 

@@ -128,15 +128,28 @@
     .alert-banner.show { display: block; }
     .alert-danger { background: rgba(239, 68, 68, 0.2); color: #fca5a5; border: 1px solid rgba(239, 68, 68, 0.4); }
     .alert-success { background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.4); }
+
+    @media (max-width: 575px) {
+      body {
+        padding: 16px 12px;
+      }
+      .admin-card {
+        padding: 24px 18px;
+        border-radius: 16px;
+      }
+      .form-control-custom {
+        font-size: 16px !important;
+        padding: 11px 14px;
+      }
+    }
   </style>
 </head>
 <body>
 
   <div class="login-container">
     <div class="text-center mb-4">
-      <div class="admin-badge">EXECUTIVE ACCESS ONLY</div>
-      <h2 class="fw-bold mb-1" style="letter-spacing: -0.02em;">Admin Command Center</h2>
-      <p class="text-muted small">DevHorizan Unified Platform • Port 4000</p>
+      <!--<div class="admin-badge">EXECUTIVE ACCESS ONLY</div>-->
+      <h2 class="fw-bold mb-1" style="letter-spacing: -0.02em;">DevHorizan Admin Login</h2>
     </div>
 
     <div class="admin-card">
@@ -157,33 +170,11 @@
           Sign In to Admin Console
         </button>
 
-        <div class="text-center">
-          <a href="http://localhost:3000" class="text-decoration-none text-muted small" target="_blank">
-            <i class="bi bi-box-arrow-up-right me-1"></i> Switch to Client Portal (Port 3000)
-          </a>
-        </div>
-
-        <div class="demo-pill">
-          <div class="d-flex justify-content-between align-items-center">
-            <div>
-              <div class="fw-bold text-white"><i class="bi bi-shield-lock-fill text-warning me-1"></i> Default Admin Credentials:</div>
-              <div class="text-muted" style="font-size: 11px;">admin@devhorizan.com</div>
-            </div>
-            <button type="button" class="btn btn-sm btn-outline-light py-1 px-2 rounded-pill" onclick="fillAdminCredentials()" style="font-size: 11px;">
-              Auto-Fill
-            </button>
-          </div>
-        </div>
       </form>
     </div>
   </div>
 
   <script>
-    function fillAdminCredentials() {
-      document.getElementById('adminEmail').value = 'admin@devhorizan.com';
-      document.getElementById('adminPassword').value = 'Admin@12345';
-    }
-
     function showAlert(msg, isError = true) {
       const b = document.getElementById('alertBox');
       b.className = `alert-banner ${isError ? 'alert-danger' : 'alert-success'} show`;

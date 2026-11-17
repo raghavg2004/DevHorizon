@@ -51,16 +51,23 @@
 
       <nav id="navmenu" class="navmenu">
         <ul>
-          <li><a href="index.html#hero" class="active">Home</a></li>
+          <li><a href="index.html#hero">Home</a></li>
           <li><a href="index.html#about">About</a></li>
-          <li><a href="index.html#features">Features</a></li>
-          <li><a href="index.html#services">Services</a></li>
-                    <li><a href="index.html#faq">FAQ</a></li>
-                    <li><a href="team.html">Team</a></li>
-          <a class="btn-getstarted" href="index.html#contact">Contact</a>
+          <li><a href="index.html#services" class="active">Services</a></li>
+          <li><a href="index.html#portfolio">Portfolio</a></li>
+          <li><a href="index.html#calculator">Estimator</a></li>
+          <li><a href="index.html#testimonials">Reviews</a></li>
+          <li><a href="index.html#faq">FAQ</a></li>
+          <li><a href="team.html">Team</a></li>
+          <li><a href="index.html#contact">Contact</a></li>
+          <li class="d-xl-none pt-2 border-top"><a href="/login" class="portal-menu-link"><i class="bi bi-person-circle me-2"></i> Client Portal</a></li>
         </ul>
         <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
       </nav>
+      <a class="btn-portal-header d-inline-flex align-items-center gap-1 gap-sm-2 ms-auto ms-sm-3 me-2 me-sm-0" href="/login">
+        <i class="bi bi-person-circle"></i>
+        <span>Client Portal</span>
+      </a>
     </div>
   </header>
 
@@ -68,11 +75,12 @@
     <!-- Page Title -->
     <div class="page-title" data-aos="fade">
       <div class="container d-lg-flex justify-content-between align-items-center">
-        <h1 class="mb-2 mb-lg-0">Service Details - Maintenance & Support</h1>
+        <h1 class="mb-2 mb-lg-0">Maintenance & Support</h1>
         <nav class="breadcrumbs">
           <ol>
             <li><a href="index.html">Home</a></li>
-            <li class="current">Service Details</li>
+            <li><a href="index.html#services">Services</a></li>
+            <li class="current">Maintenance</li>
           </ol>
         </nav>
       </div>
@@ -85,31 +93,58 @@
         <div class="row gy-5">
           <div class="col-lg-4" data-aos="fade-up" data-aos-delay="100">
             <div class="service-box">
-              <h4>Serices List</h4>
+              <h4>Services List</h4>
               <div class="services-list">
-                <a href="android-service.html"><i class="bi bi-arrow-right-circle"></i><span>Android Development</span></a>
+                <a href="salesforce-service.html"><i class="bi bi-arrow-right-circle"></i><span>Salesforce Admin & Development</span></a>
+                <a href="android-service.html"><i class="bi bi-arrow-right-circle"></i><span>iOS & Android Development</span></a>
                 <a href="web-service.html"><i class="bi bi-arrow-right-circle"></i><span>Web Development</span></a>
                 <a href="uiux-service.html"><i class="bi bi-arrow-right-circle"></i><span>UI/UX Design</span></a>
-                <a href="api-service.html"><i class="bi bi-arrow-right-circle"></i><span>API Development & Integration</span></a>
                 <a href="#" class="active"><i class="bi bi-arrow-right-circle"></i><span>Maintenance & Support</span></a>
                 <a href="consultation-service.html"><i class="bi bi-arrow-right-circle"></i><span>Consultation</span></a>
               </div>
             </div>
+
+            <div class="help-box d-flex flex-column justify-content-center align-items-center text-center">
+              <i class="bi bi-headset help-icon mb-2"></i>
+              <h4 class="fw-bold mb-1">Have Questions?</h4>
+              <p class="small opacity-75 mb-3">Speak directly with our support engineers about custom SLA agreements.</p>
+              <a href="index.html#contact" class="btn btn-primary rounded-pill px-4 btn-sm fw-bold">Get In Touch</a>
+            </div>
           </div><!-- End Services List -->
                
           <!-- Maintenance & Support -->
-          <div class="col-lg-8 ps-lg-5" data-aos="fade-up" data-aos-delay="200">
-            <h3>Regular Maintenance is essential to keep applications secure, updated, and bug-free.</h3>
-            <p>
-              Our Maintenance Services Include:
-            </p>
-            <ul>
-              <li><i class="bi bi-check-circle"></i><span><b>Bug Fixes & Performance Enhancements –</b> Continuously monitoring and improving software for stability.</span></li>
-              <li><i class="bi bi-check-circle"></i><span><b>Security Patching & Compliance –</b> Ensuring applications adhere to the latest security standards and compliance regulations.</span></li>
-              <li><i class="bi bi-check-circle"></i><span><b>Server & Hosting Management –</b> Managing cloud-based servers (AWS, Firebase, DigitalOcean, and Vercel) for high availability.</span></li>
-              <li><i class="bi bi-check-circle"></i><span><b>Version Upgrades & Feature Enhancements –</b> Keeping software updated with the latest frameworks and dependencies.</span></li>
-              <li><i class="bi bi-check-circle"></i><span><b>24/7 Technical Support & Monitoring –</b> Providing ongoing monitoring and quick issue resolution.</span></li>
-            </ul>
+          <div class="col-lg-8 ps-lg-4" data-aos="fade-up" data-aos-delay="200">
+            <div class="service-content-card">
+              <span class="badge bg-primary-subtle text-primary border border-primary-subtle px-3 py-1 rounded-pill fw-semibold text-uppercase mb-3" style="font-size: 11px;">Reliability & SLA Support</span>
+              <h3>Continuous System Health, Rapid Security Patching & 99.9% Cloud Uptime</h3>
+              <p>
+                Regular proactive maintenance is vital to prevent downtime, patch zero-day vulnerabilities, and ensure peak application performance across high traffic loads.
+              </p>
+              
+              <h5 class="fw-bold text-dark mt-4 mb-3">Key Aspects of Our Maintenance Services:</h5>
+              <ul>
+                <li><i class="bi bi-check-circle-fill"></i><span><b>Bug Fixes & Performance Enhancements –</b> Proactive telemetry monitoring, log analysis, and continuous performance tuning.</span></li>
+                <li><i class="bi bi-check-circle-fill"></i><span><b>Security Patching & Compliance Audits –</b> Keeping dependencies safe, updating certificates, and maintaining strict compliance standards.</span></li>
+                <li><i class="bi bi-check-circle-fill"></i><span><b>Cloud Infrastructure Management –</b> Managing AWS, Firebase, DigitalOcean, and Vercel hosting for elastic scalability and high availability.</span></li>
+                <li><i class="bi bi-check-circle-fill"></i><span><b>Framework & Database Version Upgrades –</b> Seamless upgrades of Node, React, Swift, Kotlin, and SQLite/Postgres without breaking changes.</span></li>
+                <li><i class="bi bi-check-circle-fill"></i><span><b>Dedicated SLA Technical Support –</b> Rapid guaranteed turnaround times and direct WhatsApp/Portal founder communication.</span></li>
+              </ul>
+
+              <!-- Service CTA Banner -->
+              <div class="service-cta-card mt-5 p-4 rounded-4 text-white position-relative overflow-hidden" style="background: linear-gradient(135deg, #091931 0%, #0f3460 60%, #1a4971 100%);">
+                <div class="row align-items-center">
+                  <div class="col-md-8 mb-3 mb-md-0">
+                    <span class="badge bg-light text-dark fw-bold px-2 py-1 mb-2" style="font-size: 10.5px;">ESTIMATE & LAUNCH</span>
+                    <h5 class="fw-bold text-white mb-1">Need dedicated SLA Maintenance?</h5>
+                    <p class="text-white opacity-75 small mb-0">Calculate an instant ballpark budget (₹3,500 – ₹25,000 range) or launch your project request directly in our portal.</p>
+                  </div>
+                  <div class="col-md-4 text-md-end d-flex flex-column gap-2">
+                    <a href="index.html#calculator" class="btn btn-primary btn-sm rounded-pill px-3 py-2 fw-bold shadow">Cost Estimator</a>
+                    <a href="/login" class="btn btn-outline-light btn-sm rounded-pill px-3 py-2 fw-semibold">Client Portal</a>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <!-- End Maintenance & Support -->
         </div>
@@ -150,6 +185,7 @@
             <li><a href="index.html#about">About us</a></li>
             <li><a href="index.html#services">Services</a></li>
             <li><a href="index.html#faq">FAQ</a></li>
+            <li><a href="team.html">Team</a></li>
             <li><a href="tos.html">Terms of service</a></li>
             <li><a href="pp.html">Privacy policy</a></li>
           </ul>
@@ -157,10 +193,10 @@
         <div class="col-lg-3 col-md-6 footer-links">
           <h4>Our Services</h4>
           <ul>
-            <li><a href="android-service.html">Android Development</a></li>
+            <li><a href="salesforce-service.html">Salesforce Admin & Development</a></li>
+            <li><a href="android-service.html">iOS & Android Development</a></li>
             <li><a href="web-service.html">Web Development</a></li>
             <li><a href="uiux-service.html">UI/UX Design</a></li>
-            <li><a href="api-service.html">API Development & Integration</a></li>
             <li><a href="ms-service.html">Maintenance and Support</a></li>
             <li><a href="consultation-service.html">Consultation</a></li>
           </ul>
@@ -192,7 +228,6 @@
 <div id="preloader"></div>
 <!-- Vendor JS Files -->
 <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-<script src="assets/vendor/php-email-form/validate.js"></script>
 <script src="assets/vendor/aos/aos.js"></script>
 <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
 <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>

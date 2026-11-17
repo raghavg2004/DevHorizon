@@ -3,7 +3,7 @@ const router = express.Router();
 const db = require('../config/db');
 const { authenticateToken, requireAdmin } = require('../middleware/auth');
 const { logActivity } = require('../services/activityService');
-const { createNotification } = require('../services/notificationService');
+const { createNotification, notifyAdmins } = require('../services/notificationService');
 const { sendEmail } = require('../services/emailService');
 
 // GET /api/payments
@@ -292,10 +292,11 @@ router.put('/:id', authenticateToken, requireAdmin, async (req, res) => {
 });
 
 // POST /api/payments/:id/pay (Client initiates or completes payment)
+// POST /api/payments/:id/pay (Client submits UPI payment for admin review)
 router.post('/:id/pay', authenticateToken, async (req, res) => {
   try {
     const paymentId = req.params.id;
-    const { amount, payment_method = 'Online / UPI', transaction_id } = req.body;
+    const { amount, payment_method = 'UPI (raghavgupta98880@okaxis)', transaction_id } = req.body;
 
     const payment = await db.get('SELECT * FROM payments WHERE id = ?', [paymentId]);
     if (!payment) {
@@ -307,64 +308,192 @@ router.post('/:id/pay', authenticateToken, async (req, res) => {
     }
 
     const payAmount = parseFloat(amount) || payment.remaining_balance;
-    const updatedPaid = payment.amount_paid + payAmount;
-    const updatedRemaining = Math.max(0, payment.total_amount - updatedPaid);
-    const newStatus = updatedRemaining <= 0 ? 'Paid' : 'Partially Paid';
-    const txnId = transaction_id || `TXN_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
+    const txnId = transaction_id || `UPI_${Date.now()}_${Math.floor(Math.random() * 1000)}`;
 
+    // Do NOT immediately mark as Paid or subtract balance!
+    // Set status to 'Under Review', store pending_review_amount and transaction_id (UTR).
     await db.run(
       `UPDATE payments 
-       SET amount_paid = ?,
-           remaining_balance = ?,
-           status = ?,
-           paid_date = CURRENT_TIMESTAMP,
+       SET status = 'Under Review',
+           pending_review_amount = ?,
            payment_method = ?,
            transaction_id = ?,
            updated_at = CURRENT_TIMESTAMP
        WHERE id = ?`,
-      [updatedPaid, updatedRemaining, newStatus, payment_method, txnId, paymentId]
+      [payAmount, payment_method, txnId, paymentId]
     );
 
-    // Sync project financial balance
-    await db.run(
-      `UPDATE projects 
-       SET paid_amount = ?, remaining_balance = ?
-       WHERE id = ?`,
-      [updatedPaid, updatedRemaining, payment.project_id]
-    );
+    // Fetch Client info
+    const client = await db.get('SELECT full_name, email FROM users WHERE id = ?', [req.user.id]);
+    const clientName = client ? client.full_name : 'Client';
 
-    // Log Activity
-    await logActivity({
-      userId: req.user.id,
-      action: 'Client Made Payment',
-      entityType: 'payment',
-      entityId: paymentId,
-      details: `Client paid ₹${payAmount} for ${payment.invoice_number}. Txn ID: ${txnId}`,
-      ipAddress: req.ip
+    // Notify Admins to verify and accept payment
+    await notifyAdmins({
+      title: 'Payment Submitted for Review',
+      message: `${clientName} submitted UPI payment of ₹${payAmount.toLocaleString('en-IN')} (UTR: ${txnId}) for ${payment.invoice_number}. Please verify and accept.`,
+      type: 'payment',
+      link: '/admin#payments'
     });
 
     // Notify Client
     await createNotification({
       userId: req.user.id,
-      title: 'Payment Successful',
-      message: `Payment of ₹${payAmount.toLocaleString('en-IN')} for ${payment.invoice_number} received successfully. Transaction ID: ${txnId}.`,
+      title: 'Payment in Review',
+      message: `Your UPI payment submission of ₹${payAmount.toLocaleString('en-IN')} (UTR: ${txnId}) for ${payment.invoice_number} is currently in review. Admin will verify and accept it shortly.`,
       type: 'payment',
       link: '/dashboard#billing',
       sendAsEmail: true,
       emailTo: req.user.email
     });
 
+    // Log Activity
+    await logActivity({
+      userId: req.user.id,
+      action: 'Client Submitted Payment for Review',
+      entityType: 'payment',
+      entityId: paymentId,
+      details: `Client submitted UPI payment of ₹${payAmount} for ${payment.invoice_number}. UTR: ${txnId}`,
+      ipAddress: req.ip
+    });
+
     return res.json({
       success: true,
-      message: 'Payment processed successfully!',
+      status: 'Under Review',
+      message: 'Payment is in review! The admin will verify and accept your payment shortly, after which your status will show as Paid.',
       transactionId: txnId,
-      newStatus,
-      amountPaid: updatedPaid,
-      remainingBalance: updatedRemaining
+      pendingAmount: payAmount
     });
   } catch (error) {
     console.error('Process payment error:', error);
     return res.status(500).json({ success: false, message: 'Server error processing payment.' });
+  }
+});
+
+// POST /api/payments/:id/accept (Admin verifies & accepts payment)
+router.post('/:id/accept', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const paymentId = req.params.id;
+    const payment = await db.get('SELECT * FROM payments WHERE id = ?', [paymentId]);
+    if (!payment) {
+      return res.status(404).json({ success: false, message: 'Payment record not found.' });
+    }
+
+    const payAmount = payment.pending_review_amount > 0 ? payment.pending_review_amount : payment.remaining_balance;
+    const newPaid = payment.amount_paid + payAmount;
+    const newRemaining = Math.max(0, payment.total_amount - newPaid);
+    const newStatus = newRemaining <= 0 ? 'Paid' : 'Partially Paid';
+
+    await db.run(
+      `UPDATE payments 
+       SET amount_paid = ?,
+           remaining_balance = ?,
+           pending_review_amount = 0,
+           status = ?,
+           paid_date = CURRENT_TIMESTAMP,
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = ?`,
+      [newPaid, newRemaining, newStatus, paymentId]
+    );
+
+    // Sync project financials
+    await db.run(
+      `UPDATE projects 
+       SET paid_amount = ?, remaining_balance = ?, updated_at = CURRENT_TIMESTAMP
+       WHERE id = ?`,
+      [newPaid, newRemaining, payment.project_id]
+    );
+
+    // Notify Client
+    const client = await db.get('SELECT full_name, email FROM users WHERE id = ?', [payment.user_id]);
+    if (client) {
+      await createNotification({
+        userId: payment.user_id,
+        title: 'Payment Accepted & Confirmed!',
+        message: `Your payment of ₹${payAmount.toLocaleString('en-IN')} for invoice ${payment.invoice_number} has been verified and accepted by admin. Your payment status is now ${newStatus}.`,
+        type: 'payment',
+        link: '/dashboard#billing',
+        sendAsEmail: true,
+        emailTo: client.email
+      });
+    }
+
+    // Log Activity
+    await logActivity({
+      userId: req.user.id,
+      action: 'Admin Accepted Payment',
+      entityType: 'payment',
+      entityId: paymentId,
+      details: `Admin verified & accepted payment of ₹${payAmount} for ${payment.invoice_number}. Status: ${newStatus}`,
+      ipAddress: req.ip
+    });
+
+    return res.json({
+      success: true,
+      message: `Payment of ₹${payAmount.toLocaleString('en-IN')} accepted and marked as ${newStatus}!`,
+      newStatus,
+      amountPaid: newPaid,
+      remainingBalance: newRemaining
+    });
+  } catch (error) {
+    console.error('Accept payment error:', error);
+    return res.status(500).json({ success: false, message: 'Server error accepting payment.' });
+  }
+});
+
+// POST /api/payments/:id/reject (Admin rejects unverified payment)
+router.post('/:id/reject', authenticateToken, requireAdmin, async (req, res) => {
+  try {
+    const paymentId = req.params.id;
+    const { reason = 'Could not verify transaction with bank' } = req.body;
+
+    const payment = await db.get('SELECT * FROM payments WHERE id = ?', [paymentId]);
+    if (!payment) {
+      return res.status(404).json({ success: false, message: 'Payment record not found.' });
+    }
+
+    const revertedStatus = payment.amount_paid > 0 ? 'Partially Paid' : 'Pending';
+
+    await db.run(
+      `UPDATE payments 
+       SET status = ?,
+           pending_review_amount = 0,
+           updated_at = CURRENT_TIMESTAMP
+       WHERE id = ?`,
+      [revertedStatus, paymentId]
+    );
+
+    // Notify Client
+    const client = await db.get('SELECT full_name, email FROM users WHERE id = ?', [payment.user_id]);
+    if (client) {
+      await createNotification({
+        userId: payment.user_id,
+        title: 'Payment Verification Declined',
+        message: `Your payment submission for invoice ${payment.invoice_number} could not be verified by admin (${reason}). Please check your transaction details or contact support.`,
+        type: 'payment',
+        link: '/dashboard#billing',
+        sendAsEmail: true,
+        emailTo: client.email
+      });
+    }
+
+    // Log Activity
+    await logActivity({
+      userId: req.user.id,
+      action: 'Admin Rejected Payment Submission',
+      entityType: 'payment',
+      entityId: paymentId,
+      details: `Admin rejected payment submission for ${payment.invoice_number}: ${reason}`,
+      ipAddress: req.ip
+    });
+
+    return res.json({
+      success: true,
+      message: 'Payment submission declined.',
+      newStatus: revertedStatus
+    });
+  } catch (error) {
+    console.error('Reject payment error:', error);
+    return res.status(500).json({ success: false, message: 'Server error rejecting payment.' });
   }
 });
 
