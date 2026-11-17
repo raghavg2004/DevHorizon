@@ -1,0 +1,55 @@
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+
+    # 1. Security: Block sensitive files and SQLite database
+    <FilesMatch "\.(db|sqlite|sqlite3|env|ini|log|json|lock|yml|yaml|md|sh)$">
+        <IfModule mod_authz_core.c>
+            Require all denied
+        </IfModule>
+        <IfModule !mod_authz_core.c>
+            Order allow,deny
+            Deny from all
+        </IfModule>
+    </FilesMatch>
+
+    # 2. Block access to hidden directories (.git, data, tests, etc.)
+    RewriteRule ^(\.git|data|tests|config|middleware|services)/ - [F,L]
+
+    # 3. API Routing -> api/index.php
+    RewriteRule ^api/(.*)$ api/index.php?route=$1 [QSA,L]
+    RewriteRule ^api/?$ api/index.php?route= [QSA,L]
+    RewriteRule ^send-invoice-email/?$ api/index.php?route=send-invoice-email [QSA,L]
+    RewriteRule ^health/?$ api/index.php?route=health [QSA,L]
+
+    # 4. Service Aliases
+    RewriteRule ^(ios-service|mobile-service|ios-android-service)\.html$ public/android-service.html [L]
+
+    # 5. Clean URLs for Pages
+    RewriteRule ^login/?$ public/login.html [L]
+    RewriteRule ^register/?$ public/login.html [L]
+    RewriteRule ^dashboard/?$ public/dashboard.html [L]
+    RewriteRule ^admin/?$ public/admin.html [L]
+    RewriteRule ^admin-login/?$ public/admin-login.html [L]
+    RewriteRule ^forgot-password/?$ public/forgot-password.html [L]
+    RewriteRule ^reset-password/?$ public/reset-password.html [L]
+    RewriteRule ^invoice/?(.*)$ public/invoice.html [L]
+
+    # 6. Serve static files from public/ if they exist
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{DOCUMENT_ROOT}/public/$1 -f
+    RewriteRule ^(.*)$ public/$1 [L]
+
+    # 7. Root home
+    RewriteRule ^/?$ public/index.html [L]
+
+    # 8. Fallback for non-existing files to index.html
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_URI} !^/api/
+    RewriteRule ^(.*)$ public/index.html [L]
+</IfModule>
+
+# Set default index
+DirectoryIndex public/index.html index.html index.php
